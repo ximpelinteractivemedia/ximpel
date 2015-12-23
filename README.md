@@ -11,10 +11,10 @@ Within the repository there are a number of folders:
 git clone https://sbruinsje@bitbucket.org/sbruinsje/ximpel.git
 
 2. Go to the build folder and follow the readme. In summary the README says:
-        - download and install nodeJs (https://nodejs.org/en/)
-        - Open a command prompt and execute: `npm install grunt-cli -g` then restart the command prompt.
-        - In the command prompt change directory to the "build" directory and execute: `npm install`
-        - Then execute: `grunt`
+        * download and install nodeJs (https://nodejs.org/en/)
+        * Open a command prompt and execute: `npm install grunt-cli -g` then restart the command prompt.
+        * In the command prompt change directory to the "build" directory and execute: `npm install`
+        * Then execute: `grunt`
 
 3. After building XIMPEL a deploy directory has been created in the repository root folder. In this deploy directory there
    is a "ximpel" directory which contains our XIMPEL build.

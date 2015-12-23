@@ -1,11 +1,9 @@
 # README #
 
 Within the repository there are a number of folders:
-- The 'src' folder this contains all the source files of ximpel
-- The 'documentation' folder contains the ximpel documentation. (open index.htm)
-- The 'build' folder contains everything needed to build XIMPEL into a deployable package. (See the README within this build folder for details on how to build).
-
-- The 'deploy' folder, this folder may not exist but after you have used grunt to make a XIMPEL build this directory has been created containing the deployable version of XIMPEL.
+* The 'src' folder this contains all the source files of ximpel
+* The 'documentation' folder contains the ximpel documentation. (open index.htm)
+* The 'build' folder contains everything needed to build XIMPEL into a deployable package. (See the README within this build folder for details on how to build).
 
 ### How do I get set up? ###
 

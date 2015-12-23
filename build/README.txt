@@ -31,7 +31,7 @@ Building XIMPEL:
 4. 	Within our "<project-dir>/build" folder we have placed a "Gruntfile.js". This gruntfile specifies
 	the tasks that Grunt needs to perform to build XIMPEL. When we want to build XIMPEL we simply execute 
 	the command:
-		grunt
+		grunt --force
 	This makes Grunt perform the building process based on whats specified in "Gruntfile.js".
 
 	After running the grunt command a <project-dir>/deploy folder has been created. This folder contains the

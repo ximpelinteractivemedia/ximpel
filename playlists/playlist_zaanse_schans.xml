@@ -1,0 +1,525 @@
+<ximpel>
+    <config>
+        <mediaDirectory></mediaDirectory>
+        <controlsDisplayMethod>fixed</controlsDisplayMethod>
+    </config>
+    <playlist>
+        <subject id="Intro">
+            <media>
+                <video leadsTo="MenuDeBonteHen">
+                    <source extensions="mp4" file="videos/Intro"/>
+                    <overlay duration="14" height="180px" leadsTo="MenuDeBonteHen" startTime="4" width="180px" x="1700px" y="890px"/>
+                </video>
+            </media>
+        </subject>
+
+        <subject id="MenuDeBonteHen">
+            <media>
+                <video repeat="true">
+                    <source extensions="mp4" file="videos/MenuDeBonteHen"/>
+                    <overlay height="100px" leadsTo="WalkToHetJongeSchaap" startTime="1" width="350px" x="200px" y="970px"/>
+                    <overlay height="100px" leadsTo="QuizBonteHenIntro" startTime="1" width="350px" x="800px" y="970px"/>
+                    <overlay height="100px" leadsTo="TourOfMolenDeBonteHen" startTime="1" width="350px" x="1470px" y="970px"/>
+                </video>
+            </media>
+        </subject>
+        <subject id="QuizBonteHenIntro">
+            <media>
+                <video leadsTo="QuizMenuDeBonteHen">
+                    <source extensions="mp4" file="videos/QuizDeBonteHenIntro"/>
+                </video>
+            </media>
+        </subject>
+        <subject id="QuizMenuDeBonteHen">
+            <description>Quiz: Windmill De Bonte Hen</description>
+            <media>
+                <video repeat="true">
+                    <source extensions="mp4" file="videos/QuizBonteHenMenu"/>
+                    <overlay height="70px" leadsTo="WrongBonteHenQuiz" width="700px" x="70px" y="970px"/>
+                    <overlay height="70px" leadsTo="WrongBonteHenQuiz" width="650px" x="820px" y="970px"/>
+                    <overlay height="70px" leadsTo="CorrectBonteHenQuiz" width="350px" x="1540px" y="970px"/>
+                </video>
+            </media>
+        </subject>
+        <subject id="WrongBonteHenQuiz">
+            <media>
+                <video leadsTo="MenuDeBonteHen">
+                    <source extensions="mp4" file="videos/WrongAnswer"/>
+                </video>
+            </media>
+        </subject>
+        <subject id="CorrectBonteHenQuiz">
+            <media>
+                <video leadsTo="CorrectBonteHenQuizInfo">
+                    <source extensions="mp4" file="videos/CorrectAnswer"/>
+                </video>
+            </media>
+        </subject>
+
+        <subject id="CorrectBonteHenQuizInfo">
+            <media>
+                <video leadsTo="MenuDeBonteHen">
+                    <source extensions="mp4" file="videos/CorrectAnswerInfoDeBonteHen"/>
+                </video>
+            </media>
+        </subject>
+        <subject id="TourOfMolenDeBonteHen">
+            <media>
+                <video leadsTo="MenuDeBonteHen">
+                    <source extensions="mp4" file="videos/TourOfMolenDeBonteHen"/>
+                    <overlay duration="49" height="180px" leadsTo="MenuDeBonteHen" startTime="4" width="180px" x="1680px" y="870px"/>
+                </video>
+            </media>
+        </subject>
+        <subject id="WalkToHetJongeSchaap">
+            <media>
+                <video leadsTo="MenuMolenHetJongeSchaap">
+                    <source extensions="mp4" file="videos/WalkToMolenHetJongeSchaap"/>
+                    <overlay duration="31" height="200px" leadsTo="MenuMolenHetJongeSchaap" startTime="0.2" width="200px" x="1680px" y="850px"/>
+                </video>
+            </media>
+        </subject>
+
+        <subject id="MenuMolenHetJongeSchaap">
+            <media>
+                <video repeat="true">
+                    <source extensions="mp4" file="videos/MenuMolenHetJongeSchaap"/>
+                    <overlay height="75px" leadsTo="MenuDeZoeker" startTime="1" width="220px" x="200px" y="970px"/>
+                    <overlay height="75px" leadsTo="QuizJongeSchaapIntro" startTime="1" width="275px" x="850px" y="970px"/>
+                    <overlay height="75px" leadsTo="TourOfMolenHetJongeSchaap" startTime="1" width="300px" x="1500px" y="970px"/>
+                </video>
+            </media>
+        </subject>
+        <subject id="QuizJongeSchaapIntro">
+            <media>
+                <video leadsTo="QuizJongeSchaapMenu">
+                    <source extensions="mp4" file="videos/QuizJongeSchaapIntro"/>
+                </video>
+            </media>
+        </subject>
+        <subject id="QuizJongeSchaapMenu">
+            <description>Quiz: windmill Het Jonge Schaap</description>
+            <media>
+                <video repeat="true">
+                    <source extensions="mp4" file="videos/QuizJongeSchaapMenu"/>
+                    <overlay height="70px" leadsTo="CorrectJongeSchaapQuiz" width="440px" x="20px" y="960px"/>
+                    <overlay height="70px" leadsTo="WrongJongeSchaapQuiz" width="560px" x="550px" y="960px"/>
+                    <overlay height="70px" leadsTo="WrongJongeSchaapQuiz" width="600px" x="1220px" y="960px"/>
+                </video>
+            </media>
+        </subject>
+
+        <subject id="WrongJongeSchaapQuiz">
+            <media>
+                <video leadsTo="MenuMolenHetJongeSchaap">
+                    <source extensions="mp4" file="videos/WrongAnswer"/>
+                </video>
+            </media>
+        </subject>
+        <subject id="CorrectJongeSchaapQuiz">
+            <media>
+                <video leadsTo="CorrectAnswerJongeSchaapInfo">
+                    <source extensions="mp4" file="videos/CorrectAnswer"/>
+                </video>
+            </media>
+        </subject>
+        <subject id="CorrectAnswerJongeSchaapInfo">
+            <media>
+                <video leadsTo="MenuMolenHetJongeSchaap">
+                    <source extensions="mp4" file="videos/CorrectAnswerJongeSchaapInfo"/>
+                </video>
+            </media>
+        </subject> 
+
+
+  
+
+        <subject id="TourOfMolenHetJongeSchaap">
+            <media>
+                <video leadsTo="DoSecreetQuiz">
+                    <source extensions="mp4" file="videos/TourOfMolenHetJongeSchaap" />
+                    <overlay startTime="2.7" duration="70" leadsTo="DoSecreetQuiz" x="1700px" y="860px" width="180px" height="180px" />
+                </video>
+            </media>
+        </subject>
+
+
+
+        <subject id="DoSecreetQuiz">
+            <media>
+                <video repeat="true">
+                    <source extensions="mp4" file="videos/DoQuizSecreetMenu"/>
+                    <overlay height="75px" leadsTo="MenuMolenHetJongeSchaap" startTime="1" width="350px" x="200px" y="970px"/>
+                    <overlay height="75px" leadsTo="QuizSecreetIntro" startTime="1" width="380px" x="1350px" y="970px"/>
+                </video>
+            </media>
+        </subject>
+
+
+        <subject id="QuizSecreetIntro">
+            <media>
+                <video leadsTo="QuizSecreetMenu">
+                    <source extensions="mp4" file="videos/QuizSecreetIntro"/>
+                </video>
+            </media>
+        </subject>
+
+
+        <subject id="QuizSecreetMenu">
+            <description>Extra quiz: secreet</description>
+            <media>
+                <video repeat="true">
+                    <source extensions="mp4" file="videos/QuizSecreetMenu"/>
+                    <overlay height="75px" leadsTo="WrongSecreetQuiz" width="450px" x="72px" y="970px"/>
+                    <overlay height="75px" leadsTo="CorrectSecreetQuiz" width="272px" x="775px" y="970px"/>
+                    <overlay height="75px" leadsTo="WrongSecreetQuiz"  width="610px" x="1250px" y="970px"/>
+
+                </video>
+            </media>
+        </subject>
+
+
+        <subject id="WrongSecreetQuiz">
+            <media>
+                <video leadsTo="MenuMolenHetJongeSchaap">
+                    <source extensions="mp4" file="videos/WrongAnswer"/>
+                </video>
+            </media>
+        </subject>
+
+
+        <subject id="CorrectSecreetQuiz">
+            <media>
+                <video leadsTo="CorrectAnswerSecreetInfo">
+                    <source extensions="mp4" file="videos/CorrectAnswer"/>
+                </video>
+            </media>
+        </subject>
+
+
+        <subject id="CorrectAnswerSecreetInfo">
+            <media>
+                <video leadsTo="MenuMolenHetJongeSchaap">
+                    <source extensions="mp4" file="videos/CorrectAnswerSecreetInfo"/>
+                </video>
+            </media>
+        </subject>
+
+
+        <subject id="MenuDeZoeker">
+            <media>
+                <video repeat="true">
+                    <source extensions="mp4" file="videos/MenuDeZoeker"/>
+                    <overlay height="70px" leadsTo="QuizDeZoekerIntro" startTime="1" width="460px" x="160px" y="970px"/>
+                    <overlay height="70px" leadsTo="WalkToMolenDeKat" startTime="1" width="300px" x="1500px" y="970px"/>
+                </video>
+            </media>
+        </subject>
+
+
+        <subject id="QuizDeZoekerIntro">
+            <media>
+                <video leadsTo="QuizDeZoekerMenu">
+                    <source extensions="mp4" file="videos/QuizDeZoekerIntro"/>
+                </video>
+            </media>
+        </subject>
+
+
+        <subject id="QuizDeZoekerMenu">
+            <description>Quiz: windmill De Zoeker</description>
+            <media>
+                <video repeat="true">
+                    <source extensions="mp4" file="videos/QuizDeZoekerMenu"/>
+                    <overlay height="70px" leadsTo="CorrectDeZoekerQuiz" width="405px" x="150px" y="970px"/>
+                    <overlay height="70px" leadsTo="WrongDeZoekerQuiz" width="400px" x="800px" y="970px"/>
+                    <overlay height="70px" leadsTo="WrongDeZoekerQuiz" width="375px" x="1400px" y="970px"/>
+                </video>
+            </media>
+        </subject>
+
+
+        <subject id="WrongDeZoekerQuiz">
+            <media>
+                <video leadsTo="MenuDeZoeker">
+                    <source extensions="mp4" file="videos/WrongAnswer"/>
+                </video>
+            </media>
+        </subject>
+
+
+        <subject id="CorrectDeZoekerQuiz">
+            <media>
+                <video leadsTo="CorrectAnswerDeZoekerInfo">
+                    <source extensions="mp4" file="videos/CorrectAnswer"/>
+                </video>
+            </media>
+        </subject>
+
+
+        <subject id="CorrectAnswerDeZoekerInfo">
+            <media>
+                <video leadsTo="MenuDeZoeker">
+                    <source extensions="mp4" file="videos/CorrectAnswerDeZoeker"/>
+                </video>
+            </media>
+        </subject>
+
+
+        <subject id="WalkToMolenDeKat">
+            <media>
+                <video leadsTo="MenuDeKat">
+                    <source extensions="mp4" file="videos/WalkToMolenDeKat"/>
+                    <overlay duration="20" height="180px" leadsTo="MenuDeKat" startTime="5" width="180px" x="1690px" y="870px"/>
+                </video>
+            </media>
+        </subject>
+
+
+
+        <subject id="MenuDeKat">
+            <media>
+                <video repeat="true">
+                    <source extensions="mp4" file="videos/MenuMolenDeKat"/>
+                    <overlay height="70px" leadsTo="WalkToPoelenburg" startTime="1" width="315px" x="350px" y="970px"/>
+                    <overlay height="70px" leadsTo="QuizDeKatIntro" startTime="1" width="450px" x="850px" y="970px"/>
+                    <overlay height="70px" leadsTo="TourOfMolenDeKat" startTime="1" width="350px" x="1400px" y="970px"/>
+                </video>
+            </media>
+        </subject>
+
+     
+        <subject id="QuizDeKatIntro">
+            <media>
+                <video leadsTo="QuizDeKatMenu">
+                    <source extensions="mp4" file="videos/QuizDeKatIntro"/>
+                </video>
+            </media>
+        </subject>
+
+
+
+ 
+        <subject id="QuizDeKatMenu">
+            <description>Quiz: windmill De Kat</description>
+            <media>
+                <video repeat="true">
+                    <source extensions="mp4" file="videos/QuizDeKatMenu"/>
+                    <overlay height="70px" leadsTo="WrongDeKatQuiz" width="730px" x="30px" y="970px"/>
+                    <overlay height="70px" leadsTo="WrongDeKatQuiz" width="530px" x="770px" y="970px"/>
+                    <overlay height="70px" leadsTo="CorrectDeKatQuiz" width="560px" x="1310px" y="970px"/>
+                </video>
+            </media>
+        </subject>
+
+
+        <subject id="WrongDeKatQuiz">
+            <media>
+                <video leadsTo="MenuDeKat">
+                    <source extensions="mp4" file="videos/WrongAnswer"/>
+                </video>
+            </media>
+        </subject>
+
+
+
+
+        <subject id="CorrectDeKatQuiz">
+            <media>
+                <video leadsTo="CorrectAnswerDeKatInfo">
+                    <source extensions="mp4" file="videos/CorrectAnswer"/>
+                </video>
+            </media>
+        </subject>
+
+
+        <subject id="CorrectAnswerDeKatInfo">
+            <media>
+                <video leadsTo="MenuDeKat">
+                    <source extensions="mp4" file="videos/CorrectAnswerDeKatInfo"/>
+                </video>
+            </media>
+        </subject>
+
+
+        <subject id="TourOfMolenDeKat">
+            <media>
+                <video leadsTo="MenuDeKat">
+                    <source extensions="mp4" file="videos/TourOfMolenDeKat"/>
+                    <overlay duration="80" height="180px" leadsTo="MenuDeKat" startTime="4" width="180px" x="1690px" y="870px"/>
+                </video>
+            </media>
+        </subject>
+
+ 
+        <subject id="WalkToPoelenburg">
+            <media>
+                <video leadsTo="MenuDePoelenburg">
+                    <source extensions="mp4" file="videos/WalkToPoelenburg"/>
+                    <overlay duration="23" height="150px" leadsTo="MenuDePoelenburg" startTime="2" width="150px" x="1740px" y="910px"/>
+                </video>
+            </media>
+        </subject>
+
+
+        <subject id="MenuDePoelenburg">
+            <media>
+                <video repeat="true">
+                    <source extensions="mp4" file="videos/MenuDePoelenburg"/>
+                    <overlay height="70px" leadsTo="WalkToDeHuisman" startTime="1" width="320px" x="210px" y="970px"/>
+                    <overlay height="70px" leadsTo="QuizDePoelenburgIntro" startTime="1" width="400px" x="1400px" y="970px"/>
+                </video>
+            </media>
+        </subject>
+
+
+        <subject id="QuizDePoelenburgIntro">
+            <media>
+                <video leadsTo="QuizDePoelenburgMenu">
+                    <source extensions="mp4" file="videos/QuizDePoelenburgIntro"/>
+                </video>
+            </media>
+        </subject>
+
+
+        <subject id="QuizDePoelenburgMenu">
+            <description>Quiz: windmill De Gekroonde Poelenburg</description>
+            <media>
+                <video repeat="true">
+                    <source extensions="mp4" file="videos/QuizDePoelenburgMenu"/>
+                    <overlay height="70px" leadsTo="WrongDePoelenburgQuiz" width="770px" x="20px" y="970px"/>
+                    <overlay height="70px" leadsTo="WrongDePoelenburgQuiz" width="560px" x="805px" y="970px"/>
+                    <overlay height="70px" leadsTo="CorrectDePoelenburgQuiz" width="480px" x="1400px" y="970px"/>
+                </video>
+            </media>
+        </subject>
+
+
+        <subject id="WrongDePoelenburgQuiz">
+            <media>
+                <video leadsTo="MenuDePoelenburg">
+                    <source extensions="mp4" file="videos/WrongAnswer"/>
+                </video>
+            </media>
+        </subject>
+
+        
+        <subject id="CorrectDePoelenburgQuiz">
+            <media>
+                <video leadsTo="CorrectAnswerDePoelenburgInfo">
+                    <source extensions="mp4" file="videos/CorrectAnswer"/>
+                </video>
+            </media>
+        </subject>
+
+
+        <subject id="CorrectAnswerDePoelenburgInfo">
+            <media>
+                <video leadsTo="MenuDePoelenburg">
+                    <source extensions="mp4" file="videos/CorrectAnswerDePoelenburgInfo"/>
+                </video>
+            </media>
+        </subject>
+
+
+        <subject id="WalkToDeHuisman">
+            <media>
+                <video leadsTo="MenuDeHuisman">
+                    <source extensions="mp4" file="videos/WalkToDeHuisman"/>
+                    <overlay duration="32" height="180px" leadsTo="MenuDeHuisman" startTime="1" width="180px" x="1700px" y="880px"/>
+                </video>
+            </media>
+        </subject>
+
+
+        <subject id="MenuDeHuisman">
+            <media>
+                <video repeat="true">
+                    <source extensions="mp4" file="videos/MenuDeHuisman"/>
+                    <overlay height="70px" leadsTo="Outro" startTime="1" width="375px" x="190px" y="970px"/>
+                    <overlay height="70px" leadsTo="QuizDeHuismanIntro" startTime="1" width="420px" x="800px" y="970px"/>
+                    <overlay height="70px" leadsTo="TourOfDeHuisman" startTime="1" width="350px" x="1400px" y="970px"/>
+                </video>
+            </media>
+        </subject>
+
+
+        <subject id="QuizDeHuismanIntro">
+            <media>
+                <video leadsTo="QuizDeHuismanMenu">
+                    <source extensions="mp4" file="videos/QuizDeHuismanIntro"/>
+                </video>
+            </media>
+        </subject>
+
+
+        <subject id="QuizDeHuismanMenu">
+            <description>Quiz: windmill De Huisman</description>
+            <media>
+                <video repeat="true">
+                    <source extensions="mp4" file="videos/QuizDeHuismanMenu"/>
+                    <overlay height="70px" leadsTo="WrongDeHuismanQuiz" width="500px" x="90px" y="970px"/>
+                    <overlay height="70px" leadsTo="WrongDeHuismanQuiz" width="500px" x="1400px" y="970px"/>
+                    <overlay height="70px" leadsTo="CorrectDeHuismanQuiz" width="550px" x="700px" y="970px"/>
+                </video>
+            </media>
+        </subject>
+
+
+        <subject id="WrongDeHuismanQuiz">
+            <media>
+                <video leadsTo="MenuDeHuisman">
+                    <source extensions="mp4" file="videos/WrongAnswer"/>
+                </video>
+            </media>
+        </subject>
+
+
+        <subject id="CorrectDeHuismanQuiz">
+            <media>
+                <video leadsTo="CorrectAnswerDeHuismanInfo">
+                    <source extensions="mp4" file="videos/CorrectAnswer" />
+                </video>
+            </media>
+        </subject>
+
+
+        <subject id="CorrectAnswerDeHuismanInfo">
+            <media>
+                <video leadsTo="MenuDeHuisman">
+                    <source extensions="mp4" file="videos/CorrectAnswerDeHuismanInfo"/>
+                </video>
+            </media>
+        </subject>
+
+
+
+        <subject id="TourOfDeHuisman">
+            <media>
+                <video leadsTo="MenuDeHuisman">
+                    <source extensions="mp4" file="videos/TourOfDeHuisman"/>
+                    <overlay duration="25" height="180px" leadsTo="MenuDeHuisman" startTime="6" width="180px" x="1700px" y="880px"/>
+                </video>
+            </media>
+        </subject>
+
+
+        <subject id="Outro">
+            <media>
+                <video>
+                    <source extensions="mp4" file="videos/WalkOutro"/>
+                    <overlay duration="117" height="250px" leadsTo="end" startTime="3" width="250px" x="1620px" y="810px"/>
+                </video>
+            </media>
+        </subject>
+
+
+        <subject id="end">
+            <description>The end</description>
+            <media>
+                <picture src="images/the_end.png" />
+            </media>
+        </subject>
+    </playlist>
+
+</ximpel>

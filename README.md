@@ -16,7 +16,7 @@ git clone https://sbruinsje@bitbucket.org/sbruinsje/ximpel.git
         * download and install nodeJs (https://nodejs.org/en/)
         * Open a command prompt and execute: `npm install grunt-cli -g` then restart the command prompt.
         * In the command prompt change directory to the "build" directory and execute: `npm install`
-        * Then execute: `grunt`
+        * Then execute: `grunt --force`
 
 3. After building XIMPEL a deploy directory has been created in the repository root folder. In this deploy directory there
    is a "ximpel" directory which contains our XIMPEL build.

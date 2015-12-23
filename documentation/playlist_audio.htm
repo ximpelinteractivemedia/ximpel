@@ -1,0 +1,97 @@
+<html>
+	<head>
+		<title>XIMPEL - Documentation</title>
+
+		<!-- include syntax highlighter -->
+		<script type="text/javascript" src="syntaxhighlighter_3.0.83/scripts/shCore.js"></script>
+		<script type="text/javascript" src="syntaxhighlighter_3.0.83/scripts/shBrushJScript.js"></script>
+		<script type="text/javascript" src="syntaxhighlighter_3.0.83/scripts/shBrushXml.js"></script>
+		<link href="syntaxhighlighter_3.0.83/styles/shCore.css" rel="stylesheet" type="text/css" />
+		<link type="text/css" rel="stylesheet" href="syntaxhighlighter_3.0.83/styles/shCoreDefault.css"/>
+
+		<!-- include jquery -->
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+
+		<!-- include jquery ui -->
+		<link rel="stylesheet" href="jquery-ui-1.11.4/jquery-ui.min.css" />
+		<script src="jquery-ui-1.11.4/jquery-ui.min.js"></script>
+		
+		<!-- include scripts/css for this documentation page. -->
+		<link rel="stylesheet" href="styles/main.css" />
+		<script src="scripts/main.js"></script>
+		<script type="text/javascript">
+			//
+			var activeSection=1;
+		</script>
+
+	</head>
+	<body>
+		<div id="container">
+			<script src="scripts/header.js"></script>
+			<script src="scripts/navigation.js"></script>
+
+			<div id="mainContentContainer">
+				<div id="mainContent">
+					<h2>Syntax - Audio mediatype</h2>
+					The audio media type allows you to play audio within your ximpel presentation.
+
+					<h4>playlist.xml</h4>
+					<pre class="brush: html;">
+						&lt;ximpel&gt;
+						&lt;playlist&gt;
+					    &lt;subject&gt;
+					        &lt;media&gt;
+					            &lt;audio&gt;
+					            	&lt;source file=&quot;myaudio&quot; extensions=&quot;mp3,ogg&quot; types=&quot;audio/mp3,audio/ogg&quot; /&gt;
+					            &lt;/audio&gt;
+					        &lt;/media&gt;
+					    &lt;/subject&gt;
+						&lt;/playlist&gt;
+						&lt;/ximpel&gt;</pre>
+					<p>
+						The <code>file</code> attribute specifies the filename of the audio that is to be played without the extension. The <code>extensions</code> attribute specifies the extensions that are available and the <code>types</code> attribute specifies the mime types corresponding to the extensions listed with the <code>extensions</code> attribute. The browser chooses which of the audio formats is best supported and will play that format.
+					</p>
+					<p>
+						In the example above we indicated that we want to play an audio file which is stored in two formats: <code>myaudio.mp3</code> and <code>myaudio.ogg</code>. The <code>types</code> attribute specifies that the mp3 file is of type <code>audio/mp3</code> and the ogg file is of type <code>audio/ogg</code>. The browser will pick the source file that is actually used.
+					</p>
+					<p>
+						<strong>Note</strong>: the first type listed in the types attribute corresponds to the first extension listed in the extensions attribute. The second type in the types attribute to the second extension in the extensions attribute, and so on.
+					</p>
+					<p>
+						<strong>Note</strong>: The types attribute is optional and is only used by the browser to make a better decision about which of the source files is most likely to be supported. If you only want to specify a type for some formats but not for all then you should first list the format for which you want to specify the type in the extensions attribute. For instance, if you want to specify the type for the <code>.ogg</code> file but not for the <code>.mp3</code> file then you can do:
+						<pre class="brush: html;">&lt;source file="myaudio" extensions="ogg,mp3" types="audio/ogg" /&gt;</pre>
+
+					</p>
+					<br /><br />
+
+
+
+
+					<h3>Playing only part of the audio file</h3>
+					In order to start playing at a certain point within the audio file, the <code>startTime</code> attribute can be used. This specifies the startTime in seconds from which to start playing.
+
+					<pre class="brush: html;">				
+						&lt;audio startTime="5"&gt;
+							&lt;source file=&quot;myaudio&quot; extensions=&quot;mp3&quot; /&gt;
+						&lt;/audio&gt;</pre>
+
+					To control how much of the audio file should be played, you can use the <code>duration</code> attribute that is available for all media types. This specifies the number of seconds to play. So if the <code>startTime="30"</code> and the <code>duration="10"</code> then the audio will play from the 30 seconds point of the audio to the 40 seconds point of the audio.
+
+					<pre class="brush: html;">				
+						&lt;audio startTime="30" duration="10"&gt;
+							&lt;source file=&quot;myaudio&quot; extensions=&quot;mp3&quot; /&gt;
+						&lt;/video&gt;</pre>
+
+					<p>
+						Leaving out the duration attribute means it will play until the end of the audio file. Leaving out the startTime attribute means the audio will be played from the beginning.
+					</p>
+					<br /><br />
+					
+					
+					
+
+				</div>
+			</div>
+		</div>
+	</body>
+</html>

@@ -1,0 +1,247 @@
+<html>
+	<head>
+		<title>XIMPEL - Documentation</title>
+
+		<!-- include syntax highlighter -->
+		<script type="text/javascript" src="syntaxhighlighter_3.0.83/scripts/shCore.js"></script>
+		<script type="text/javascript" src="syntaxhighlighter_3.0.83/scripts/shBrushJScript.js"></script>
+		<script type="text/javascript" src="syntaxhighlighter_3.0.83/scripts/shBrushXml.js"></script>
+		<link href="syntaxhighlighter_3.0.83/styles/shCore.css" rel="stylesheet" type="text/css" />
+		<link type="text/css" rel="stylesheet" href="syntaxhighlighter_3.0.83/styles/shCoreDefault.css"/>
+
+		<!-- include jquery -->
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+
+		<!-- include jquery ui -->
+		<link rel="stylesheet" href="jquery-ui-1.11.4/jquery-ui.min.css" />
+		<script src="jquery-ui-1.11.4/jquery-ui.min.js"></script>
+		
+		<!-- include scripts/css for this documentation page. -->
+		<link rel="stylesheet" href="styles/main.css" />
+		<script src="scripts/main.js"></script>
+		<script type="text/javascript">
+			//
+			var activeSection=3;
+		</script>
+
+	</head>
+	<body>
+		<div id="container">
+			<script src="scripts/header.js"></script>
+			<script src="scripts/navigation.js"></script>
+
+			<div id="mainContentContainer">
+				<div id="mainContent">
+					<h2>Custom Media Types - Constructing a Media Type</h2>
+					<p>
+						XIMPEL is designed such that new media types can easily be added. There are three requirements that a media type implementation should adhere to:
+						<ol>
+							<li><strong>Constructor function</strong>: instances of your media type are created by a constructor function (a function that is used with <code>new</code> keyword).</li>
+							<li><strong>Media type API</strong>: the object created by the constructor function implements the media type interace (ie. the object contains a number of functions that each media type should have).</li>
+							<li><strong>Media type registration</strong>: your media type has to be registered with XIMPEL.</li>
+						</ol>
+
+						We will discuss each of these requirements by working out an example custom media type. Our media type is simple and will only print a text message when its played. We will call our media type <code>Message</code> and we will be able to use our media in the playlist by doing: <code>&lt;message text="message to show" /&gt;</code>.
+					</p>
+					<br />
+
+
+
+
+					<h3>1. Create a constructor function</h3>
+					<p>
+						The first step is to create a constructor function. This is the function that XIMPEL uses to construct an instance of a media type. Lets create the constructor function for our media type.
+					</p>
+					<h4>media_type_message.js</h4>
+					<pre class="brush: js;">
+						ximpel.mediaTypeDefinitions.Message = function( customEl, customAttr, $el, player ){
+							this.customElements = customEl;
+							this.customAttributes = customAttr;
+							this.$parentElement = $el;
+							this.player = player;
+						}
+						ximpel.mediaTypeDefinitions.Message.prototype = new ximpel.MediaType();</pre>
+					<p>
+						We defined a function and stored it in <code>ximpel.mediaTypeDefinitions.Message</code>. Then on <code>line 7</code> we construct a <code>ximpel.MediaType()</code> object and use that as the <code>prototype</code> property of our function.
+					</p>
+					<div class="ui-widget">	<div class="ui-state-highlight ui-corner-all" style="margin-top: 20px; padding: 0 .7em;">
+							<span class="ui-icon ui-icon-info" style="float: left; margin-right: .3em;"></span>
+							We could have stored our constructor function in any variable but we stored it as <code>ximpel.mediaTypeDefinitions.Message</code> because <code>ximpel.mediaTypeDefinitions</code> is the namespace that is used by the core XIMPEL media types.
+					</div></div>
+					<p>
+						Because the XIMPEL parser knows nothing about our media type, it can't process the attributes and child element of our <code>&lt;message&gt;</code> tag. Only the media type implementation itself knows the meaning of those attributes and child elements. XIMPEL calls the media type constructor function with the custom elements and custom attributes as arguments. This allows the media type implementation to determine what to do with it. XIMPEL also passes the player element to the constructor function, so that the Media Type knows to which DOM element it should attach its content.
+					</p>
+					<br />
+
+
+
+
+					<h3>2. Implement the media type API</h3>
+					Ok so now we have a constructor function which can create instances of our media type. This is what XIMPEL does when it creates an instance of a media type:
+					<pre class="brush: js;">
+						var messageMediaItem = new ximpel.mediaTypeDefinitions.Message( ... );</pre>
+
+					Now we need to make sure our instances implement the required functions that each media type is supposed to have. These functions are:
+					<ul>
+						<li><strong>mediaPlay</strong>: starts/resumes the media item</li>
+						<li><strong>mediaPause</strong>: pauses the media item</li>
+						<li><strong>mediaStop</strong>: stops the media item entirely (ie. it will start playing from its original starting state when play() is called)</li>
+						<li><strong>mediaIsPlaying</strong>: should return true if the media item is playing, false otherwise</li>
+						<li><strong>mediaIsPaused</strong>: should return true if the media item is paused, false otherwise.</li>
+						<li><strong>mediaIsStopped</strong>: should return true if the media item is stopped, false otherwise.</li>
+					</ul>
+					Let's create those functions for our <code>Message</code> media type.
+
+					<pre class="brush: js;">
+						ximpel.mediaTypeDefinitions.Message.prototype.mediaPlay = function(){
+							this.state = 'playing';
+							this.$parentElement.append( this.$messageSpan );
+						}
+
+						ximpel.mediaTypeDefinitions.Message.prototype.mediaPause = function(){
+							this.state = 'paused';
+						}
+
+						ximpel.mediaTypeDefinitions.Message.prototype.mediaStop = function(){
+							this.state = 'stopped';
+							this.$messageSpan.detach();
+						}
+
+						ximpel.mediaTypeDefinitions.Message.prototype.mediaIsPlaying = function(){
+							return this.state === 'playing';
+						}
+
+						ximpel.mediaTypeDefinitions.Message.prototype.mediaIsPaused = function(){
+							return this.state === 'paused';
+						}
+
+						ximpel.mediaTypeDefinitions.Message.prototype.mediaIsStopped = function(){
+							return this.state === 'stopped';
+						}</pre>
+					<p>
+						That's it, our media type implemented all the required functions and is ready to be registered for use.
+					</p>					
+					<br />
+
+
+
+
+					<h3>3. Media type registration</h3>
+					<p>
+						Now that we have a constructor function that can create instances of our media type, we need to register our media type with XIMPEL. By doing so XIMPEL will recognize our &lt;message&gt; tag in the playlist and will be able to create instances of our media type.
+					</p>
+
+					<p>
+						Registering the media type is done using the <code>ximpel.registerMediaType();</code> function. This function takes one argument: a <code>ximpel.MediaTypeRegistration</code> object. We can create this object and register it like this:
+					</p>					
+					<pre class="brush: js;">
+					    var r = new ximpel.MediaTypeRegistration( 'message', ximpel.mediaTypeDefinitions.Message, {
+							'allowedAttributes': ['text'],
+							'requiredAttributes': ['text'],
+							'allowedChildren': [],
+							'requiredChildren': [],
+						} );
+						ximpel.registerMediaType( r );</pre>
+					<p>
+						First we create a <code>MediaTypeRegistration</code> object by passing three arguments. The first argument <code>message</code> is the tag name of our media type (&lt;message&gt;). The second argument <code>ximpel.mediaTypeDefinitions.Message</code> is the pointer to the constructor function of our media type so XIMPEL knows how to create instances of our media type. The third argument is an object with four properties:
+						<ol>
+							<li><strong>allowedAttributes</strong>: specifies an array containing all the attributes that can be used on the media type tag</li>
+							<li><strong>requiredAttributes</strong>: specifies an array containing all the attributes that are required on the media type tag.</li>
+							<li><strong>allowedChildren</strong>: specifies an array containing all the element names that are allowed for the media type tag.</li>
+							<li><strong>requiredChildren</strong>: specifies an array containing all the element names that are required for the media type tag.</li>
+						</ol>
+					</p>
+					<br />
+
+
+
+
+					<h3>Putting it all together</h3>
+					Store all the code in a javascript file (<code>Message.js</code>):
+					<h4>Message.js</h4>
+					<pre class="brush: js;">
+						ximpel.mediaTypeDefinitions.Message = function( customEl, customAttr, $el, player ){
+						    this.customElements = customEl;
+						    this.customAttributes = customAttr;
+						    this.$parentElement = $el;
+						    this.player = player;
+						 
+						    this.$messageSpan = $('<span></span>');
+						    this.$messageSpan.html( customAttributes.text );
+						    this.$messageSpan.css({
+						        'color': 'red',
+						        'font-size': '100px'
+						    });
+						 
+						    this.state = 'stopped';
+						}
+						ximpel.mediaTypeDefinitions.Message.prototype = new ximpel.MediaType();
+						 
+						ximpel.mediaTypeDefinitions.Message.prototype.mediaPlay = function(){
+						    this.state = 'playing';
+						    this.$parentElement.append( this.$messageSpan );
+						}
+						 
+						ximpel.mediaTypeDefinitions.Message.prototype.mediaPause = function(){
+						    this.state = 'paused';
+						}
+						 
+						ximpel.mediaTypeDefinitions.Message.prototype.mediaStop = function(){
+						    this.state = 'stopped';
+						    this.$messageSpan.detach();
+						}
+						 
+						ximpel.mediaTypeDefinitions.Message.prototype.mediaIsPlaying = function(){
+						    return this.state === 'playing';
+						}
+						 
+						ximpel.mediaTypeDefinitions.Message.prototype.mediaIsPaused = function(){
+						    return this.state === 'paused';
+						}
+						 
+						ximpel.mediaTypeDefinitions.Message.prototype.mediaIsStopped = function(){
+						    return this.state === 'stopped';
+						}
+
+						// Register the media type with XIMPEL
+						var r = new ximpel.MediaTypeRegistration('message', ximpel.mediaTypeDefinitions.Message, {
+						        'allowedAttributes': ['text'],
+						        'requiredAttributes': ['text'],
+						        'allowedChildren': [],
+						        'requiredChildren': [],
+						} );
+						ximpel.registerMediaType( r );</pre>
+					<p>
+						In the HTML page you include our <code>Message.js</code> script after jQuery and the XIMPEL core:
+					</p>
+					<pre class="brush: js;">
+				        &lt;script src=&quot;https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js&quot;&gt;&lt;/script&gt;
+				        &lt;script type=&quot;text/javascript&quot; src=&quot;ximpel.js&quot;&gt;&lt;/script&gt;
+				        &lt;script type=&quot;text/javascript&quot; src=&quot;Message.js&quot;&gt;&lt;/script&gt;</pre>
+				    <p>
+				    	Let XIMPEL run the following playlist:
+				    </p>
+				    <pre class="brush: js;">
+				        &lt;ximpel&gt;
+						&lt;playlist&gt;
+						&lt;subject id=&quot;subject1&quot; leadsTo=&quot;subject1&quot;&gt;
+						    &lt;media&gt;
+						    	&lt;message text=&quot;abcd&quot; duration="5" /&gt;
+						    	&lt;youtube id=&quot;4HoD30-vqPQ&quot; duration=&quot;60&quot; /&gt;
+						    &lt;/media&gt;
+						&lt;/subject&gt;
+						&lt;/playlist&gt;
+						&lt;/ximpel&gt;</pre>
+					You will see the text message when XIMPEL starts playing. After five seconds the duration has been exceeded causing our <code>message</code> media item to stop and the <code>youtube</code> media item to play. 
+
+
+					<br /><br />
+					
+					
+					
+
+				</div>
+			</div>
+		</div>
+	</body>
+</html>

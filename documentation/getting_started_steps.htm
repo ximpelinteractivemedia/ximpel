@@ -1,0 +1,203 @@
+<html>
+	<head>
+		<title>XIMPEL - Documentation</title>
+
+		<!-- include syntax highlighter -->
+		<script type="text/javascript" src="syntaxhighlighter_3.0.83/scripts/shCore.js"></script>
+		<script type="text/javascript" src="syntaxhighlighter_3.0.83/scripts/shBrushJScript.js"></script>
+		<script type="text/javascript" src="syntaxhighlighter_3.0.83/scripts/shBrushXml.js"></script>
+		<link href="syntaxhighlighter_3.0.83/styles/shCore.css" rel="stylesheet" type="text/css" />
+		<link type="text/css" rel="stylesheet" href="syntaxhighlighter_3.0.83/styles/shCoreDefault.css"/>
+
+		<!-- include jquery -->
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+
+		<!-- include jquery ui -->
+		<link rel="stylesheet" href="jquery-ui-1.11.4/jquery-ui.min.css" />
+		<script src="jquery-ui-1.11.4/jquery-ui.min.js"></script>
+		
+		<!-- include scripts/css for this documentation page. -->
+		<link rel="stylesheet" href="styles/main.css" />
+		<script src="scripts/main.js"></script>
+		<script type="text/javascript">
+			//
+			var activeSection=2;
+		</script>
+
+	</head>
+	<body>
+		<div id="container">
+			<script src="scripts/header.js"></script>
+			<script src="scripts/navigation.js"></script>
+
+			<div id="mainContentContainer">
+				<div id="mainContent">
+					<h2>Getting started - playlist / config</h2>
+					<h3>Step 1: Create a playlist</h3>
+					<p>
+						First we need to create a playlist that we will be using. Lets make a playlist that plays three youtube videos in a row for 10 seconds each.
+					</p>
+					<p>
+						Open a text editor and paste the following code into it. Save it as <code>playlist.xml</code> (you could name it anything but in our example we use <code>playlist.xml</code>).
+					</p>
+					<h4>playlist.xml</h4>
+					<pre class="brush: html;">
+						&lt;ximpel&gt;
+						    &lt;playlist&gt;
+						        &lt;subject&gt;
+						            &lt;media&gt;
+						                &lt;youtube id=&quot;AI0RTvlm0hw&quot; startTime=&quot;300&quot; duration=&quot;10&quot; /&gt;
+						                &lt;youtube id=&quot;4_UVnsG7COM&quot; startTime=&quot;300&quot; duration=&quot;10&quot; /&gt;
+						                &lt;youtube id=&quot;J_x-dIA7oeE&quot; startTime=&quot;300&quot; duration=&quot;10&quot; /&gt;
+						            &lt;/media&gt;
+						        &lt;/subject&gt;
+						    &lt;/playlist&gt;
+						&lt;/ximpel&gt;</pre>
+					
+
+					<h3>Step 2: Create a config</h3>
+					<p>
+						We also need a config file in which we can change some configuration settings. We use a config where we indicate that our XIMPEL player should show controls that are displayed as an overlay over the video.
+					</p>
+					<p>
+						Open a text editor and paste the following code into it. Save it as <code>config.xml</code> (you could name it anything but in our example we use <code>config.xml</code>).
+					</p>
+					<h4>config.xml</h4>
+					<pre class="brush: html;">
+						&lt;ximpel&gt;
+							&lt;config&gt;
+								&lt;enableControls&gt;true&lt;/enableControls&gt;
+								&lt;controlsDisplayMethod&gt;overlay&lt;/controlsDisplayMethod&gt;
+							&lt;/config&gt;
+						&lt;/ximpel&gt;</pre>
+					<p>
+						Copy the code above and paste it into a text editor. Save it as <code>config.xml</code> in the same directory as your <code>playlist.xml</code>.
+					</p>
+					<br />
+
+
+
+
+					<h3>Step 3: include XIMPEL into an HTML page</h3>
+					<p>
+						Now we are ready to create an HTML page that includes the XIMPEL engine. When you download XIMPEL and unarchive it you will get a <code>ximpel</code> folder containing:
+						<ul>
+							<li><code>ximpel/ximpel.css</code>: the XIMPEL stylesheet</li>
+							<li><code>ximpel/ximpel.js</code>: the XIMPEL javascript engine</li>
+							<li><code>ximpel/images/*</code>: a folder containing some images used by XIMPEL.</li>
+						</ul>
+						 
+						Place this <code>ximpel</code> directory in the same place as where you put your <code>playlist.xml</code> and <code>config.xml</code> file earlier.						
+					</p>
+					<p>
+						Now lets create a basic HTML page that includes <code>jQuery</code>, <code>ximpel.css</code> and <code>ximpel.js</code>. Copy the code below in a text editor and store it as <code>ximpel_example.htm</code> in the same directory as where you stored the <code>playlist.xml</code>, <code>config.xml</code> and <code>ximpel</code> directory.
+					</p>
+					<h4>ximpel_example.htm</h4>
+					<pre class="brush: html;">
+						&lt;!DOCTYPE html&gt;
+						&lt;html&gt;
+							&lt;head&gt;
+								&lt;link rel=&quot;stylesheet&quot; href=&quot;ximpel/ximpel.css&quot; type=&quot;text/css&quot; /&gt;
+								&lt;script src=&quot;https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js&quot;&gt;&lt;/script&gt;
+								&lt;script type=&quot;text/javascript&quot; src=&quot;ximpel/ximpel.js&quot;&gt;&lt;/script&gt;
+							&lt;/head&gt;
+							&lt;body&gt;
+
+							&lt;/body&gt; 
+						&lt;/html&gt;</pre>
+					<p>
+						Right now we have defined a XIMPEL presentation in the <code>playlist.xml</code> and <code>config.xml</code> and we have made the XIMPEL engine available by importing <code>jquery</code>, <code>ximpel.css</code> and <code>ximpel.js</code>. We have everything ready to start playing our playlist. We just need to tell XIMPEL to load and play our presentation.
+					</p>
+					<br />
+					
+
+					
+					<h3>Step 4: tell XIMPEL to run the presentation.</h3>
+					<p>
+						We need to tell XIMPEL to start running our playlist by adding a snippet of javascript that runs when the document is fully loaded. In that snippet we create a new <code>XimpelApp</code> object to which we pass a <code>unique ID</code>, the <code>playlist.xml</code> file and the <code>config.xml</code> file.
+					</p>
+					<p>
+						Lets add the snippet of javascript to the HTML file we created in step 3. Copy the snippet from the code below and paste it into your HTML file.
+					</p>
+					<h4>ximpel_example.htm</h4>
+					<pre class="brush: html;">
+					&lt;!DOCTYPE html&gt;
+					&lt;html&gt;
+						&lt;head&gt;
+							&lt;link rel=&quot;stylesheet&quot; href=&quot;ximpel/ximpel.css&quot; type=&quot;text/css&quot; /&gt;
+							&lt;script src=&quot;https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js&quot;&gt;&lt;/script&gt;
+							&lt;script type=&quot;text/javascript&quot; src=&quot;ximpel/ximpel.js&quot;&gt;&lt;/script&gt;
+
+							&lt;!-- NEW SNIPPET --&gt;
+							&lt;script type=&quot;text/javascript&quot;&gt;
+								$( document ).ready(function(){
+									var myXimpelApp = new ximpel.XimpelApp(
+										'someappid',
+										'playlist.xml', 
+										'config.xml'
+									);
+									myXimpelApp.load();
+								});
+							&lt;/script&gt;
+							&lt;!-- NEW SNIPPET --&gt;
+						&lt;/head&gt;
+						&lt;body&gt;
+
+						&lt;/body&gt; 
+					&lt;/html&gt;</pre>
+
+					<p>
+						By creating the XimpelApp like we did above, XIMPEL will start playing the presentation automatically. It will create a new HTML element and use that element to show our presentation in.
+					</p>
+					<p>
+						<strong>Note</strong>: There are some configuration options that you can use when creating a XimpelApp object. These options are explained <a href="getting_started_configuration_options.htm">here</a>.
+					</p>
+					
+
+
+					<h3>Step 5: open the HTML page with the presentation.</h3>
+					<p>
+						There it is, our XIMPEL presentation is ready to run. There is still one problem though. Due to a number of reasons, it is not always possible to run the presentation locally without a webserver. these reasons include:
+					</p>
+					<ul>
+						<li>Browsers often have security restrictions that cause AJAX requests for files to be blocked when running from the local filesystem even if the ajax requests are also directed to the local file system.</li> 
+						<li>The youtube API does not work locally in (some versions of) Internet Explorer due to security restrictions</li>
+					</ul>
+					<p>
+						So in order to test our XIMPEL HTML page we need to serve the files from a webserver (either a local webserver or a hosted webserver). A few suggestions:
+						<ul>
+							<li>Install apache on your local machine (or WAMP which is probably more simple).</li>
+							<li>Get access to a webhost to host your files somewhere online.</li>
+							<li>Install an extension for chrome called "Web Server for Chrome". This is probably the easiest method. When you run the extension you can choose a local folder that is the document-root of your chrome-webserver.</li>
+						</ul>
+					</p>
+
+					<p>
+						Once you have access to a webserver you copy the following items to your webserver all in the same directory:
+						<ul>
+							<li>The <code>playlist.xml</code> file</li>
+							<li>The <code>config.xml</code> file</li>
+							<li>The <code>ximpel_example.htm</code> HTML page</li>
+							<li>The <code>ximpel</code> directory (which contains <code>ximpel.js</code>, <code>ximpel.css</code> and an <code>images</code> folder</li>
+						</ul>
+						<p>
+							Then open <code>ximpel_example.htm</code> by going to: <code>&lt;your-webserver-url&gt;/ximpel_example.htm</code>. For example if you run a local webserver then it will be something like:
+							<code>http://localhost/ximpel_example.htm</code>
+						</p>
+						<p>
+							If your webserver is working you will see that XIMPEL starts playing our presentation.
+						</p>
+
+						
+
+
+						
+					</p>
+
+
+
+				</div>
+			</div>
+		</div>
+	</body>
+</html>

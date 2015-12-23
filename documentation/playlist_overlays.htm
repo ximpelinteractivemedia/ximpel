@@ -1,0 +1,263 @@
+<html>
+	<head>
+		<title>XIMPEL - Documentation</title>
+
+		<!-- include syntax highlighter -->
+		<script type="text/javascript" src="syntaxhighlighter_3.0.83/scripts/shCore.js"></script>
+		<script type="text/javascript" src="syntaxhighlighter_3.0.83/scripts/shBrushJScript.js"></script>
+		<script type="text/javascript" src="syntaxhighlighter_3.0.83/scripts/shBrushXml.js"></script>
+		<link href="syntaxhighlighter_3.0.83/styles/shCore.css" rel="stylesheet" type="text/css" />
+		<link type="text/css" rel="stylesheet" href="syntaxhighlighter_3.0.83/styles/shCoreDefault.css"/>
+
+		<!-- include jquery -->
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+
+		<!-- include jquery ui -->
+		<link rel="stylesheet" href="jquery-ui-1.11.4/jquery-ui.min.css" />
+		<script src="jquery-ui-1.11.4/jquery-ui.min.js"></script>
+		
+		<!-- include scripts/css for this documentation page. -->
+		<link rel="stylesheet" href="styles/main.css" />
+		<script src="scripts/main.js"></script>
+		<script type="text/javascript">
+			//
+			var activeSection=1;
+		</script>
+		<style type="text/css">
+			th{
+				text-align: left;
+			}
+			table{
+				width: 100%;
+				border-collapse:collapse;
+				vertical-align: top;
+			}
+			td{
+				padding: 5px;
+				vertical-align: top;
+				border: 1px solid black;
+			}
+			tr:nth-child(even) {background: #CCC}
+		</style>
+
+	</head>
+	<body>
+		<div id="container">
+			<script src="scripts/header.js"></script>
+			<script src="scripts/navigation.js"></script>
+
+			<div id="mainContentContainer">
+				<div id="mainContent">
+					<h2>Syntax - Overlays</h2>
+					Overlays in XIMPEL are clickable elements that can be shown during a media item. Overlays are often used to allow the user to choose which subject he wants to jump to. An example is shown below:
+
+
+					<h4>playlist.xml</h4>
+					<pre class="brush: html;">
+						&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;
+						&lt;ximpel&gt;
+						&lt;playlist&gt;
+
+						    &lt;subject id=&quot;subject1&quot;&gt;
+						        &lt;media&gt;
+						            &lt;video&gt;
+						                &lt;source file=&quot;video_filename1&quot; extensions=&quot;mp4&quot; types=&quot;video/mp4&quot; /&gt;
+										&lt;overlay startTime=&quot;3&quot; leadsTo=&quot;subject2&quot; shape=&quot;rectangle&quot; x=&quot;0px&quot; y=&quot;0px&quot; width=&quot;300px&quot; height=&quot;200px&quot; text=&quot;Go to subject2!&quot; /&gt;
+						            &lt;/video&gt;
+						        &lt;/media&gt;
+						    &lt;/subject&gt;
+						 
+						    &lt;subject id=&quot;subject2&quot;&gt;
+						        &lt;media&gt;
+						            &lt;video&gt;
+						                &lt;source file=&quot;video_filename2&quot; extensions=&quot;mp4&quot; types=&quot;video/mp4&quot; /&gt;
+										&lt;overlay startTime=&quot;3&quot; leadsTo=&quot;subject1&quot; shape=&quot;oval&quot; x=&quot;0px&quot; y=&quot;0px&quot; width=&quot;300px&quot; height=&quot;200px&quot; text=&quot;Go to subject1!&quot; /&gt;
+						            &lt;/video&gt;
+						        &lt;/media&gt;
+						    &lt;/subject&gt;
+
+						&lt;/playlist&gt;
+						&lt;/ximpel&gt;</pre>
+					
+					In this example	there are two subjects, both with one video. Both of these videos defined an overlay to be shown after the first three seconds of that video has played. When you click on on the overlay of the video of <code>subject1</code> you will jump to <code>subject2</code>. If you click on the overlay from the video of <code>subject2</code> you will jump to <code>subject1</code> again. 
+					<br /><br />
+
+
+
+
+
+					<h3>Multiple overlays</h3>
+					Any number of overlays can be displayed at any point during a media item (video/audio/picture/etc). You can specify when the overlay should appear and when the overlay should disappear using the <code>startTime</code> and <code>duration</code> attributes respectively. Omitting the <code>duration</code> attribute will keep the overlay visible until another media item or subject is started.
+
+					<pre class="brush: html;">
+						&lt;picture src=&quot;test_files/pictures/demo.png&quot;&gt;
+						    &lt;overlay startTime=&quot;0&quot; duration=&quot;1&quot; x=&quot;0px&quot; y=&quot;0px&quot; width=&quot;150px&quot; height=&quot;150px&quot; backgroundColor=&quot;red&quot; /&gt;
+						    &lt;overlay startTime=&quot;1&quot; duration=&quot;1&quot; x=&quot;150px&quot; y=&quot;0px&quot; width=&quot;150px&quot; height=&quot;150px&quot; backgroundColor=&quot;red&quot; /&gt;
+						    &lt;overlay startTime=&quot;2&quot; duration=&quot;1&quot; x=&quot;300px&quot; y=&quot;0px&quot; width=&quot;150px&quot; height=&quot;150px&quot; backgroundColor=&quot;red&quot; /&gt;
+						 
+						    &lt;overlay startTime=&quot;0&quot; duration=&quot;1&quot; x=&quot;300px&quot; y=&quot;150px&quot; width=&quot;150px&quot; height=&quot;150px&quot; backgroundColor=&quot;red&quot; /&gt;
+						    &lt;overlay startTime=&quot;1&quot; duration=&quot;1&quot; x=&quot;150px&quot; y=&quot;150px&quot; width=&quot;150px&quot; height=&quot;150px&quot; backgroundColor=&quot;red&quot; /&gt;
+						    &lt;overlay startTime=&quot;2&quot; duration=&quot;1&quot; x=&quot;0px&quot; y=&quot;150px&quot; width=&quot;150px&quot; height=&quot;150px&quot; backgroundColor=&quot;red&quot; /&gt;
+						&lt;/picture&gt;</pre>
+					<br /><br />
+
+
+
+
+
+					<h3>Conditional leadsTo</h3>
+					As with subjects you can specify conditional leadsTo values for overlays so that when the overlay is clicked, depending on a condition it will jump to one subject or another. An example is given below, but for more explanation see: <a href="playlist_subjects.htm">subjects</a> and <a href="playlist_variables.htm">variables</a>.
+
+					<h4>playlist.xml</h4>
+					<pre class="brush: html;">
+						&lt;subject id=&quot;subject1&quot; leadsTo=&quot;subject1&quot;&gt;
+							&lt;media&gt;
+								&lt;picture src=&quot;myimage.png&quot; leadsTo="subject1"&gt;
+									&lt;overlay leadsTo="subject1" startTime=&quot;0&quot; x=&quot;0px&quot; y=&quot;0px&quot; width=&quot;150px&quot; height=&quot;150px&quot; &gt;
+										&lt;leadsTo subject=&quot;subject2&quot; condition=&quot;{{score1}} &gt; 8&quot; /&gt;
+										&lt;leadsTo subject=&quot;subject3&quot; condition=&quot;{{score1}} &gt; 6&quot; /&gt;
+									&lt;/overlay&gt;
+								&lt;/picture&gt;
+							&lt;/media&gt;
+						&lt;/subject&gt;</pre>
+					
+					<br /><br />
+
+
+
+
+
+					<h3>Overview of supported attributes and elements</h3>
+					There are many other attributes available for the overlay. A list is shown below.
+					
+					<table>
+						<tr>
+							<th width="25%">Attribute name</th>
+							<th width="25%">Possible values</th>
+							<th width="50%">Description</th>
+						</tr>
+						<tr>
+							<td>x</td>
+							<td>For example: <code>100px</code></td>
+							<td>The x coordinate the overlay will appear at</td>
+						</tr>
+						<tr>
+							<td>y</td>
+							<td>For example: <code>100px</code></td>
+							<td>The y coordinate the overlay will appear at</td>
+						</tr>
+						<tr>
+							<td>width</td>
+							<td>For example: <code>200px</code></td>
+							<td>The width of the overlay</td>
+						</tr>
+						<tr>
+							<td>height</td>
+							<td>For example: <code>200px</code></td>
+							<td>The height of the overlay</td>
+						</tr>
+						<tr>
+							<td>shape</td>
+							<td><code>rectangle</code>, <code>oval</code>, <code>circle</code>, <code>square</code></td>
+							<td>What the shape of the overlay should be</td>
+						</tr>
+						<tr>
+							<td>sides</td>
+							<td>For example: <code>200px</code></td>
+							<td>The length of the sides of a square overlay (only used when overlay has shape "square".</td>
+						</tr>
+						<tr>
+							<td>diameter</td>
+							<td>For example: <code>200px</code></td>
+							<td>The diameter of the overlay (used when overlay has shape "circle")</td>
+						</tr>
+						<tr>
+							<td>leadsTo</td>
+							<td>For example: <code>introSubject</code></td>
+							<td>The name of the subject to jump to when this subject finishes.</td>
+						</tr>
+						<tr>
+							<td>startTime</td>
+							<td>For example: <code>200px</code></td>
+							<td>The time in seconds from the start of the video when the overlay should appear.</td>
+						</tr>
+						<tr>
+							<td>duration</td>
+							<td>For example: <code>5</code></td>
+							<td>The number of seconds the overlay should be shown. Not specifying this or using value <code>0</code> means the overlay is shown until the media item is terminated.</td>
+						</tr>
+						<tr>
+							<td>text</td>
+							<td>For example: <code>"Click me!"</code></td>
+							<td>The text to show on the overlay</td>
+						</tr>
+						<tr>
+							<td>alpha</td>
+							<td>Between <code>0</code> and <code>1</code>, for example: <code>0.6</code></td>
+							<td>The transparency of the overlay (<code>0</code> is fully transparent, <code>1</code> is fully opaque)</td>
+						</tr>
+						<tr>
+							<td>hoverAlpha</td>
+							<td>Between <code>0</code> and <code>1</code>, for example: <code>0.6</code></code></td>
+							<td>The transparency of the overlay while hovering over it (<code>0</code> is fully transparent, <code>1</code> is fully opaque)</td>
+						</tr>
+						<tr>
+							<td>backgroundColor</td>
+							<td>For example: <code>"red"</code> or <code>#000000</code></td>
+							<td>The background color of the overlay</td>
+						</tr>
+						<tr>
+							<td>hoverBackgroundColor</td>
+							<td>For example: <code>"green"</code> or <code>#000000</code></td>
+							<td>The background color of the overlay while hovering over it</td>
+						</tr>
+						<tr>
+							<td>textColor</td>
+							<td>For example: <code>"green"</code> or <code>#000000</code></td>
+							<td>The text color of the overlay</td>
+						</tr>
+						<tr>
+							<td>hoverTextColor</td>
+							<td>For example: <code>"green"</code> or <code>#000000</code></td>
+							<td>The text color of the overlay while hovering over it</td>
+						</tr>
+						<tr>
+							<td>fontFamily</td>
+							<td>For example: <code>"arial"</code></td>
+							<td>The font to use on the overlay.</td>
+						</tr>
+						<tr>
+							<td>hoverFontFamily</td>
+							<td>For example: <code>"arial"</code></td>
+							<td>The font to use on the overlay when hovering over it.</td>
+						</tr>
+						<tr>
+							<td>fontSize</td>
+							<td>For example: <code>"16pt"</code> or <code>"2em"</code> or <code>50px</code></td>
+							<td>The text size of the overlay</td>
+						</tr>
+						<tr>
+							<td>hoverFontSize</td>
+							<td>For example: <code>"16pt"</code> or <code>"2em"</code> or <code>50px</code></td>
+							<td>The text size of the overlay while hovering it.</td>
+						</tr>
+						<tr>
+							<td>image</td>
+							<td>For example: <code>images/picture.png</code></td>
+							<td>The background image to use for the overlay</td>
+						</tr>
+						<tr>
+							<td>hoverImage</td>
+							<td>For example: <code>images/picture.png</code></td>
+							<td>The background image to use for the overlay while hovering it</td>
+						</tr>
+					</table>
+
+					<br /><br /><br /><br />
+
+
+				</div>
+			</div>
+		</div>
+	</body>
+</html>

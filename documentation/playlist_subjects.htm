@@ -1,0 +1,172 @@
+<html>
+	<head>
+		<title>XIMPEL - Documentation</title>
+
+		<!-- include syntax highlighter -->
+		<script type="text/javascript" src="syntaxhighlighter_3.0.83/scripts/shCore.js"></script>
+		<script type="text/javascript" src="syntaxhighlighter_3.0.83/scripts/shBrushJScript.js"></script>
+		<script type="text/javascript" src="syntaxhighlighter_3.0.83/scripts/shBrushXml.js"></script>
+		<link href="syntaxhighlighter_3.0.83/styles/shCore.css" rel="stylesheet" type="text/css" />
+		<link type="text/css" rel="stylesheet" href="syntaxhighlighter_3.0.83/styles/shCoreDefault.css"/>
+
+		<!-- include jquery -->
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+
+		<!-- include jquery ui -->
+		<link rel="stylesheet" href="jquery-ui-1.11.4/jquery-ui.min.css" />
+		<script src="jquery-ui-1.11.4/jquery-ui.min.js"></script>
+		
+		<!-- include scripts/css for this documentation page. -->
+		<link rel="stylesheet" href="styles/main.css" />
+		<script src="scripts/main.js"></script>
+		<script type="text/javascript">
+			//
+			var activeSection=1;
+		</script>
+
+	</head>
+	<body>
+		<div id="container">
+			<script src="scripts/header.js"></script>
+			<script src="scripts/navigation.js"></script>
+
+			<div id="mainContentContainer">
+				<div id="mainContent">
+					<h2>Syntax - Subjects</h2>
+					Subjects are the main building blocks of a XIMPEL presentation. When jumping from one part of the presentation to another part of the presentation we are always jumping to another subject. In other words, a subject identifies a part of the presentation which can be requested to play at any point in time.
+
+					<h4>playlist.xml - a playlist containing two subjects</h4>
+					<pre class="brush: html;">
+						&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;
+						&lt;ximpel&gt;
+						&lt;playlist&gt;
+
+							&lt;subject id=&quot;presentationStart&quot; leadsTo=&quot;presentationEnd&quot;&gt;
+								&lt;media&gt;
+									&lt;video&gt;
+										&lt;source file=&quot;welcoming_video&quot; extensions=&quot;mp4&quot; types=&quot;video/mp4&quot; /&gt;
+									&lt;/video&gt;
+								&lt;/media&gt;
+							&lt;/subject&gt;
+
+							&lt;subject id=&quot;presentationEnd&quot;&gt;
+								&lt;media&gt;
+									&lt;video&gt;
+										&lt;source file=&quot;goodbye_video&quot; extensions=&quot;mp4&quot; types=&quot;video/mp4&quot; /&gt;
+									&lt;/video&gt;
+								&lt;/media&gt;
+							&lt;/subject&gt;
+
+						&lt;/playlist&gt;
+						&lt;/ximpel&gt;</pre>
+					This example will first play the subject with id <code>presentationStart</code> because that subject appears first in the document. When the video in that subject has finished XIMPEL will start playing the subject with id <code>presentationEnd</code> because the subject that ended had a <code>leadsTo</code> attribute with value <code>presentationEnd</code>. When the video of that subject has also finished, then there is nothing specified to play after it so the ximpel player stops.
+					<br /><br />
+
+
+
+
+					<h3>Basic structure of a subject</h3>
+					<h4>playlist.xml</h4>
+					<pre class="brush: html;">
+						&lt;subject id=&quot;nameOfThisSubject&quot; leadsTo=&quot;nameOfSomeSubject&quot;&gt;
+							&lt;description&gt;a description of the subject&lt;/description&gt;
+							&lt;media&gt;
+								<!-- media content -->
+							&lt;/media&gt;
+						&lt;/subject&gt;
+					</pre>
+
+					<ul>
+						<li>The <code>id</code> attribute specifies a unique name for the subject so that it can be referenced.</li>
+						<li>The <code>leadsTo</code> attribute is used to specify a subject name that should be played after this subject has finished playing. (the <code>leadsTo</code> attribute is optional)</li>
+						<li>The <code>&lt;description&gt;</code> tag is used to enter a description of the subject. The description is not visible in the presentation but it makes the playlist more readable.</li>
+						<li>The <code>&lt;media&gt;</code> tag is used to define a list of media content for this subject.</li>
+					</ul>
+					<br /><br />
+
+
+
+
+
+
+					<h3>Linking subjects</h3>
+					There are a number of ways to jump to a subject.
+
+					<ul>
+						<li>Using the leadsTo attribute of a subject</li>
+						<li>Using the leadsTo attribute of a media item</li>
+						<li>Using the leadsTo attribute of an overlay</li>
+					</ul>
+					<h4>playlist.xml</h4>
+					<pre class="brush: html;">
+					 
+					    &lt;subject id=&quot;overlayJump&quot;&gt;
+					    	&lt;description&gt;When the overlay is clicked we jump to subject &quot;mediaJump&quot;&lt;/description&gt;
+					        &lt;media&gt;
+					            &lt;video&gt;
+					                &lt;source file=&quot;video_filename&quot; extensions=&quot;mp4&quot; types=&quot;video/mp4&quot; /&gt;
+					                &lt;overlay leadsTo=&quot;mediaJump&quot; text=&quot;Click me!&quot; x=&quot;0&quot; y=&quot;0&quot; width=&quot;200&quot; height=&quot;100&quot; fontSize=&quot;2em&quot; /&gt;
+					            &lt;/video&gt;
+					        &lt;/media&gt;
+					    &lt;/subject&gt;
+					 
+					    &lt;subject id=&quot;mediaJump&quot;&gt;
+							&lt;description&gt;When the video ends we jump to subject &quot;subjectJump&quot;&lt;/description&gt;
+					        &lt;media&gt;
+					            &lt;video leadsTo=&quot;subjectJump&quot;&gt;
+					                &lt;source file=&quot;video_filename&quot; extensions=&quot;mp4&quot; types=&quot;video/mp4&quot; /&gt;
+					            &lt;/video&gt;
+					        &lt;/media&gt;
+					    &lt;/subject&gt;
+					 
+					    &lt;subject id=&quot;subjectJump&quot; leadsTo=&quot;overlayJump&quot;&gt;
+							&lt;description&gt;When the subject ends we jump back to subject &quot;overlayJump&quot;&lt;/description&gt;
+					        &lt;media&gt;
+					            &lt;video&gt;
+					                &lt;source file=&quot;video_filename&quot; extensions=&quot;mp4&quot; types=&quot;video/mp4&quot; /&gt;
+					            &lt;/video&gt;
+					             &lt;audio&gt;
+					                &lt;source file=&quot;audio_filename&quot; extensions=&quot;mp4&quot; types=&quot;video/mp4&quot; /&gt;
+					            &lt;/audio&gt;
+					        &lt;/media&gt;
+					    &lt;/subject&gt;
+					</pre>
+					<br /><br />
+
+
+
+
+
+					<h3>Jumping to subjects conditionally</h3>
+					It is possible to specify a conditional jump. To do this we use the <code>&lt;leadsTo&gt;</code> element with a <code>subject</code> and a <code>condition</code> attribute.
+					<br /><br />
+
+					<strong>condition</strong>: The <code>condition</code> attribute specifies the condition that must be true for the jump to happen. The condition must be a javascript expression that results in true or false. Using conditions is most useful if you use XIMPEL variables in your playlist (see the <a href="playlist_variables.htm">variables</a> section). Such a XIMPEL variable can be referenced within a condition by using a variable template like this: <code>{{ variableName }}</code>. This variable template will be replaced with the variable's value at the moment of evaluation.
+					<br /><br />
+					
+					<strong>subject</strong>: the <code>subject</code> attribute specifies the subject to jump to when the condition is met.
+
+
+					<h4>playlist.xml</h4>
+					<pre class="brush: html;">
+						&lt;subject id=&quot;subject1&quot; leadsTo=&quot;subject1&quot;&gt;
+							&lt;leadsTo subject=&quot;subject2&quot; condition=&quot;{{score1}} &gt; 8&quot; /&gt;
+							&lt;leadsTo subject=&quot;subject3&quot; condition=&quot;{{score1}} &gt; 6&quot; /&gt;
+
+							&lt;description&gt;Repeat subject1 indefinitely untill: score1 &gt; 6&lt;/description&gt;
+							&lt;media&gt;
+								&lt;!-- some media list where {{score1}} is modified --&gt;
+							&lt;/media&gt;
+						&lt;/subject&gt;</pre>
+					In this case when the subject finished it will play <code>subject1</code> UNLESS <code>score1 > 8</code> then it will go to <code>subject2</code> or <code>score1 > 6</code> then it will go <code>subject3</code>. The first leadsTo condition listed that returns true is the leadsTo subject that will be used.
+					
+					<br /><br /><br /><br />
+					
+					
+					
+
+				</div>
+			</div>
+		</div>
+	</body>
+</html>

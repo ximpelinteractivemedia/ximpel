@@ -1,0 +1,178 @@
+<html>
+	<head>
+		<title>XIMPEL - Documentation</title>
+
+		<!-- include syntax highlighter -->
+		<script type="text/javascript" src="syntaxhighlighter_3.0.83/scripts/shCore.js"></script>
+		<script type="text/javascript" src="syntaxhighlighter_3.0.83/scripts/shBrushJScript.js"></script>
+		<script type="text/javascript" src="syntaxhighlighter_3.0.83/scripts/shBrushXml.js"></script>
+		<link href="syntaxhighlighter_3.0.83/styles/shCore.css" rel="stylesheet" type="text/css" />
+		<link type="text/css" rel="stylesheet" href="syntaxhighlighter_3.0.83/styles/shCoreDefault.css"/>
+
+		<!-- include jquery -->
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+
+		<!-- include jquery ui -->
+		<link rel="stylesheet" href="jquery-ui-1.11.4/jquery-ui.min.css" />
+		<script src="jquery-ui-1.11.4/jquery-ui.min.js"></script>
+		
+		<!-- include scripts/css for this documentation page. -->
+		<link rel="stylesheet" href="styles/main.css" />
+		<script src="scripts/main.js"></script>
+		<script type="text/javascript">
+			//
+			var activeSection=2;
+		</script>
+
+	</head>
+	<body>
+		<div id="container">
+			<script src="scripts/header.js"></script>
+			<script src="scripts/navigation.js"></script>
+
+			<div id="mainContentContainer">
+				<div id="mainContent">
+					<h2>Getting started - Configuration Options</h2>
+					<h3>Required XimpelApp parameters</h3>
+					<p>
+						In the <a href="getting_started_steps.htm">step by step guide</a> we showed how to run a presentation. We used the following code:
+					</p>
+					<h4>ximpel_example.htm</h4>
+					<pre class="brush: js;">
+						&lt;!DOCTYPE html&gt;
+						&lt;html&gt;
+							&lt;head&gt;
+								&lt;link rel=&quot;stylesheet&quot; href=&quot;ximpel.css&quot; type=&quot;text/css&quot; /&gt;
+								&lt;script src=&quot;https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js&quot;&gt;&lt;/script&gt;
+								&lt;script type=&quot;text/javascript&quot; src=&quot;ximpel.js&quot;&gt;&lt;/script&gt;
+
+								&lt;script type=&quot;text/javascript&quot;&gt;
+									$( document ).ready(function(){
+										var myXimpelApp = new ximpel.XimpelApp(
+											'someappid',
+											'playlist.xml', 
+											'config.xml'
+										);
+										myXimpelApp.load();
+									});
+								&lt;/script&gt;
+							&lt;/head&gt;
+							&lt;body&gt;
+
+							&lt;/body&gt; 
+						&lt;/html&gt;</pre>
+					<p>
+						We created a XimpelApp object and passed three required arguments:
+					</p>
+					<ul>
+						<li><code>someappid</code> - a unique id for this ximpel presentation. Every XimpelApp/presentation should have its own unique ID.</li>
+						<li><code>playlist.xml</code> - the path to the playlist file relative to the <code>ximpel_example.htm</code> file. Because our <code>playlist.xml</code> is in the same directory as the HTML file we do not need to specify a folder, only the filename.</li>
+						<li><code>config.xml</code> - the path to the config file relative to the <code>ximpel_example.htm</code> file. Because our <code>config.xml</code> is in the same directory as the HTML file we do not need to specify a folder, only the filename.</li>
+					</ul>
+					<br />
+
+
+
+
+					<h3>Optional XIMPEL app parameters</h3>
+					<p>
+						There are a number of configuration options available when creating a XimpelApp object. These are optional configuration settings. They can be specified by passing a javascript object as the fourth argument. Within this object we specify the optional configuration settings, like so: 
+					</p>
+					<pre class="brush: js;">
+						&lt;script type=&quot;text/javascript&quot;&gt;
+							$( document ).ready(function(){
+								var myXimpelApp = new ximpel.XimpelApp(
+									'someappid',
+									'playlist.xml', 
+									'config.xml',
+									{
+										'appWidth': '640px',
+										'appWidth': '360px'
+									}
+								);
+						    	myXimpelApp.load();
+							});
+						&lt;/script&gt;</pre>
+					<p>
+						In this case the fourth argument is an object with two properties: <code>appWidth</code> and <code>appHeight</code> which sets the width and the height of the XIMPEL element that is created in which the presentation is displayed. The following properties are available for the configuration object:
+					</p>
+					<ul>
+						<li><strong>appElement</strong>: this specifies an existing appElement to use instead of letting XIMPEL create an appElement in which the presentation is shown. The value can be the <code>ID of an element</code>, an <code>HTML element reference</code> or a <code>jquery selector</code>. If the specified value does not correspond to an existing HTML element, then XIMPEL will create its own element. If the <code>parentElement</code> option is used, then XIMPEL will detach the <code>appElement</code> from its current parent and re-attach it to the element specified by the <code>parentElement</code> setting.</li>
+
+						<li><strong>parentElement</strong>: this option specifies the HTML element to which XIMPEL will attach the appElement (the element containing the presentation). The value can be the <code>ID of an element</code>, an <code>HTML element reference</code> or a <code>jquery selector</code>. If the specified value does not correspond to an existing HTML element then XIMPEL will ignore this setting. 
+						
+						<li><strong>appWidth</strong>: set the width of the appElement. If this option is not specified, then XIMPEL will use the css width specified on the appElement. If no css width is specified then it will use a default value. </li>
+						
+						<li><strong>appHeight</strong>: set the height of the appElement. If this option is not specified, then XIMPEL will use the css height specified on the appElement. If no css height is specified then it will use a default value.</li>
+					</ul>
+					<strong>Note</strong>: usualy you will want to choose an <code>appWidth</code> and <code>appHeight</code> with an aspect ratio of 16:9, as this is the aspect ratio used by the XIMPEL player. Choosing another aspect ratio will more likely cause black bars to appear around the presentation.
+					
+
+
+
+					<h3>Configuration options for the load() method</h3>
+					<p>
+						In our example we did not pass a parameter to the <code>load()</code> method. However, this method also takes a configuration object like this:
+
+						<pre class="brush: js;">
+							&lt;script type=&quot;text/javascript&quot;&gt;
+						    	myXimpelApp.load({
+						    		'autoPlay': false
+						    	});
+							&lt;/script&gt;</pre>
+
+						Currently, only the <code>autoPlay</code> option is supported, which will prevent XIMPEL from automatically starting to play the presentation. 
+
+
+
+
+					<h3>Connect your own javascript code to your XIMPEL presentation</h3>
+					<p>
+						If you want to talk to the XIMPEL player using your own javascript, you can do so like this:
+					</p>
+					<pre class="brush: js;">
+						&lt;script type=&quot;text/javascript&quot;&gt;
+						    $( document ).ready(function(){
+						        var myXimpelApp = new ximpel.XimpelApp(
+						            'someappid',
+						            'playlist.xml', 
+						            'config.xml'
+						        );
+						        myXimpelApp.load().done( function(){
+									// This function is executed once the ximpel app has finished loading the  
+									// playlist and config file and has been fully initialized (ie its ready  
+									// to play or it is already playing if autoplay was set to true). This 
+									// function can be used to interact with the ximpel app using external
+									// javascript.
+
+									// First we get the player object that is playing our XIMPEL presentation.
+									var player = myApp.ximpelPlayer;
+
+									// Do something with the player object...
+									// - retrieve scores used in your presentation
+									// - listen for certain events
+									// - etc.
+								}.bind(this));
+						    });
+						&lt;/script&gt;</pre>
+					<br /><br />
+
+					<h3>TODO</h3>
+					<p>
+					.... describe the API of the XimpelApp object (.done(), .error(), etc.)...<br />
+					.... desccribe the API of the Player object (.getScore(), addEventHandler(), etc.)...<br />
+					</p>
+
+
+
+
+					<br /><br />
+					
+					
+					
+
+				</div>
+			</div>
+		</div>
+	</body>
+</html>

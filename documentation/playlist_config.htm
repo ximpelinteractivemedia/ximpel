@@ -1,0 +1,130 @@
+<html>
+	<head>
+		<title>XIMPEL - Documentation</title>
+
+		<!-- include syntax highlighter -->
+		<script type="text/javascript" src="syntaxhighlighter_3.0.83/scripts/shCore.js"></script>
+		<script type="text/javascript" src="syntaxhighlighter_3.0.83/scripts/shBrushJScript.js"></script>
+		<script type="text/javascript" src="syntaxhighlighter_3.0.83/scripts/shBrushXml.js"></script>
+		<link href="syntaxhighlighter_3.0.83/styles/shCore.css" rel="stylesheet" type="text/css" />
+		<link type="text/css" rel="stylesheet" href="syntaxhighlighter_3.0.83/styles/shCoreDefault.css"/>
+
+		<!-- include jquery -->
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+
+		<!-- include jquery ui -->
+		<link rel="stylesheet" href="jquery-ui-1.11.4/jquery-ui.min.css" />
+		<script src="jquery-ui-1.11.4/jquery-ui.min.js"></script>
+		
+		<!-- include scripts/css for this documentation page. -->
+		<link rel="stylesheet" href="styles/main.css" />
+		<script src="scripts/main.js"></script>
+		<script type="text/javascript">
+			//
+			var activeSection=1;
+		</script>
+		<style type="text/css">
+			th{
+				text-align: left;
+			}
+			table{
+				width: 100%;
+				border-collapse:collapse;
+				vertical-align: top;
+			}
+			td{
+				padding: 5px;
+				vertical-align: top;
+				border: 1px solid black;
+			}
+			tr:nth-child(even) {background: #CCC}
+		</style>
+
+	</head>
+	<body>
+		<div id="container">
+			<script src="scripts/header.js"></script>
+			<script src="scripts/navigation.js"></script>
+
+			<div id="mainContentContainer">
+				<div id="mainContent">
+					<h2>Syntax - Config</h2>
+					<p>
+						In the config file several configuration settings can be defined.
+					</p>
+
+					<h4>config.xml</h4>
+					<pre class="brush: html;">
+						&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;
+						&lt;ximpel&gt;
+							&lt;config&gt;
+								&lt;!-- Settings are defined here --&gt;
+								&lt;enableControls&gt;true&lt;/enableControls&gt;
+								&lt;controlsDisplayMethod&gt;overlay&lt;/controlsDisplayMethod&gt;
+							&lt;/config&gt;	
+						&lt;/ximpel&gt;</pre>
+					<p>
+						The following configuration options are available:
+					</p>
+					<table style="width: 100%; text-align: left;">
+						<tr>
+							<th style="width: 20%;">Setting</th>
+							<th style="width: auto;">Description</th>
+							<th style="width: 15%;">Default</th>
+						</tr>
+						<tr>
+							<td>enableControls</td>
+							<td>Specifies if XIMPEL will show control buttons (play/pause/etc). Should be <code>true</code> or <code>false</code>.</td>
+							<td>true</td>
+						</tr>
+						<tr>
+							<td>controlsDisplayMethod</td>
+							<td>Specifies how XIMPEL will show the controls. Value <code>overlay</code> will show the controls by placing the control bar over the content of the presentation. Value <code>fixed</code> will show the controls below the content (this may cause black bars to be shown around the presentation).</td>
+							<td>overlay</td>
+						</tr>
+						<tr>
+							<td>mediaDirectory</td>
+							<td>If a <code>mediaDirectory</code> is specified then all core media types (picture/audio/video) will search for the source of the media items relative to the specified <code>mediaDirectory</code>. Custom media types may also make use of this <code>mediaDirectory</code> setting, but that is up to the media type implementation. Note that the specified <code>mediaDirectory</code> is relative to the html page that includes XIMPEL.</td>
+							<td>No mediaDirectory is used</td>
+						</tr>
+					</table>
+
+					
+					<br />
+
+
+					<h3>Overwriting Config file settings</h3>
+					<p>
+						Config settings specified in the config file can be overwritten in the playlist file. So if you have this config file:
+					</p>
+					<h4>config.xml</h4>
+					<pre class="brush: html;">
+						&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;
+						&lt;ximpel&gt;
+							&lt;config&gt;
+								&lt;enableControls&gt;true&lt;/enableControls&gt;
+							&lt;/config&gt;	
+						&lt;/ximpel&gt;</pre>
+					<p>
+						And this playlist file:
+					</p>
+					<h4>playlist.xml</h4>
+					<pre class="brush: html;">
+						&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;
+						&lt;ximpel&gt;
+							&lt;playlist&gt;
+								&lt;!-- Description of the presentation comes here --&gt;
+							&lt;/playlist&gt;
+							&lt;config&gt;
+								&lt;enableControls&gt;false&lt;/enableControls&gt;
+							&lt;/config&gt;	
+						&lt;/ximpel&gt;</pre>
+
+					<p>
+						Then the <code>enableControls</code> setting will get value <code>false</code>, because settings in the config file are overwritten by settings in the playlist file. This is useful if you have a common config file used for all your XIMPEL presentations and want to overwite some settings specifically for a certain playlist.
+					</p>
+				</div>
+			</div>
+		</div>
+	</body>
+</html>

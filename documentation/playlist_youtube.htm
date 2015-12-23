@@ -1,0 +1,106 @@
+<html>
+	<head>
+		<title>XIMPEL - Documentation</title>
+
+		<!-- include syntax highlighter -->
+		<script type="text/javascript" src="syntaxhighlighter_3.0.83/scripts/shCore.js"></script>
+		<script type="text/javascript" src="syntaxhighlighter_3.0.83/scripts/shBrushJScript.js"></script>
+		<script type="text/javascript" src="syntaxhighlighter_3.0.83/scripts/shBrushXml.js"></script>
+		<link href="syntaxhighlighter_3.0.83/styles/shCore.css" rel="stylesheet" type="text/css" />
+		<link type="text/css" rel="stylesheet" href="syntaxhighlighter_3.0.83/styles/shCoreDefault.css"/>
+
+		<!-- include jquery -->
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+
+		<!-- include jquery ui -->
+		<link rel="stylesheet" href="jquery-ui-1.11.4/jquery-ui.min.css" />
+		<script src="jquery-ui-1.11.4/jquery-ui.min.js"></script>
+		
+		<!-- include scripts/css for this documentation page. -->
+		<link rel="stylesheet" href="styles/main.css" />
+		<script src="scripts/main.js"></script>
+		<script type="text/javascript">
+			//
+			var activeSection=1;
+		</script>
+
+	</head>
+	<body>
+		<div id="container">
+			<script src="scripts/header.js"></script>
+			<script src="scripts/navigation.js"></script>
+
+			<div id="mainContentContainer">
+				<div id="mainContent">
+					<h2>Syntax - Youtube mediatype</h2>
+					The youtube media type allows you to show youtube videos within your ximpel presentation.
+
+					<h4>playlist.xmls</h4>
+					<pre class="brush: html;">
+						&lt;ximpel&gt;
+							&lt;playlist&gt;
+							    &lt;subject id=&quot;subject1&quot;&gt;
+							        &lt;media&gt;
+							            &lt;youtube id=&quot;AI0RTvlm0hw&quot;/&gt;
+							        &lt;/media&gt;
+							    &lt;/subject&gt;
+							&lt;/playlist&gt;
+						&lt;/ximpel&gt;</pre>
+					This plays the youtube video with the id <code>AI0RTvlm0hw</code>. The id of a youtube video can be found by going to the video in youtube and looking at the url of the video. For instance:<br />
+					
+					<p><code>https://www.youtube.com/watch?v=AI0RTvlm0hw</code></p>	
+					or maybe something like:<br />
+					<p><code>https://www.youtube.com/watch?v=AI0RTvlm0hw&t=8m22s</code></p>
+
+					The part <code>v=AI0RTvlm0hw</code> specifies the video that is playing, where <code>AI0RTvlm0hw</code> is the video ID in this case.
+					<br /><br />
+
+
+
+
+					<h3>Positioning of the youtube video</h3>
+					<p>
+						The <code>x</code>, <code>y</code>, <code>width</code> and <code>height</code> attributes can be used to position the youtube video at a certain spot within the presentation and force it to have a certain size. If you don't set any of these attributes then the youtube video will take up the entire view area.
+					</p>
+
+					<pre class="brush: html;">
+						&lt;youtube id=&quot;AI0RTvlm0hw&quot; x=&quot;200px&quot; y=&quot;200px&quot; width=&quot;400px&quot; height=&quot;400&quot; /&gt;</pre>
+
+					<p>
+					 	By setting the <code>x</code> and/or <code>y</code> attributes, the video will have an offset from the top-left of the view area. In that case if you don't specify a <code>width</code> or <code>height</code> attribute the video will will have a width and height equal to the view-area. This will cause part of the video to become invisble (because offset+view-area is bigger than the view-area). Usually you want to provide width/height attributes when using x and y offsets. By specifying the <code>width</code> and/or <code>height</code> attributes you can change the width and height that the video will have.
+					</p>
+					<p>
+						<strong>Note</strong>: the video itself might not have the dimensions you specified. This is because youtube will maintain the aspect ratio of the video. If you specify a width and height that does not reflect the aspect ratio of the video then youtube will use your specified width and height and display the video as large as possible inside these dimensions while maintaining the aspect ratio. In that case black bars may appear at the sides or the top/bottom of the video. If this is undesirable, then choose a width/height equal to the aspect ratio of the video.
+					</p>
+					<br />
+
+
+
+					<h3>Playing only part of the youtube video</h3>
+					In order to start playing at a certain point within the youtube video, the <code>startTime</code> attribute can be used. This specifies the startTime in seconds from which to start playing.
+
+					<pre class="brush: html;">&lt;youtube id=&quot;AI0RTvlm0hw&quot; startTime=&quot;30&quot; /&gt;</pre>
+
+					To control how much of the youtube video should be played, you can use the <code>duration</code> attribute that is available for all media types. This specifies the number of seconds to play. So if the <code>startTime="30"</code> and the <code>duration="10"</code> then the video will play from the 30 seconds point of the video to 40 seconds point of the video.
+
+					<pre class="brush: html;">&lt;youtube id=&quot;AI0RTvlm0hw&quot; startTime=&quot;30&quot; duration="10" /&gt;</pre>	
+
+					<p>
+						Leaving out the duration attribute means it will play until the end of the video. Leaving 
+						out the startTime attribute means the video will be played from the beginning.
+					</p>
+
+
+
+
+
+					<br /><br />
+					
+					
+					
+
+				</div>
+			</div>
+		</div>
+	</body>
+</html>

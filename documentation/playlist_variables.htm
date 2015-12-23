@@ -1,0 +1,151 @@
+<html>
+	<head>
+		<title>XIMPEL - Documentation</title>
+
+		<!-- include syntax highlighter -->
+		<script type="text/javascript" src="syntaxhighlighter_3.0.83/scripts/shCore.js"></script>
+		<script type="text/javascript" src="syntaxhighlighter_3.0.83/scripts/shBrushJScript.js"></script>
+		<script type="text/javascript" src="syntaxhighlighter_3.0.83/scripts/shBrushXml.js"></script>
+		<link href="syntaxhighlighter_3.0.83/styles/shCore.css" rel="stylesheet" type="text/css" />
+		<link type="text/css" rel="stylesheet" href="syntaxhighlighter_3.0.83/styles/shCoreDefault.css"/>
+
+		<!-- include jquery -->
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+
+		<!-- include jquery ui -->
+		<link rel="stylesheet" href="jquery-ui-1.11.4/jquery-ui.min.css" />
+		<script src="jquery-ui-1.11.4/jquery-ui.min.js"></script>
+		
+		<!-- include scripts/css for this documentation page. -->
+		<link rel="stylesheet" href="styles/main.css" />
+		<script src="scripts/main.js"></script>
+		<script type="text/javascript">
+			//
+			var activeSection=1;
+		</script>
+
+	</head>
+	<body>
+		<div id="container">
+			<script src="scripts/header.js"></script>
+			<script src="scripts/navigation.js"></script>
+
+			<div id="mainContentContainer">
+				<div id="mainContent">
+					<h2>Syntax - Variables</h2>
+					XIMPEL can keep track of variables during your presentation. In the playlist you can define when and how to change variables. Variables can be used to keep track of scores for example.
+
+					<h4>playlist.xml</h4>
+					<pre class="brush: html;">
+						&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;
+						&lt;ximpel&gt;
+							&lt;playlist&gt;
+								&lt;subject id=&quot;subject1&quot;&gt;
+									&lt;media&gt;
+										&lt;youtube id=&quot;AI0RTvlm0hw&quot; startTime=&quot;301&quot; duration=&quot;30&quot;&gt;
+											&lt;overlay leadsTo=&quot;subject2&quot; x=&quot;200&quot; y=&quot;100&quot; shape=&quot;rectangle&quot; width=&quot;400px&quot; height=&quot;200px&quot; text=&quot;Go subject2&quot; fontSize=&quot;2em&quot; /&gt;
+											&lt;overlay leadsTo=&quot;subject3&quot; x=&quot;700&quot; y=&quot;100&quot; shape=&quot;rectangle&quot; width=&quot;400px&quot; height=&quot;200px&quot; text=&quot;Go subject3&quot; fontSize=&quot;2em&quot; /&gt;
+										&lt;/youtube&gt;
+									&lt;/media&gt;
+								&lt;/subject&gt;
+								&lt;subject id=&quot;subject2&quot;&gt;
+									&lt;media&gt;
+										&lt;youtube id=&quot;iNr0efL7Wz8&quot; startTime=&quot;100&quot; duration=&quot;30&quot;&gt;
+											&lt;variable id=&quot;score1&quot; operation=&quot;add&quot; value=&quot;100&quot; /&gt;
+											&lt;variable id=&quot;score2&quot; operation=&quot;substract&quot; value=&quot;50&quot; /&gt;
+										&lt;/youtube&gt;
+									&lt;/media&gt;
+								&lt;/subject&gt;
+								&lt;subject id=&quot;subject3&quot;&gt;
+									&lt;media&gt;
+										&lt;youtube id=&quot;iBTIQ--9er0&quot; startTime=&quot;120&quot; duration=&quot;30&quot;&gt;
+											&lt;variable id=&quot;score1&quot; operation=&quot;substract&quot; value=&quot;50&quot; /&gt;
+											&lt;variable id=&quot;score2&quot; operation=&quot;add&quot; value=&quot;75&quot; /&gt;
+										&lt;/youtube&gt;
+									&lt;/media&gt;
+								&lt;/subject&gt;
+							&lt;/playlist&gt;
+						&lt;/ximpel&gt;</pre>
+					In this example, during the playback of the first subject, the users gets the choice between clicking two overlays. One leads to <code>subject2</code> and the other leads to <code>subject3</code>. Depending on which subject is chosen, the user will get different points for the <code>score1</code> and <code>score2</code> variables.
+					<br /><br />
+
+
+
+
+					<h3>The &lt;score&gt; alias</h3>
+					The <code>&lt;variable&gt;</code> tag is used to define and modify variables. A common use case for variables is to keep track of scores. For that reason, instead of using the <code>&lt;variable&gt;</code> tag, you can use a <code>&lt;score&gt;</code> tag. The <code>&lt;score&gt;</code> tag is simply an alias for <code>&lt;variable&gt;</code> and has the exact same meaning but is more intuitive when keeping track of scores.
+					<br /><br />
+
+					So, this:
+					<pre class="brush: html;">&lt;variable id=&quot;test&quot; operation=&quot;substract&quot; value=&quot;5&quot; /&gt;</pre>
+					Is exactly the same as:
+					<pre class="brush: html;">&lt;score id=&quot;test&quot; operation=&quot;substract&quot; value=&quot;5&quot; /&gt;</pre>
+					Both statements	 define the exact same variable and if you have both of these statements within an overlay tag, then when the overlay is clicked 5 is substracted from the <code>test</code> variable twice.
+					<br /><br />
+
+
+
+
+
+					<h3>Changing variables</h3>
+					Variable modifications can be defined in the following places:
+					<ul>
+						<li>Within the playlist tag - the score is changed when the playlist starts (initialization of variables)</li>
+						<li>Within a subject - the score is changed when the subject starts</li>
+						<li>Within a media item - the score is changed when the media item starts</li>
+						<li>Within an overlay - the score is changed when that overlay is clicked</li>
+						<li>Within a question - the score is changed when that question is answered correctly</li>
+					</ul>
+
+					<h4>playlist.xml</h4>
+					<pre class="brush: html;">
+						&lt;?xml version="1.0" encoding="utf-8"?&gt;
+						&lt;ximpel&gt;
+						&lt;playlist&gt;
+							&lt;score id=&quot;scoreA&quot; operation=&quot;set&quot; value=&quot;0&quot; /&gt;
+
+							&lt;subject id=&quot;subject1&quot;&gt;
+								&lt;score id=&quot;scoreA&quot; operation=&quot;add&quot; value=&quot;5&quot; /&gt;
+								
+								&lt;media&gt;
+									&lt;youtube id=&quot;AI0RTvlm0hw&quot;&gt;
+										&lt;score id=&quot;scoreA&quot; operation=&quot;multiply&quot; value=&quot;3&quot; /&gt;
+										
+										&lt;overlay leadsTo=&quot;subject2&quot; backgroundColor="red"&gt;
+											&lt;score id=&quot;scoreA&quot; operation=&quot;substract&quot; value=&quot;2&quot; /&gt;
+										&lt;/overlay&gt;
+										
+										&lt;question&gt;
+										    &lt;score id=&quot;scoreA&quot; operation=&quot;multiply&quot; value=&quot;2&quot; /&gt;
+										    Is a cow an animal?
+										&lt;/question&gt;
+									&lt;/youtube&gt;
+								&lt;/media&gt;
+							&lt;/subject&gt;
+
+							&lt;subject id=&quot;subject2&quot;&gt;
+						        &lt;media&gt;
+						            &lt;youtube id=&quot;J_x-dIA7oeE&quot; /&gt;
+						        &lt;/media&gt;
+							&lt;/subject&gt;
+
+						&lt;/playlist&gt;
+						&lt;/ximpel&gt;</pre>
+						<ul>
+						<li>When the playlist starts the <code>scoreA</code> variable is set to 0.</li>
+						<li>When <code>subject1</code> starts, the variable is increased with 5.</li>
+						<li>Then the youtube video will start and the variable is multiplied by 3.</li>
+						<li>When the user clicks the overlay, 2 is substracted from the variable.</li>
+						<li>When the question is answered correctly the variable is multiplied by 2.</li>
+					</ul>
+					
+					<br /><br />
+					
+					
+					
+
+				</div>
+			</div>
+		</div>
+	</body>
+</html>

@@ -1,0 +1,117 @@
+/* 	transform: translate3d( 0,0,0 ); might work for overflow: hidden bugs in chrome */
+
+html, body{
+	height: 100%;
+	margin: 0;
+	padding: 0;
+}
+
+/* This class can be assigned to an element so that no tecxt-highlting is possible on it. (to prevent accidental selections). */
+.noSelect {
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+
+/* Default styling for the main ximpel container player element */
+.ximpelApp{
+	height: 100%;
+	margin: 0;
+    padding: 0;
+    border: 0;
+    background-color: black;
+	overflow-y: hidden; 
+	overflow-x: hidden;
+	/*background-image: url('images/ximpel_text.png');*/
+}
+
+/* Styling for all div elements within the .ximpelContainer element (ie. for all its descendants) */
+.ximpelApp div{
+	margin: 0;
+    padding: 0;
+    border: 0;
+}
+.ximpelWrapper{
+    background-color: black;
+}
+/* Default styling for the main ximpel player element */
+.ximpelPlayer{
+    background-color: black;
+	overflow-y: hidden; 
+	overflow-x: hidden;
+	text-align: center;
+}
+
+.ximpelControls{
+	background-color: gray;
+	overflow-y: hidden; 
+	overflow-x: hidden;
+}
+
+.ximpelControlsOverlay{
+	background: rgb(0, 0, 0);
+	background-color: rgba( 0, 0, 0, 0.6);
+	
+}
+.ximpelControlsFixed{
+	background: rgb(0, 0, 0);
+	background-color: rgba( 0, 0, 0, 1);
+}
+
+.ximpelControl{
+	opacity: 1;
+	content: " ";
+}
+
+.question{
+	position: absolute;
+	text-align: center;
+	overflow: hidden;
+	z-index: 1100;
+}
+
+/* The styling for the main overlay element */
+.overlay{
+	position: absolute;
+	text-align: center;
+	overflow: hidden;
+	z-index: 1000;
+}
+.overlay:hover{
+	cursor: pointer;
+}
+.overlay:hover div{
+
+}
+/* Styling the element that functions as the background for the main overlay element (=a div child of main overlay element).
+ * The reason there is a seperate element for defining the background is to get background opacity working properly without needing 
+ * rgba() because with rgba with need the rgb values which are a hassle to compute for hex and color names. */
+.overlay div{
+	overflow: hidden;
+	width: 100%;
+	height: 100%;
+	display: inline-block;
+	position: absolute;
+	top: 0px;
+	left: 0px;
+	background-color: black;
+}
+/* Styling the span containing the text of the overlay. */
+.overlay span{
+	position: absolute;
+	top: 0px;
+	left: 0px;
+	width: 100%;
+	height: 100%;
+	display: inline-block;
+	font-weight: bold;
+	overflow: hidden;
+}
+/* For oval overlays we set the border-radius to 50% of the main overlay element and all its children. */
+.overlayOval, .overlayOval *{
+	border-radius: 50%;
+}

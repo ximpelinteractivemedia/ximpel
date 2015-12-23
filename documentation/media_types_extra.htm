@@ -1,0 +1,79 @@
+<html>
+	<head>
+		<title>XIMPEL - Documentation</title>
+
+		<!-- include syntax highlighter -->
+		<script type="text/javascript" src="syntaxhighlighter_3.0.83/scripts/shCore.js"></script>
+		<script type="text/javascript" src="syntaxhighlighter_3.0.83/scripts/shBrushJScript.js"></script>
+		<script type="text/javascript" src="syntaxhighlighter_3.0.83/scripts/shBrushXml.js"></script>
+		<link href="syntaxhighlighter_3.0.83/styles/shCore.css" rel="stylesheet" type="text/css" />
+		<link type="text/css" rel="stylesheet" href="syntaxhighlighter_3.0.83/styles/shCoreDefault.css"/>
+
+		<!-- include jquery -->
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+
+		<!-- include jquery ui -->
+		<link rel="stylesheet" href="jquery-ui-1.11.4/jquery-ui.min.css" />
+		<script src="jquery-ui-1.11.4/jquery-ui.min.js"></script>
+		
+		<!-- include scripts/css for this documentation page. -->
+		<link rel="stylesheet" href="styles/main.css" />
+		<script src="scripts/main.js"></script>
+		<script type="text/javascript">
+			//
+			var activeSection=3;
+		</script>
+
+	</head>
+	<body>
+		<div id="container">
+			<script src="scripts/header.js"></script>
+			<script src="scripts/navigation.js"></script>
+
+			<div id="mainContentContainer">
+				<div id="mainContent">
+					<h2>Custom Media Types - Extra</h2>
+					<p>
+						In <a href="media_types_construction.htm">Building a media type</a> we showed that by implementing the <code>mediaPlay</code>, <code>mediaPause</code>, <code>mediaStop</code>, <code>mediaIsPlaying</code>, <code>mediaIsPaused</code> and <code>mediaIsStopped</code> methods you can create your own media type.
+					</p>
+					<p>
+						There are some additional things to keep in mind when building a media type.
+					</p>
+					<br />
+
+
+
+
+					<h3>Playback ends</h3>
+					<p>
+						In our example we built a Message media type. This message media type had no natural ending just like the <code>Picture</code> media type (ie. it doesn't stop playing unless a <code>duration</code> is specified).
+					</p>
+					<p>
+						Sometimes you want to create a media type that does have a natural ending. For instance, a <code>Video</code> ends when the end of the video is reached. In that case you need to be able to tell XIMPEL that your media item is done playing. This can be done by calling:
+					</p>
+					<pre class="brush: js;">
+					ximpel.mediaTypeDefinitions.MyCustomMediaType.prototype.mediaPlay = function(){
+						// do some stuff
+						
+						// set a timeout, after 3 seconds the media type will throw the 'end' event.
+						setTimeout( function(){
+							this.ended();
+						}.bind(this), 3000 );
+					}</pre>
+					<p>
+						This will cause your MediaType to throw an <code>end</code> event after three seconds since it started playing. When XIMPEL creates an instance of a media type it starts listening for that <code>end</code> event. When XIMPEL receives the event, it will stop your media item and take back control. 
+					</p>
+					<strong>Note</strong>: the above example is not very useful because it basically says that the media type always stops after 3 seconds of playing. This can be achieved with the <code>duration</code> attribute that is available for all media types.
+
+				
+
+					<br /><br />
+					
+					
+					
+
+				</div>
+			</div>
+		</div>
+	</body>
+</html>

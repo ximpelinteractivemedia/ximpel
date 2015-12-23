@@ -1,0 +1,118 @@
+<html>
+	<head>
+		<title>XIMPEL - Documentation</title>
+
+		<!-- include syntax highlighter -->
+		<script type="text/javascript" src="syntaxhighlighter_3.0.83/scripts/shCore.js"></script>
+		<script type="text/javascript" src="syntaxhighlighter_3.0.83/scripts/shBrushJScript.js"></script>
+		<script type="text/javascript" src="syntaxhighlighter_3.0.83/scripts/shBrushXml.js"></script>
+		<link href="syntaxhighlighter_3.0.83/styles/shCore.css" rel="stylesheet" type="text/css" />
+		<link type="text/css" rel="stylesheet" href="syntaxhighlighter_3.0.83/styles/shCoreDefault.css"/>
+
+		<!-- include jquery -->
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+
+		<!-- include jquery ui -->
+		<link rel="stylesheet" href="jquery-ui-1.11.4/jquery-ui.min.css" />
+		<script src="jquery-ui-1.11.4/jquery-ui.min.js"></script>
+		
+		<!-- include scripts/css for this documentation page. -->
+		<link rel="stylesheet" href="styles/main.css" />
+		<script src="scripts/main.js"></script>
+		<script type="text/javascript">
+			//
+			var activeSection=1;
+		</script>
+
+	</head>
+	<body>
+		<div id="container">
+			<script src="scripts/header.js"></script>
+			<script src="scripts/navigation.js"></script>
+
+			<div id="mainContentContainer">
+				<div id="mainContent">
+					<h2>Syntax - Video mediatype</h2>
+					The video media type allows you to show videos within your ximpel presentation.
+
+					<h4>playlist.xml</h4>
+					<pre class="brush: html;">
+						&lt;ximpel&gt;
+						&lt;playlist&gt;
+					    &lt;subject id=&quot;subject1&quot; leadsTo=&quot;subject1&quot;&gt;
+					        &lt;media&gt;
+					            &lt;video&gt;
+					            	&lt;source file=&quot;myvideo&quot; extensions=&quot;mp4,webm&quot; types=&quot;video/mp4,video/webm&quot; /&gt;
+					            &lt;/video&gt;
+					        &lt;/media&gt;
+					    &lt;/subject&gt;
+						&lt;/playlist&gt;
+						&lt;/ximpel&gt;</pre>
+					<p>
+						Each <code>&lt;video&gt;</code> tag in the playlist contains a <code>&lt;source&gt;</code> tag. This source tag defines the video file to be played. The <code>file</code> attribute specifies the filename of the video that is to be played without the extension. The <code>extensions</code> attribute specifies the extensions that are available and the <code>types</code> attribute specifies the mime types corresponding to the extensions listed with the <code>extensions</code> attribute. The browser chooses which of the video formats is best supported and will play that format.
+					</p>
+					<p>
+						In the example above we indicated that we want to play a video which is stored in two formats: <code>myvideo.mp4</code> and <code>myvideo.webm</code>. The <code>types</code> attribute specifies that the mp4 file is of type <code>video/mp4</code> and the webm file is of type <code>video/webm</code>. The browser will pick the source file that is actually used.
+					</p>
+					<p>
+						<strong>Note</strong>: the first type listed in the types attribute corresponds to the first extension listed in the extensions attribute. The second type in the types attribute to the second extension in the extensions attribute, and so on.
+					</p>
+					<p>
+						<strong>Note</strong>: The types attribute is optional and is only used by the browser to make a better decision about which of the source files is most likely to be supported. If you only want to specify a type for some formats but not for all then you should list the format for which you want to specify the type first in the extensions attribute. For instance:
+						<pre class="brush: html;">&lt;source file="myvideo" extensions="webm,mp4" types="video/webm" /&gt;</pre>
+
+					</p>
+					<br /><br />
+
+
+
+
+					<h3>Positioning of the video</h3>
+					<p>
+						The <code>x</code>, <code>y</code>, <code>width</code> and <code>height</code> attributes can be used to position the video at a certain spot within the presentation and force it to have certain dimensions. If you don't set any of these attributes then the video expands as large as possible such that it covers up the entire width and/or height while maintaining its aspect ratio.
+					</p>
+
+					<pre class="brush: html;">
+						&lt;video x=&quot;200px&quot; y=&quot;200px&quot; width=&quot;400px&quot; height=&quot;400px&quot;&gt;
+							&lt;source file=&quot;myvideo&quot; extensions=&quot;mp4,webm&quot; types=&quot;video/mp4,video/webm&quot; /&gt;
+						&lt;/video&gt;
+						</pre>
+
+					<p>
+					 	By setting the <code>x</code> and/or <code>y</code> attributes, the video will have an offset from the top-left of the view area. The x and y offsets do not change the default width and height used for a video, which may cause the video to become partly invisible. Usually you want to provide width/height attributes when using x and y offsets. By specifying the <code>width</code> and/or <code>height</code> attributes you can change the width and height that the video will have.
+					</p>
+					<p>
+						<strong>Note</strong>: the video itself might not have the dimensions you specified. This is because the aspect ratio of the video is maintained. If you specify a width and height that does not reflect the aspect ratio of the video then the video is displayed as large as possible inside these dimensions while maintaining the aspect ratio. In that case black bars may appear at the sides or the top/bottom of the video. If this is undesirable, then choose a width/height equal to the aspect ratio of the video.
+					</p>
+					<br />
+
+
+
+					<h3>Playing only part of the video</h3>
+					In order to start playing at a certain point within the video, the <code>startTime</code> attribute can be used. This specifies the startTime in seconds from which to start playing.
+
+					<pre class="brush: html;">				
+						&lt;video startTime="5"&gt;
+							&lt;source file=&quot;myvideo&quot; extensions=&quot;mp4&quot; /&gt;
+						&lt;/video&gt;</pre>
+
+					To control how much of the video should be played, you can use the <code>duration</code> attribute that is available for all media types. This specifies the number of seconds to play. So if the <code>startTime="30"</code> and the <code>duration="10"</code> then the video will play from the 30 seconds point of the video to 40 seconds point of the video.
+
+					<pre class="brush: html;">				
+						&lt;video startTime="30" duration="10"&gt;
+							&lt;source file=&quot;myvideo&quot; extensions=&quot;mp4&quot; /&gt;
+						&lt;/video&gt;</pre>
+
+					<p>
+						Leaving out the duration attribute means it will play until the end of the video. Leaving out the startTime attribute means the video will be played from the beginning.
+					</p>
+					<br /><br />
+					
+					
+					
+
+				</div>
+			</div>
+		</div>
+	</body>
+</html>

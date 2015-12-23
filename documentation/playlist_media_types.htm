@@ -1,0 +1,122 @@
+<html>
+	<head>
+		<title>XIMPEL - Documentation</title>
+
+		<!-- include syntax highlighter -->
+		<script type="text/javascript" src="syntaxhighlighter_3.0.83/scripts/shCore.js"></script>
+		<script type="text/javascript" src="syntaxhighlighter_3.0.83/scripts/shBrushJScript.js"></script>
+		<script type="text/javascript" src="syntaxhighlighter_3.0.83/scripts/shBrushXml.js"></script>
+		<link href="syntaxhighlighter_3.0.83/styles/shCore.css" rel="stylesheet" type="text/css" />
+		<link type="text/css" rel="stylesheet" href="syntaxhighlighter_3.0.83/styles/shCoreDefault.css"/>
+
+		<!-- include jquery -->
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+
+		<!-- include jquery ui -->
+		<link rel="stylesheet" href="jquery-ui-1.11.4/jquery-ui.min.css" />
+		<script src="jquery-ui-1.11.4/jquery-ui.min.js"></script>
+		
+		<!-- include scripts/css for this documentation page. -->
+		<link rel="stylesheet" href="styles/main.css" />
+		<script src="scripts/main.js"></script>
+		<script type="text/javascript">
+			//
+			var activeSection=1;
+		</script>
+
+	</head>
+	<body>
+		<div id="container">
+			<script src="scripts/header.js"></script>
+			<script src="scripts/navigation.js"></script>
+
+			<div id="mainContentContainer">
+				<div id="mainContent">
+					<h2>Syntax - Media types</h2>
+					<p>
+						In XIMPEL media types are implemented as plugins and as such none of the media types have a special integration with XIMPEL. However, there are a few media types that are included by default and are shipped together with the XIMPEL source code. These are the media types: audio, video, picture and youtube. There are seperate documentation pages that explain how to use each of these media types. This page describes the usage of media types in general.
+					</p>
+
+					<h4>playlist.xml</h4>
+					<pre class="brush: html;">
+						&lt;ximpel&gt;
+						&lt;playlist&gt;
+					    &lt;subject id="subject1"&gt;
+					        &lt;media&gt;
+					            &lt;audio&gt;
+					            	&lt;source file=&quot;myaudio&quot; extensions=&quot;mp3&quot;  /&gt;
+					            &lt;/audio&gt;
+					        &lt;/media&gt;
+					    &lt;/subject&gt;
+						&lt;/playlist&gt;
+						&lt;/ximpel&gt;</pre>
+					<p>
+						In this case a media item of media type audio is used within <code>subject1</code>.  Media items are always listed between the <code>&lt;media&gt</code>; and <code>&lt;/media&gt;</code> tags of a subject.
+					</p>
+					<br />
+
+
+					<h3>Playing a sequence of media items</h3>
+					Multiple media items can be played in sequence by listing them between the <code>&lt;media&gt;</code> and <code>&lt;/media&gt;</code> tags.
+
+					<h4>playlist.xml</h4>
+					<pre class="brush: html;">
+						&lt;ximpel&gt;
+						&lt;playlist&gt;
+					    &lt;subject id="subject1"&gt;
+					        &lt;media&gt;
+					        	&lt;youtube id="4_UVnsG7COM" /&gt;
+					        	&lt;youtube id="Tx7cXz_gSeI" /&gt;
+					            &lt;video&gt;
+					            	&lt;source file=&quot;myvideo&quot; extensions=&quot;mp4&quot;  /&gt;
+					            &lt;/video&gt;
+					        &lt;/media&gt;
+					    &lt;/subject&gt;
+						&lt;/playlist&gt;
+						&lt;/ximpel&gt;</pre>
+					<p>
+						This example will play a youtube video, then another youtube video and then a local video.
+					</p>
+					<br />
+
+
+
+
+					<h3>Limit the duration of a media item</h3>
+					<p>
+						To limit how long a media item may play you can use the <code>duration</code> attribute of the media item. The duration attribute is specified in seconds and it works on any media type.
+					</p>
+					<h4>play the youtube video for 5 seconds</h4>
+					<pre class="brush: html;">
+						&lt;youtube id="4_UVnsG7COM" duration="5" /&gt;</pre>
+					<p>
+						Leaving out the duration attribute will make the media item play until it reaches the playback end. For media types without a playback end (such as pictures) this means that the picture will be shown indefinitely (unless some user interaction causes something else to be played).
+					</p>
+					<br />
+
+
+
+
+					<h3>Repeating media items</h3>
+					<p>
+						Sometimes you want to repeat media items such that when they reach their end they start playing from the start again. This can be done by using the <code>repeat</code> attribute which works for any media type.
+					</p>
+					<pre class="brush: html;">
+						&lt;youtube id="4_UVnsG7COM" duration="5" repeat="true" /&gt;</pre>
+					<p>
+						This plays a youtube video for 5 seconds and then repeats indefinitely, playing that same 5 seconds of the youtube video over an over again.
+					</p>
+
+
+
+
+
+					
+					
+					
+
+				</div>
+			</div>
+		</div>
+	</body>
+</html>

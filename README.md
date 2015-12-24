@@ -18,7 +18,7 @@ git clone https://sbruinsje@bitbucket.org/sbruinsje/ximpel.git
         * In the command prompt change directory to the "build" directory and execute: `npm install`
         * Then execute: `grunt --force`
 
-3. After building XIMPEL a deploy directory has been created in the repository root folder. In this deploy directory there
+3. That should have built XIMPEL. After building XIMPEL a deploy directory has been created in the repository root folder. In this deploy directory there
    is a "ximpel" directory which contains our XIMPEL build.
    
 4. Open the index.htm in the documentation folder. Then follow the getting_started guide of the documentation.

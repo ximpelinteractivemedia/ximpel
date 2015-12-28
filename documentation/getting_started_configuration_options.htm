@@ -67,7 +67,9 @@
 					<ul>
 						<li><code>someappid</code> - a unique id for this ximpel presentation. Every XimpelApp/presentation should have its own unique ID.</li>
 						<li><code>playlist.xml</code> - the path to the playlist file relative to the <code>ximpel_example.htm</code> file. Because our <code>playlist.xml</code> is in the same directory as the HTML file we do not need to specify a folder, only the filename.</li>
-						<li><code>config.xml</code> - the path to the config file relative to the <code>ximpel_example.htm</code> file. Because our <code>config.xml</code> is in the same directory as the HTML file we do not need to specify a folder, only the filename.</li>
+						<li><code>config.xml</code> - the path to the config file relative to the <code>ximpel_example.htm</code> file. Because our <code>config.xml</code> is in the same directory as the HTML file we do not need to specify a folder, only the filename. 
+						<br />
+						<strong>Note</strong>: the config file is optional. If you don't provide one, then default values will be used or values specified in the playlist. To specify no config file you can pass <code>null</code> as the third argument.</li>
 					</ul>
 					<br />
 

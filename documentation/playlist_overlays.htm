@@ -86,6 +86,20 @@
 
 
 
+
+					<h3>Positioning overlays</h3>
+					<p>
+						To position and specify the size of overlays the <code>x</code>, <code>y</code>, <code>width</code> and <code>height</code> attributes are used.
+											<p>
+						<div class="ui-widget">	<div class="ui-state-highlight ui-corner-all" style="margin-top: 20px; padding: 0 .7em;">
+							<span class="ui-icon ui-icon-info" style="float: left; margin-right: .3em;"></span>
+							The <code>x</code>, <code>y</code>, <code>width</code> and <code>height</code> attributes of an overlay are all based on a <code>1920x1080</code> resolution. So the visible area of the presentation lies between <code>x=0</code> to <code>x=1920</code> and <code>y=0</code> to <code>y=1080</code>. Read more about the native XIMPEL resolution <a href="architecture_resolution.htm">here</a>.
+						</div></div>
+					</p>
+					<br />
+
+
+
 					<h3>Multiple overlays</h3>
 					Any number of overlays can be displayed at any point during a media item (video/audio/picture/etc). You can specify when the overlay should appear and when the overlay should disappear using the <code>startTime</code> and <code>duration</code> attributes respectively. Omitting the <code>duration</code> attribute will keep the overlay visible until another media item or subject is started.
 
@@ -162,9 +176,9 @@
 							<td>What the shape of the overlay should be</td>
 						</tr>
 						<tr>
-							<td>sides</td>
+							<td>side</td>
 							<td>For example: <code>200px</code></td>
-							<td>The length of the sides of a square overlay (only used when overlay has shape "square".</td>
+							<td>The length of the side of a square overlay (only used when overlay has shape "square".</td>
 						</tr>
 						<tr>
 							<td>diameter</td>

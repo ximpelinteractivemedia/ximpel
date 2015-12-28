@@ -567,8 +567,8 @@ ximpel.Parser.prototype.processOverlayNode = function( playlistModel, domElement
 			overlayModel.width = parseInt(attributeValue);
 		} else if( attributeName === 'height' ){
 			overlayModel.height = parseInt(attributeValue);
-		} else if( attributeName === 'sides' ){
-			overlayModel.sides = parseInt(attributeValue);
+		} else if( attributeName === 'side' ){
+			overlayModel.side = parseInt(attributeValue);
 		} else if( attributeName === 'diameter' ){
 			overlayModel.diameter = parseInt(attributeValue);
 		} else if( attributeName === 'leadsTo' ){

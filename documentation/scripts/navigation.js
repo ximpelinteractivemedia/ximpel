@@ -4,9 +4,10 @@ var html =
     		'<h3>Architecture</h3>',
 			'<ul>',
 				'<li><a href="architecture_overview.htm">Overview</a></li>',
+				'<li><a href="architecture_resolution.htm">Resolution</a></li>',
 			'</ul>',    		
 			'',
-			'<h3>XIMPEL syntax</h3>',
+			'<h3>XIMPEL Introduction</h3>',
 			'<ul>',
 				'<li><a href="playlist_introduction.htm">Introduction</a></li>',
 				'<li><a href="playlist_subjects.htm">Subjects</a></li>',
@@ -22,8 +23,6 @@ var html =
 				'<li><a href="playlist_variables.htm">Variables / Scores</a></li>',
 				'<hr />',
 				'<li><a href="playlist_config.htm">Config</a></li>',
-
-
 			'</ul>',
 			'',
 			'<h3>Getting started</h3>',

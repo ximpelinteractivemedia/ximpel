@@ -1,0 +1,56 @@
+<html>
+	<head>
+		<title>XIMPEL - Documentation</title>
+
+		<!-- include syntax highlighter -->
+		<script type="text/javascript" src="syntaxhighlighter_3.0.83/scripts/shCore.js"></script>
+		<script type="text/javascript" src="syntaxhighlighter_3.0.83/scripts/shBrushJScript.js"></script>
+		<script type="text/javascript" src="syntaxhighlighter_3.0.83/scripts/shBrushXml.js"></script>
+		<link href="syntaxhighlighter_3.0.83/styles/shCore.css" rel="stylesheet" type="text/css" />
+		<link type="text/css" rel="stylesheet" href="syntaxhighlighter_3.0.83/styles/shCoreDefault.css"/>
+
+		<!-- include jquery -->
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+
+		<!-- include jquery ui -->
+		<link rel="stylesheet" href="jquery-ui-1.11.4/jquery-ui.min.css" />
+		<script src="jquery-ui-1.11.4/jquery-ui.min.js"></script>
+		
+		<!-- include scripts/css for this documentation page. -->
+		<link rel="stylesheet" href="styles/main.css" />
+		<script src="scripts/main.js"></script>
+		<script type="text/javascript">
+			//
+			var activeSection=0;
+		</script>
+
+	</head>
+	<body>
+		<div id="container">
+			<script src="scripts/header.js"></script>
+			<script src="scripts/navigation.js"></script>
+
+			<div id="mainContentContainer">
+				<div id="mainContent">
+					<h2>Architecture - Resolution</h2>
+					<p>
+						The XIMPEL player attaches all its visual and non-visual content to an HTML element: the <code>player element</code>. 
+						The player element has a native resolution of <code>1920x1080</code> pixels (which means an aspect ratio of 16:9). This means that you can position the content of your presentation from <code>x=0</code> to <code>x=1920</code> and <code>y=0</code> to <code>y=1080</code>.
+					</p>
+					<p>
+						However, often you don't want the XIMPEL application to take up that much space on your webpage. For this reason its possible to change the width and height of your XIMPEL application to anything you want and XIMPEL just scales all the content to make it fit into the specified width and height while maintaining the 16:9 aspect ratio. This prevents the presentation author to adjust the positioning of all presentation content whenever he or she changes the dimensions of the XIMPEL application.
+					</p>
+					<p>
+						<strong>Example</strong>: you want your XIMPEL presentation to be shown on your webpage in a <code>640x360</code> pixels box, so you provide an app width of <code>640px</code> and app height of <code>360px</code>. Then you describe a presentation in an XML file where you specify that some videos should be played in sequence at a certain x and y position with a certain width and height. You specify the x, y, width and height as if the content is going to be shown in an element of size <code>1920x1080</code>. However, because you indicated that you want your XIMPEL presentation to be displayed in a 640x360 box, XIMPEL will scale the content down from <code>1920px</code> to <code>1080px</code>. This means that if you now decide you want your presentation to be hosted on another website as well but bigger, you only have to change the app width and app height for the presentation on that website.
+					</p>
+					<p>
+						<div class="ui-widget">	<div class="ui-state-highlight ui-corner-all" style="margin-top: 20px; padding: 0 .7em;">
+							<span class="ui-icon ui-icon-info" style="float: left; margin-right: .3em;"></span>
+							You probably want to provide an app width and app height with an aspect ratio of 16:9. If not then you will always get black bars around your presentation, either at the top/bottom or left/right.
+						</div></div>
+					</p>
+				</div>
+			</div>
+		</div>
+	</body>
+</html>

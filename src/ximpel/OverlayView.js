@@ -60,7 +60,7 @@ ximpel.OverlayView.prototype.renderView = function(){
 	// Check which shape has been chosen and make that shape using CSS.
 	switch( model.shape ){
 		case this.SHAPE_RECTANGLE: 	this.makeRectangle( $el, model.width, model.height ); break;
-		case this.SHAPE_SQUARE: 	this.makeSquare( $el, model.sides ); break;
+		case this.SHAPE_SQUARE: 	this.makeSquare( $el, model.side ); break;
 		case this.SHAPE_OVAL: 		this.makeOval( $el, model.width, model.height ); break;
 		case this.SHAPE_CIRCLE: 	this.makeCircle( $el, model.diameter ); break;
 	}
@@ -144,8 +144,8 @@ ximpel.OverlayView.prototype.makeRectangle = function( el, width, height ){
 }
 
 // If the specified shape was a square, then this function will apply styles to the given element to make it a square.
-ximpel.OverlayView.prototype.makeSquare = function( el, sides ){
-	this.makeRectangle( el, sides, sides );
+ximpel.OverlayView.prototype.makeSquare = function( el, side ){
+	this.makeRectangle( el, side, side );
 }
 
 // If the specified shape was an oval, then this function will apply styles to the given element to make it an oval.

@@ -96,7 +96,9 @@ ximpel.XimpelApp.prototype.load = function( options ){
 	// executed before any callback function defined by the caller of .load()
 	ximpelAppModel.filesRequestPromise.done( function( playlistStatus, configStatus ){
 		ximpelAppModel.playlistXmlDocument = playlistStatus[0];
-		ximpelAppModel.configXmlDocument = configStatus[0] || null; // configStatus[0] may not exist if no config file was specified.
+
+		// configStatus[0] may not exist if no config file was specified.
+		ximpelAppModel.configXmlDocument = configStatus ? configStatus[0] : null; 
 
 		// We parse the content of the loaded files. parseResult will have the form: {'playlist':<PlaylistModel-object>, 'config':<configModel-object>}
 		// Even if no config file was specified, there were still be a config model filled with default values.

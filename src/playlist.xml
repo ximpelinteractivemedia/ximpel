@@ -1,14 +1,16 @@
 <ximpel>
 <config>
     <enableControls>true</enableControls>
-    <controlsDisplayMethod>fixed</controlsDisplayMethod>
+    <controlsDisplayMethod>overlay</controlsDisplayMethod>
 </config>
 <playlist>
     <subject id="test" leadsTo="Intro">
         <media>
+        	<image src="test.jpg" />
             <youtube id="AI0RTvlm0hw" startTime="300" duration="10" />
             <youtube id="4_UVnsG7COM" startTime="300" duration="10" />
             <youtube id="J_x-dIA7oeE" startTime="300" duration="10" />
+
         </media>
     </subject>
 </playlist>

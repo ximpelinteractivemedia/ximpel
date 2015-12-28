@@ -73,8 +73,6 @@ ximpel.mediaTypeDefinitions.Video = function( customElements, customAttributes, 
 }
 
 ximpel.mediaTypeDefinitions.Video.prototype = new ximpel.MediaType();
-// this is the ID of the media type as well as the name of the element in the playlist (<video>).
-ximpel.mediaTypeDefinitions.Video.prototype.MEDIA_TYPE_ID = 'video';
 ximpel.mediaTypeDefinitions.Video.prototype.STATE_PLAYING = 'state_video_playing';
 ximpel.mediaTypeDefinitions.Video.prototype.STATE_PAUSED = 'state_video_paused';
 ximpel.mediaTypeDefinitions.Video.prototype.STATE_STOPPED = 'state_video_stopped';

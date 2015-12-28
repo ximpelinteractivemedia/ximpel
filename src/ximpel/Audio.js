@@ -2,7 +2,6 @@
 // ##################################################################################################
 // ##################################################################################################
 ximpel.mediaTypeDefinitions.Audio = function( customElements, customAttributes, $parentElement, player ){
-
 	// The custom elements that were added inside the <audio> tag in the playlist (if any).
 	this.customElements = customElements;
 
@@ -33,9 +32,6 @@ ximpel.mediaTypeDefinitions.Audio = function( customElements, customAttributes, 
 	this.state = this.STATE_STOPPED;
 }
 ximpel.mediaTypeDefinitions.Audio.prototype = new ximpel.MediaType();
-// this is the ID of the media type as well as the name of the element in the playlist (<audio>).
-ximpel.mediaTypeDefinitions.Audio.prototype.mediaTypeId = 'audio';
-
 ximpel.mediaTypeDefinitions.Audio.prototype.STATE_PLAYING = 'state_audio_playing';
 ximpel.mediaTypeDefinitions.Audio.prototype.STATE_PAUSED = 'state_audio_paused';
 ximpel.mediaTypeDefinitions.Audio.prototype.STATE_STOPPED = 'state_audio_stopped';

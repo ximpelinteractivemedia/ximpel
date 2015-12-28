@@ -59,8 +59,6 @@ ximpel.mediaTypeDefinitions.YouTube = function( customElements, customAttributes
 	this.initYoutubeElements();
 }
 ximpel.mediaTypeDefinitions.YouTube.prototype = new ximpel.MediaType();
-// this is the ID of the media type as well as the name of the element in the playlist (<youtube>).
-ximpel.mediaTypeDefinitions.YouTube.prototype.MEDIA_TYPE_ID = 'youtube';
 ximpel.mediaTypeDefinitions.YouTube.prototype.CLASS_YOUTUBE_CONTAINER = 'youtubeContainer';
 ximpel.mediaTypeDefinitions.YouTube.prototype.CLASS_YOUTUBE_CLICK_CATCHER = 'youtubeClickCatcher';
 ximpel.mediaTypeDefinitions.YouTube.prototype.STATE_PLAYING = 'state_youtube_playing';

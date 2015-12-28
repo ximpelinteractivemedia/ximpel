@@ -251,6 +251,10 @@ ximpel.Player.prototype.applyVariableModifier = function( variableModifier ){
 			var newValue = Number(currentVariableValue) === NaN ? 0 : Number(currentVariableValue);
 			newValue /= Number( variableModifier.value );
 			break;
+		case variableModifier.OPERATION_POWER:
+			var newValue = Number(currentVariableValue) === NaN ? 0 : Number(currentVariableValue);
+			newValue = Number( Math.pow(newValue, variableModifier.value ) );
+			break;
 		default:
 			var newValue = currentVariableValue;
 	}

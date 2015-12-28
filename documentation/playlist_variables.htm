@@ -138,7 +138,22 @@
 						<li>When the user clicks the overlay, 2 is substracted from the variable.</li>
 						<li>When the question is answered correctly the variable is multiplied by 2.</li>
 					</ul>
-					
+					<br />
+
+
+
+					<h3>Available variable operations</h3>
+					<p>
+						As described above you can change variables/scores by providing a variable <code>id</code> an <code>operation</code> and a <code>value</code>. XIMPEL supports the operations add, substract, multiply, divide, power and set.
+					</p>
+					<pre class="brush: html;">
+						&lt;variable id=&quot;scoreA&quot; operation=&quot;add&quot; value=&quot;5&quot; /&gt;
+						&lt;variable id=&quot;scoreA&quot; operation=&quot;substract&quot; value=&quot;5&quot; /&gt;
+						&lt;variable id=&quot;scoreA&quot; operation=&quot;multiply&quot; value=&quot;5&quot; /&gt;
+						&lt;variable id=&quot;scoreA&quot; operation=&quot;divide&quot; value=&quot;5&quot; /&gt;
+						&lt;variable id=&quot;scoreA&quot; operation=&quot;power&quot; value=&quot;5&quot; /&gt;
+						&lt;variable id=&quot;scoreA&quot; operation=&quot;set&quot; value=&quot;5&quot; /&gt;</pre>
+					They are pretty self descriptive. For example <code>add</code> adds the specified value to the current variable, <code>set</code> sets the value of the variable to the specified value, <code>power</code> uses the specified value as exponent/power and the current variable value as the base (ie. <code>new_score = current_score<sup>value</sup></code>).
 					<br /><br />
 					
 					

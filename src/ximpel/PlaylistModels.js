@@ -174,6 +174,7 @@ ximpel.VariableModifierModel.prototype.OPERATION_ADD = 'add';
 ximpel.VariableModifierModel.prototype.OPERATION_SUBSTRACT = 'substract';
 ximpel.VariableModifierModel.prototype.OPERATION_MULTIPLY = 'multiply';
 ximpel.VariableModifierModel.prototype.OPERATION_DIVIDE = 'divide';
+ximpel.VariableModifierModel.prototype.OPERATION_POWER = 'power';
 
 ximpel.VariableModifierModel.prototype.id = '';
 ximpel.VariableModifierModel.prototype.operation = 'set';

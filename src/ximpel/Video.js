@@ -28,7 +28,7 @@
 // - customAttributes - contains the attributes that were on the <video> tag in the playlist.
 // - $parentElement - The element to which the video will be appended (the ximpel player element).
 // - player - A reference to the player object, so that the media type can use functions from the player.
-ximpel.mediaTypeDefinitions.Video = function( customElements, customAttributes, $attachTo, player ){
+ximpel.mediaTypeDefinitions.Video = function( customElements, customAttributes, $parentElement, player ){
 	// The custom elements that were added inside the <video> tag in the playlist (<source> for example).
 	this.customElements = customElements;
 

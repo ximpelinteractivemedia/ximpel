@@ -45,7 +45,39 @@
 					'playlist.xml', 
 					'config.xml', 
 					{'appElement': 'ximpel1',
-					 'parentElement': $( document.body ),
+					 /*'parentElement': $( document.body ),*/
+					 'appWidth': '640px',
+					 'appHeight': '360px'
+					}
+				);
+
+				// After creating a XimpelApp object tell the object to load the given playlist and config file.
+				myApp.load( {
+					'autoPlay': false
+				}).done( function(){
+					// This function is executed once the ximpel app has finished loading the playlist 
+					// and config file and has been fully initialized (ie its ready to play or it is 
+					// already playing if autoplay was set to true). This function can be used to interact
+					// with the ximpel app using external javascript.
+					var player = myApp.ximpelPlayer;
+					//player.play();
+					// do something...
+				}.bind(this));
+			});
+
+
+			$( document ).ready(function(){
+				// Define a XimpelApp object by passing the following arguments:
+				// - The appId which is just a unique name for this presentation.
+				// - The path to the playlist file relative to this html document.
+				// - The path to the config file relative to this html document
+				// - An object containing multiple optional settings such a the
+				//   the width/height of the app and the element to use.
+				var myApp = new ximpel.XimpelApp(
+					'stefansapp2',
+					'playlist.xml', 
+					'config.xml', 
+					{'appElement': 'ximpel2',
 					 'appWidth': '640px',
 					 'appHeight': '360px'
 					}
@@ -68,7 +100,8 @@
 	</head>
 
 	<body>
-		<div id="ximpelParent"><div id="ximpel1"></div></div>
+		<div id="ximpel1"></div>
+		<div id="ximpel2"></div>
  		
 
 	</body> 

@@ -64,10 +64,10 @@ ximpel.mediaTypeDefinitions.YouTube = function( customElements, customAttributes
 	// The statTime should be in seconds but can be a floating point number.
 	this.startTime = customAttributes.startTime || 0;
 
-	// This is the jquery wrapper for the youtube's iframe element which is to be played. 
+	// This is will hold the the jquery selector of the wrapper element for all youtube's DOM nodes (such as the youtube iframe element) 
 	this.$youtubeContainer = null;
 
-	// The youtube player requires an element which will be replaced by youtube's iframe, ie. the a placeholder:
+	// The youtube player requires an element which will be replaced by youtube's iframe, ie. a placeholder element
 	this.$youtubePlaceholder = null;
 
 	// Youtube has assigned click handlers to its iframe which cause the video to pause. This is not what
@@ -75,9 +75,10 @@ ximpel.mediaTypeDefinitions.YouTube = function( customElements, customAttributes
 	// use a "click catcher" element that will be placed over the youtube's iframe which ignores all click handlers.
 	this.$youtubeClickCatcher = null;
 
-	// This will contain the youtube player object (ie. youtube's player api)
+	// This will contain the youtube player object which can be used to start and pause the video
 	this.youtubePlayer = null;
 
+	// This will hold a jquery promise object that indicates if the this.youtubePlayer is ready to play.
 	this.readyToPlayPromise = null;
 
 	// The state indicates the state of the youtube media item (playing, paused, stopped)
@@ -92,12 +93,10 @@ ximpel.mediaTypeDefinitions.YouTube.prototype.STATE_STOPPED = 'state_youtube_sto
 
 
 
-
-
-
-
+// The mediaPlay() is one of the required methods for a media type. XIMPEL calls the play() method on the
+// prototype which in turn calls this mediaPlay() method.
 ximpel.mediaTypeDefinitions.YouTube.prototype.mediaPlay = function(){
-	// Ignore this call if this media item is already playing.
+	// Ignore this call if this media item is already playing or resume playback if its paused.
 	if( this.state === this.STATE_PLAYING ){
 		return;
 	} else if( this.state === this.STATE_PAUSED ){
@@ -105,10 +104,13 @@ ximpel.mediaTypeDefinitions.YouTube.prototype.mediaPlay = function(){
 		return;
 	}
 
-	// Indicate that the media item is in a playing state now. This should be done now.
+	// Indicate that the media item is in a playing state now.
 	this.state = this.STATE_PLAYING;
 
-	// Check if another Youtube instance has initiated to load the youtube api script already, if so we don't need to anymore.
+	// Before we can create Youtube Player objects we need to load the Youtube API script. So we first check if the script
+	// has already been loaded by another instance of this Youtube media type. If it has then we don't need to do it again. 
+	// We can check if it has because a jquery promise will have been stored in: ximpel.mediaTypeDefinitions.YouTube.apiLoadPromise 
+	// If such an object exists then the script is either in the process of being loaded, or completed/failed to load.
 	if( ! ximpel.mediaTypeDefinitions.YouTube.apiLoadPromise ){
 		// Start loading the youtube api script. This stores ximpel.mediaTypeDefinitions.YouTube.apiLoadPromise which is a jquery
 		// promise object that is resolved when the script has been loaded or is rejected when the script failed to load.
@@ -119,16 +121,16 @@ ximpel.mediaTypeDefinitions.YouTube.prototype.mediaPlay = function(){
 	this.initYoutubeElements();
 
 	// Two things need to be loaded in order to start playing a youtube video:
-	// - The youtube API script
+	// - The youtube API script (is already being loaded by now)
 	// - The youtube player.
-	// We get a combined jquery deferred which resolves if both of these items are loaded or fails if any of them fail.
+	// We create a combined jquery deferred which resolves if both of these items are loaded or fails if any of them fail.
 	var playerLoadDeferred = new $.Deferred();
-	var readyToPlayDeferred = $.when( apiLoadDeferred, playerLoadDeferred );
+	var readyToPlayDeferred = $.when( apiLoadDeferred, playerLoadDeferred ); // this is the combined deferred.
 	this.readyToPlayPromise = readyToPlayDeferred.promise();
 
-	// Register a callback for When the combined deferred is resolved (ie. when both the API script and the Youtube player are loaded)
-	// then we start playing the youtube player.
+	// Register a callback for when the combined deferred is resolved (ie. when both the API script and the Youtube player are loaded)
 	readyToPlayDeferred.done( function(){
+		// start playing the youtube player.
 		this.playYoutube();
 	}.bind(this) );
 
@@ -149,6 +151,8 @@ ximpel.mediaTypeDefinitions.YouTube.prototype.mediaPlay = function(){
 	}
 }
 
+
+
 // The resumePlayback() method resumes playback from a paused state.
 ximpel.mediaTypeDefinitions.YouTube.prototype.resumePlayback = function(){
 	// Indicate that the media item is in a playing state now.
@@ -160,10 +164,11 @@ ximpel.mediaTypeDefinitions.YouTube.prototype.resumePlayback = function(){
 
 
 
-
+// This method starts loading the youtube api. When it finishes it will resolve
+// the jquery promise stored in: ximpel.mediaTypeDefinitions.YouTube.apiLoadPromise
+// The state of this promise can be checked at any time to find out the state of the
+// loading of the youtube API script.
 ximpel.mediaTypeDefinitions.YouTube.prototype.loadYoutubeApi = function(){
-	// If there is no global apiLoadPromise object set yet, then it means that the youtube API
-	// script has not been loaded yet. So we should start loading it.
 	if( ! ximpel.mediaTypeDefinitions.YouTube.apiLoadPromise ){
 		// Store a jquery promise object on the ximpel.mediaTypeDefinitions.YouTube object to track if the youtube 
 		// api script is loaded or not. The ximpel.mediaTypeDefinitions.YouTube object is not instance specific
@@ -196,6 +201,7 @@ ximpel.mediaTypeDefinitions.YouTube.prototype.loadYoutubeApi = function(){
 		return apiLoadDeferred;
 	} 
 }
+// This will make a request for the youtube API script.
 ximpel.mediaTypeDefinitions.YouTube.prototype.requestYoutubeApiScript = function( apiLoadDeferred ){
 	// We do the actual ajax request for the youtube api script.
 	var ajaxRequest = $.ajax({
@@ -217,6 +223,10 @@ ximpel.mediaTypeDefinitions.YouTube.prototype.requestYoutubeApiScript = function
 
     return apiLoadDeferred.promise();
 }
+
+
+
+// This will load the youtube player. After the youtube player is ready the this.readyToPlayPromise will be resolved.
 ximpel.mediaTypeDefinitions.YouTube.prototype.loadYoutubePlayer = function( deferred ){
 	// The function to be called when the youtube player is ready to be used.
 	var youtubePlayerReadyHandler = function(){
@@ -238,6 +248,7 @@ ximpel.mediaTypeDefinitions.YouTube.prototype.loadYoutubePlayer = function( defe
 	        'onStateChange': this.youtubePlayerStateChangeHandler.bind(this)
 	    },
 	    playerVars: {
+	    	/*'enablejsapi': 1,*/
 	    	'html5': 1, 		// use the html5 player?
 			'autoplay': 0,		// auto play video on load?
      		'controls': 0, 		// show controls?
@@ -252,12 +263,19 @@ ximpel.mediaTypeDefinitions.YouTube.prototype.loadYoutubePlayer = function( defe
 
 	return deferred;
 }
+
+
+
+// This tells the youtube player to start playing. It also shows and positions the youtube element at the appropriate position.
 ximpel.mediaTypeDefinitions.YouTube.prototype.playYoutube = function(){
 	this.repositionYoutubeIframe();
 	this.youtubePlayer.playVideo();
 	this.$youtubeContainer.show();
 }
 
+
+
+// Create the youtube elements that are used by this media type and set some attributes.
 ximpel.mediaTypeDefinitions.YouTube.prototype.initYoutubeElements = function(){
 	// Create the wrapper HTML element for the youtube's iframe element.
 	this.$youtubeContainer = $('<div></div>');
@@ -299,6 +317,7 @@ ximpel.mediaTypeDefinitions.YouTube.prototype.initYoutubeElements = function(){
 
 
 
+
 ximpel.mediaTypeDefinitions.YouTube.prototype.repositionYoutubeIframe = function(){
 	var $youtubeIframe = this.$youtubeContainer.find("iframe");
 	$youtubeIframe.css({
@@ -323,7 +342,7 @@ ximpel.mediaTypeDefinitions.YouTube.prototype.repositionYoutubeIframe = function
 
 
 
-
+// Define what should happen in case of different error messages.
 ximpel.mediaTypeDefinitions.YouTube.prototype.youtubePlayerErrorHandler = function( deferred, error ){
 	if( error.data == 2 ){
        ximpel.warn("YouTube.youtubePlayerErrorHandler(): invalid parameters received. Possibly the video id is invalid.");
@@ -338,13 +357,17 @@ ximpel.mediaTypeDefinitions.YouTube.prototype.youtubePlayerErrorHandler = functi
 	}
 	deferred.reject();
 }
+
+
+
+// This is called when the youtube player changes state.
 ximpel.mediaTypeDefinitions.YouTube.prototype.youtubePlayerStateChangeHandler = function( event ){
 	var state = event.data;
 
 	switch( state ){
 		case YT.PlayerState.ENDED: 
 			// The youtube video has ended. By calling ended() all callback functions registered with 
-			// .addEventHandler('end', func) will be called. ended() and addEventHandler are both functions 
+			// .addEventHandler('end', func) will be called. ended() and addEventHandler() are both functions 
 			// on the prototype of this media type.
 			this.ended(); 
 			break;
@@ -385,11 +408,16 @@ ximpel.mediaTypeDefinitions.YouTube.prototype.mediaStop = function(){
 	this.readyToPlayPromise = null;
 }
 
-// Every media item can implement a getPlayTime() method. If this method is implemented by the media item then ximpel will use this method to determine
-// how long the media item has been playing. If this method is not implemented then ximpel itself will calculate how long a media item has been playing. Note that
-// the media item can sometimes better determine the play time. For instance, if the network has problems causing the video to stop loading, then ximpel
-// would not be able to detect this and use an incorrect play time. A video media item could still determine the correct play time by looking at the current playback
-// time of its element. This is exactly what the getPlayTime method of this YouTube media item does. It returns the play time in miliseconds.
+
+
+// Every media item can implement a getPlayTime() method. If the media type implements this method then 
+// ximpel will use this method to determine how long the media item has been playing. If this method is 
+// not implemented then ximpel itself will calculate how long a media item has been playing. Note that
+// the media item can sometimes better determine the play time. For instance, if the network has problems
+// causing the video to stop loading, then ximpel would not be able to detect this and use an incorrect 
+// play time. A Youtube media item could still determine the correct play time by looking at the current 
+// playback time of the youtube player object (something that the core of ximpel has no access to). This is exactly 
+// what the getPlayTime method of this youtube media item does. It returns the play time in miliseconds.
 ximpel.mediaTypeDefinitions.YouTube.prototype.getPlayTime = function(){
 	if( ! this.youtubePlayer || !this.youtubePlayer.getCurrentTime ){
 		return 0;
@@ -400,23 +428,41 @@ ximpel.mediaTypeDefinitions.YouTube.prototype.getPlayTime = function(){
 	return playTimeInMs;
 }
 
+
+
 // Returns whether the video is playing.
 ximpel.mediaTypeDefinitions.YouTube.prototype.mediaIsPlaying = function(){
 	return this.state === this.STATE_PLAYING;
 }
+
+
+
 // Returns whether the video is paused.
 ximpel.mediaTypeDefinitions.YouTube.prototype.mediaIsPaused = function(){
 	return this.state === this.STATE_PAUSED;
 }
+
+
+
 // Returns whether the video is stopped.
 ximpel.mediaTypeDefinitions.YouTube.prototype.mediaIsStopped = function(){
 	return this.state === this.STATE_STOPPED;
 }
-ximpel.registerMediaType(
-	new ximpel.MediaTypeRegistration( 'youtube', ximpel.mediaTypeDefinitions.YouTube, {
-		'allowedAttributes': ['videoId', 'width', 'height', 'x', 'y', 'startTime'],
-		'requiredAttributes': ['videoId'],
-		'allowedChildren': [],
-		'requiredChildren': [],
-	})
+
+
+
+// Finally we register the media type to XIMPEL such that XIMPEL knows some information about the media type.
+// Information for the parser (tagname, allowedAttributes, requiredAttributes, allowedElements and requiredElements)
+// and information for the XIMPEL player (the constructor such that it can create instances of the media type)
+var mediaTypeRegistrationObject = new ximpel.MediaTypeRegistration( 
+	'youtube',  							// = the media type ID (and also the tagname used in the playlist)
+	ximpel.mediaTypeDefinitions.YouTube,	// a pointer to the constructor function to create instances of the media type.
+	{
+		'allowedAttributes': ['videoId', 'width', 'height', 'x', 'y', 'startTime'], // the attributes that are allowed on the <youtube> tag (excluding the attributes that are available for every media type like duration).
+		'requiredAttributes': ['videoId'],	// the attributes that are required on the <youtube> tag.
+		'allowedChildren': ['source'],		// the child elements that are allowed on the <youtube> tag.
+		'requiredChildren': ['source'] 		// The child elements that are required on the <youtube> tag.
+	}
 );
+
+ximpel.registerMediaType( mediaTypeRegistrationObject );

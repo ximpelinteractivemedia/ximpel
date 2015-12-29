@@ -6,8 +6,14 @@
 <playlist>
     <subject id="test" leadsTo="Intro">
         <media>
-<!--         	<image src="test.jpg" duration="2" /> -->
-            <youtube id="AI0RTvlm0hw" startTime="300" duration="10" />
+        	<audio>
+        		<source file="test" extensions="mp3" types="video/mp3" />
+        	</audio>
+        	<video x="0px" y="0px" width="600px" height="900px">
+        		<source file="test" extensions="mp4" types="video/mp4" />
+        	</video>
+        	<image src="test.jpg" duration="2" width="600px"  />
+            <youtube id="AI0RTvlm0hw" startTime="300" duration="10" height="800px" width="800px" />
             <youtube id="4_UVnsG7COM" startTime="300" duration="10" />
             <youtube id="J_x-dIA7oeE" startTime="300" duration="10" />
 

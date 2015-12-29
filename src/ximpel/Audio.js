@@ -100,7 +100,6 @@ ximpel.mediaTypeDefinitions.Audio.prototype.mediaPlay = function(){
 	// (duration) has been loaded and then executes the function.
 	$audio.one("loadedmetadata", function(){
 		// This function is executed once the metadata of the audio has been loaded...
-
 		// Set the current position in the audio to the appropriate startTime (this can only be done after the metadata is loaded).
 		audioElement.currentTime = this.startTime;
 
@@ -143,7 +142,7 @@ ximpel.mediaTypeDefinitions.Audio.prototype.mediaPlay = function(){
 
 	// start loading the audio now.
 	audioElement.load();
-	
+
 	this.bufferingPromise = bufferingDeferred.promise();
 	return this.bufferingPromise;
 }

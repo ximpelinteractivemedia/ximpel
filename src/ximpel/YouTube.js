@@ -1,37 +1,66 @@
+// Youtube
+// The Youtube object implements a media type for XIMPEL to use. This media type is one of the core media types that ship with
+// XIMPEL by default. MediaTypes are a sort of plugins. Anyone can create their own media type. None of the media types
+// (not even the core media types) have a special integration with XIMPEL. There are just a number of requirements that should
+// be fulfilled to create a MediaType (See the documentation for more info). 
+//
+// Notes:
+// - The Youtube object definition is added to the: ximpel.mediaTypeDefinitions namespace, but this is not required, it
+//   could be stored in any variable.
+// - The MediaType gets a new instance of ximpel.MediaType() as prototype. This gives the media type a number of predefined 
+//   methods. For instance this implements a play(), pause() and stop() method which XIMPEL will call. These methods in turn
+//   will call the mediaPlay(), mediaPause() and mediaStop() methods that we implement in this Youtube object.
+// - Besides the implementation of some required methods of a media type, the media type must be registered. This is
+//   done at the bottom using the ximpel.registerMediaType() function.
+//
 // ##################################################################################################
 // ##################################################################################################
 // ##################################################################################################
 
 // TODO: 
 // - Youtube API: As an extra security measure, you should also include the origin parameter to the URL, specifying the URL scheme (http:// or https://) and full domain of your host page as the parameter value
-ximpel.mediaTypeDefinitions.YouTube = function( customElements, customAttributes, $parentElement ){
-	// The custom elements that were added inside the <youtube> tag in the playlist 
+// - Make it such that not all youtube elements are attached (but invisble) to the DOM at all times (even when their not being played).
+
+
+
+// The constructor function which XIMPEL will use to create instances of our media type. Four arguments
+// should be passed to the constructor function:
+// - customElements - contains the child elements that were within the <youtube> tag in the playlist.
+// - customAttributes - contains the attributes that were on the <youtube> tag in the playlist.
+// - $parentElement - The element to which the youtube iframe will be appended (the ximpel player element).
+// - player - A reference to the player object, so that the media type can use functions from the player.
+ximpel.mediaTypeDefinitions.YouTube = function( customElements, customAttributes, $parentElement, player ){
+	// The custom elements that were added inside the <youtube> tag in the playlist.
 	this.customElements = customElements; // not used right now.
 
 	// The custom attributes that were added to the <youtube> tag in the playlist.
 	this.customAttributes = customAttributes;
 
-	// The XIMPEL player element to which this youtube element can attach itself.
+	// The XIMPEL player element to which this youtube video can attach itself (this is the element to which all media DOM nodes will be attached).
 	this.$attachTo = $parentElement;
 
-	// The youtube video id.
+	// A reference to the XIMPEL player object. The media type can make use of functions on the player object.
+	this.player = player;
+
+	// The youtube video id (can be found in the URL of a youtube video).
 	this.videoId = customAttributes.id;
 
-	// The x coordinate of the youtube element relative to the ximpel parent element or 'center' to align center horizontally.
-	// The value is including the units (for instance: 100px or 10%)
+	// The x coordinate of the video relative to the ximpel player element or 'center' to align center.
+	// The value for x should include the units (for instance: 600px or 20%)
 	this.x = customAttributes.x || 'center';
 
-	// The y coordinate of the youtube element relative to the main ximpel element or 'center' to align center vertically.
-	// The value is including the units (for instance: 100px or 10%)
+	// The y coordinate of the video relative to the ximpel player element or 'center' to align center.
+	// The value for y should include the units (for instance: 600px or 20%)
 	this.y = customAttributes.y || 'center';
 
-	// The width of the youtube element. The value includes units (ie. 600px or 50%).
+	// The width of the youtube element. The value includes units (ie. 600px or 20%).
 	this.width = customAttributes.width || this.$attachTo.width() +'px';
 
 	// The height of the youtube element. The value includes units (ie. 600px or 50%)
 	this.height = customAttributes.height || this.$attachTo.height() + 'px';
 
-	// The point in the youtube video from which the video should start playing (if not specified in the playlist then it is set to 0.)
+	// The point in the video from which youtube should start playing (if not specified in the playlist then it is set to 0.)
+	// The statTime should be in seconds but can be a floating point number.
 	this.startTime = customAttributes.startTime || 0;
 
 	// This is the jquery wrapper for the youtube's iframe element which is to be played. 

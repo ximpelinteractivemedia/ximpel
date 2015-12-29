@@ -30,7 +30,7 @@ ximpel.Parser = function(){
  		'description': [''],
 		'config': [''],
 		// We want to define valid children that will apply to each custom media type, we use __MEDIA_TYPE__ for this.
-		 '__MEDIA_TYPE__': ['branchquestion', 'overlay', 'score', 'question'], // ie. these tags are valid children for each custom media type.
+		 '__MEDIA_TYPE__': ['overlay', 'score', 'question'], // ie. these tags are valid children for each custom media type.
 	}
 
 	// This counter is used to give each media item a unique ID that is used within ximpel to refer to that media item.

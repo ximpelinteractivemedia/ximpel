@@ -294,6 +294,17 @@ ximpel.mediaTypeDefinitions.Video.prototype.calculateVideoDetails = function(){
 		var height = this.height;
 	}
 
+	// Set the x, y, width and height for the element.
+	// We need to do this before we check if x and y are equal to "center"
+	// because determining the x and y to center the video can only be done if the width and height of the
+	// video are known and this information is only accessible if we set it here.
+	this.$video.css({
+		'position': 'absolute',
+		'width': width,
+		'height': height,
+		'left': x,
+		'top': y
+	});	
 
 	// If x or y are set to 'center' then we use the width and height of the video element to determine the x and y coordinates such
 	// that the video element is centered within the player element.
@@ -303,15 +314,10 @@ ximpel.mediaTypeDefinitions.Video.prototype.calculateVideoDetails = function(){
 	if( this.y === 'center' ){
 		var y = Math.round( Math.abs( this.$attachTo.height() - this.$video.height() ) / 2 );
 	}
-
-	// Set the x, y, width and height for the element.
 	this.$video.css({
-		'position': 'absolute',
-		'width': width,
-		'height': height,
 		'left': x,
 		'top': y
-	});	
+	});
 }
 
 

@@ -88,6 +88,9 @@ ximpel.mediaTypeDefinitions.Image.prototype.mediaPlay = function(){
 	// Ignore this call if this media item is already playing.
 	if( this.state === this.STATE_PLAYING ){
 		return;
+	} else if( this.state === this.STATE_PAUSED ){
+		this.resumePlayback();
+		return;
 	}
 
 	// Indicate that the media item is in a playing state now.
@@ -130,6 +133,15 @@ ximpel.mediaTypeDefinitions.Image.prototype.mediaPlay = function(){
 	// We return a jquery promise which is resolved when the image finished loading or rejected if the image fails to load.
 	this.loadPromise = deferred.promise();
 	return this.loadPromise;
+}
+
+
+
+// The resumePlayback() method resumes playback from a paused state. It doesn't do anything
+// exceot for setting the state to PLAYING
+ximpel.mediaTypeDefinitions.Image.prototype.resumePlayback = function(){
+	// Indicate that the media item is in a playing state now.
+	this.state = this.STATE_PLAYING;
 }
 
 
@@ -235,16 +247,10 @@ ximpel.mediaTypeDefinitions.Image.prototype.calculateImageDetails = function(){
 		var height = this.height;
 	}
 
-	// If x or y are set to 'center' then we use the width and height of the image element to determine the x and y coordinates such
-	// that the image element is centered within the player element.
-	if( this.x === 'center' ){
-		var x = Math.round( Math.abs( this.$attachTo.width() - this.$image.width() ) / 2 );
-	}
-	if( this.y === 'center' ){
-		var y = Math.round( Math.abs( this.$attachTo.height() - this.$image.height() ) / 2 );
-	}
-
 	// Set the x, y, width and height for the element.
+	// We need to do this before we check if x and y are equal to "center"
+	// because determining the x and y to center the image can only be done if the width and height of the
+	// image are known and this information is only accessible if we set it here.
 	this.$image.attr({
 		'width': width,
 		'height': height,
@@ -253,6 +259,20 @@ ximpel.mediaTypeDefinitions.Image.prototype.calculateImageDetails = function(){
 		'left': x,
 		'top': y
 	});
+
+	// If x or y are set to 'center' then we use the width and height of the image element to determine the x and y coordinates such
+	// that the image element is centered within the player element.
+	if( this.x === 'center' ){
+		var x = Math.round( Math.abs( this.$attachTo.width() - this.$image.width() ) / 2 );
+	}
+	if( this.y === 'center' ){
+		var y = Math.round( Math.abs( this.$attachTo.height() - this.$image.height() ) / 2 );
+	}
+	this.$image.css({
+		'left': x,
+		'top': y
+	});
+
 }
 
 
@@ -282,7 +302,7 @@ ximpel.registerMediaType( mediaTypeRegistrationObject );
 // Some old methods that are not used anymore but might be useful at some point.
 
 // Return the maximum dimensions of a rectangle that still fits in some available space (another rectangle) while maintaining aspect ratio.
-ximpel.mediaTypeDefinitions.Image.prototype.getFittingRectangle = function( availableWidth, availableHeight, actualWidth, actualHeight ){
+/*ximpel.mediaTypeDefinitions.Image.prototype.getFittingRectangle = function( availableWidth, availableHeight, actualWidth, actualHeight ){
 	var scale = Math.min( availableWidth / actualWidth, availableHeight / actualHeight );
 	return {'width': actualWidth*scale, 'height': actualHeight*scale };
 }
@@ -291,3 +311,4 @@ ximpel.mediaTypeDefinitions.Image.prototype.getCenteredRectangleCoordinates = fu
 	var x = ( actualWidth < availableWidth ) 	? Math.round( ( availableWidth-actualWidth ) / 2 ) : 0;
 	var y = ( actualHeight < availableHeight ) 	? Math.round( ( availableHeight-actualHeight ) / 2 ) : 0;
 	return { 'x': x, 'y': y };
+}*/

@@ -1,3 +1,9 @@
+// MediaTypeRegistration()
+// The MediaTypeRegistration() object is used when registering a media type to XIMPEL.
+// You create an instance of this object and pass it to ximpel.registerMediaType()
+
+// ########################################################################################################################################################
+
 ximpel.MediaTypeRegistration = function( mediaTypeId, mediaTypeConstructor, options ){
 	var options = options || {};
 

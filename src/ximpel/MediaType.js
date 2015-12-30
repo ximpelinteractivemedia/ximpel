@@ -1,35 +1,34 @@
-// ############################################################################
+// MediaType()
+// The media type constructor constructs objects that are used as prototype by specific media types such as video or audio.
+// In other words, its a parent object for specific media types (ie. Audio, Video, Picture use this as parent object)
+// For example the Video media type does:
+//     ximpel.mediaTypeDefinitions.Video.prototype = new ximpel.MediaType();
+// By using a generic MediaType object as the prototype for a specific media type, all the media types will
+// have some common functions available. For example the following methods are available by each
+// media type that uses this MediaType object as its prototype:
+// addEventHandler()
+// removeEventHandler()
+// ended()
+// play()
+// pause()
+// stop()
+// isPlaying()
+// etc.
 // 
+// Methods like "play" and "pause" don't do much more then forwarding the call to the mediaPlay 
+// and mediaPause methods of the specific media type implementation itself. However, they generate 
+// a warning in the console to indicate a media type is missing certain required functions if that is the case.
+// 
+// The function addEventHandler() and removeEventHandler() provides the ability to add event handlers for events
+// without creating an addEventHandler() function on every media type.
 // ############################################################################
 
-
-// TODO: 
-
-ximpel.MediaType = function( customMediaType ){
-	/* 	By doing: "new MediaType()"" javascript first creates a new empty object and sets the prototype
-		of that object. The code in this constructor then runs with the "this" keyword pointing
-	   	to the new empty object. If a customMediaType is passed as an argument, then the new object  
-	   	will be extended with the properties and methods of the customMediaType object.
-	   	This allows users of ximpel to define their own media types by simply creating an 
-	   	object literal which includes all the functionality of their media type. Then ximpel 
-	   	does the rest by attaching the custom code to a generic MediaType object.
-	   	
-		Another way to create a custom media type object is to use the getInstance() method.
-			- var genericMediaTypeObj = new MediaType();
-			- var customMediaTypeObj = genericMediaTypeObj.getInstance( videoMediaType );
-			- var customMediaTypeObj = genericMediaTypeObj.getInstance( googleMapsMediaType );
-	*/
-
-	// Extend the new instance of the MediaType with the properties and methods of
-	// the given customMediaType object (if a customMediaType obj was given)
-	if( customMediaType ){
-		// Note that we pass 'true' as the first argument, this means that we deep-copy the 
-		// properties of "customMediaType" instead of doing a shallow copy.
-		$.extend( true, this, customMediaType );
-	}
+ximpel.MediaType = function(){
 }
-ximpel.MediaType.prototype.EVENT_MEDIA_END = 'MEDIA_END';
+ximpel.MediaType.prototype.EVENT_MEDIA_END = 'ended';
 
+
+// This method will call the mediaPlay method of the specific mediaType or produce a warning if the media type doesn't have one.
 ximpel.MediaType.prototype.play = function(){
 	if( this.mediaPlay ){
 		this.mediaPlay();
@@ -40,6 +39,8 @@ ximpel.MediaType.prototype.play = function(){
 }
 
 
+
+// This method will call the mediaPause method of the specific mediaType or produce a warning if the media type doesn't have one.
 ximpel.MediaType.prototype.pause = function(){
 	if( this.mediaPause ){
 		this.mediaPause();
@@ -50,6 +51,8 @@ ximpel.MediaType.prototype.pause = function(){
 }
 
 
+
+// This method will call the mediaStop method of the specific mediaType or produce a warning if the media type doesn't have one.
 ximpel.MediaType.prototype.stop = function(){
 	if( this.mediaStop ){
 		this.mediaStop();
@@ -59,6 +62,9 @@ ximpel.MediaType.prototype.stop = function(){
 	return this;
 }
 
+
+
+// This method will call the mediaIsPlaying() method of the specific mediaType or produce a warning if the media type doesn't have one.
 ximpel.MediaType.prototype.isPlaying = function(){
 	if( this.mediaIsPlaying ){
 		return this.mediaIsPlaying();
@@ -66,6 +72,10 @@ ximpel.MediaType.prototype.isPlaying = function(){
 		ximpel.error('ximpel.MediaType(): Invalid custom media type! A custom media type does not conform to the required interface. The media type has not implemented the mediaIsPlaying() method.');
 	}
 }
+
+
+
+// This method will call the mediaIsPaused() method of the specific mediaType or produce a warning if the media type doesn't have one.
 ximpel.MediaType.prototype.isPaused = function(){
 	if( this.mediaIsPaused ){
 		return this.mediaIsPaused();
@@ -73,6 +83,10 @@ ximpel.MediaType.prototype.isPaused = function(){
 		ximpel.error('ximpel.MediaType(): Invalid custom media type! A custom media type does not conform to the required interface. The media type has not implemented the mediaIsPaused() method.');
 	}
 }
+
+
+
+// This method will call the mediaIsStopped() method of the specific mediaType or produce a warning if the media type doesn't have one.
 ximpel.MediaType.prototype.isStopped = function(){
 	if( this.mediaIsStopped ){
 		return this.mediaIsStopped();
@@ -81,12 +95,7 @@ ximpel.MediaType.prototype.isStopped = function(){
 	}
 }
 
-ximpel.MediaType.prototype.preload = function(){
-	if( this.mediaPreload ){
-		return this.mediaPreload();
-	}
-	return new $.Deferred().resolve().promise();
-}
+
 
 // This method should be called by the parent object (such as Video() or Youtube() ) to indicate the media type has ended.
 // Note that this should only be called when the media type has ran into its playback end (ie. a video has nothing more to play).
@@ -103,33 +112,53 @@ ximpel.MediaType.prototype.ended = function(){
 	return this;
 }
 
+
+// This method will call the mediaDestroy() method of the specific mediaType and destroy any generic variables used within this MediaType object.
 ximpel.MediaType.prototype.destroy = function(){
+	if( this.mediaDestroy ){
+		return this.mediaDestroy();
+	} 
 	this.__mediaTypePubSub__ = null;
+
 	return this;
 }
+
+
+
+// This method registers an event for when the media item ends (ie. it has nothing more to play)
 ximpel.MediaType.prototype.onEnd = function( callback ){
-	return this.addEventHandler( 'end', callback );
+	return this.addEventHandler( this.EVENT_MEDIA_END, callback );
 }
 
-ximpel.MediaType.prototype.addEventHandler = function( event, callback ){
-	switch( event ){
-		case 'end':
+
+
+// This method registers a handler function for a given event
+ximpel.MediaType.prototype.addEventHandler = function( eventName, callback ){
+	switch( eventName ){
+		case this.EVENT_MEDIA_END:
 			return this.lazyLoadPubSub().subscribe( this.EVENT_MEDIA_END, callback );
 		default:
-			ximpel.warn("MediaType.addEventHandler(): event type '" + event + "' is not supported.");    
+			ximpel.warn("MediaType.addEventHandler(): event type '" + eventName + "' is not supported.");    
 			return null;
 	}
 }
-ximpel.MediaType.prototype.removeEventHandler = function( event, callback ){
-	switch( event ){
-		case 'end':
+
+
+
+// This method removes a handler function for a given event
+ximpel.MediaType.prototype.removeEventHandler = function( eventName, callback ){
+	switch( eventName ){
+		case this.EVENT_MEDIA_END:
 			this.lazyLoadPubSub().unsubscribe( this.EVENT_MEDIA_END, callback ); 
 			return 	true;
 		default: 
-			ximpel.warn("MediaType.removeEventHandler(): event type '" + event + "' is not supported. Can't add/remove event handlers of this type.");
+			ximpel.warn("MediaType.removeEventHandler(): event type '" + eventName + "' is not supported.");
 			return false;
 	}
 }
+
+
+
 ximpel.MediaType.prototype.lazyLoadPubSub = function(){
 	// Lazy loading means that we do not execute this code in the constructor but we do this  
 	// at the last possible moment. At that moment the 'this' keyword will point not to this

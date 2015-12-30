@@ -1,6 +1,7 @@
-// ############################################################################
+// polyfills.js
 // Register any polyfills here (ie. functionality that is expected to be 
 // supported natively by the browser but isnt).
+
 // ############################################################################
 
 // Polyfill for: console.log() console.debug() console.warn() console.error()
@@ -15,29 +16,29 @@ if( !console ){
     };
 }
 
+// ############################################################################
 
-//Polyfill for: Object.keys()
+// Polyfill for: Object.keys()
 // Object.keys is an ECMAScript 5 feature which lacks some browser support.
 // It returns an array containing an object's own properties (so not the 
 // properties of its prototype). Below is a polyfill to include the same
 // functionality for older browsers that do not natively support it.
 if ( ! Object.keys ){
 	Object.keys = function( obj ){
-			if( obj !== Object( obj ) ){
-  			ximpel.error('Object.keys() called on a non-object');
-			}
-			var properties=[], property;
-			for( property in obj ){
-				if( Object.prototype.hasOwnProperty.call( obj, property ) ){
-					keys.push( property );
-				}
-			}
-			return keys;
+		if( obj !== Object( obj ) ){
+  		   ximpel.error('Object.keys() called on a non-object');
 		}
+		var properties=[], property;
+		for( property in obj ){
+			if( Object.prototype.hasOwnProperty.call( obj, property ) ){
+				keys.push( property );
+			}
+		}
+		return keys;
 	}
+}
 
-
-
+// ############################################################################
 
 // Polyfill for Array.prototype.forEach()
 // Production steps of ECMA-262, Edition 5, 15.4.4.18
@@ -96,14 +97,9 @@ if( !Array.prototype.forEach ){
     };
 }
 
+// ############################################################################
 
-
-
-
-
-
-
-
+// Polyfill for: Array.filter()
 if( !Array.prototype.filter ){
     Array.prototype.filter = function( func /*, thisp */ ){
         "use strict";
@@ -131,7 +127,7 @@ if( !Array.prototype.filter ){
     };
 }
 
-
+// ############################################################################
 
 // A polyfill for Date.now() function
 if( !Date.now ){
@@ -139,3 +135,4 @@ if( !Date.now ){
         return new Date().getTime();
     }
 }
+

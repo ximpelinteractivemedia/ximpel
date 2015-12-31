@@ -1,29 +1,31 @@
-// ########################################################################################################################################################
-// The XimpelApp..... description... comes later...
+// XimpelApp()
+// XimpelApp is the main object to create XIMPEL players. For each XIMPEL player that you want
+// to add on your page you create an instance of XimpelApp. This object can load playlist
+// and config files from the server, then ask the parser to parse the XML documents and create
+// a playlist that plays the PlaylistModel anc ConfigModel that the parser produced. So
+// XimpelApp manages everything to start the player. When it has started the Player() lobject
+// does everything.
 // ########################################################################################################################################################
 
-// TODO:
-// - making multiple apps on one page work.
-// - setting autoPlay to false works but it does not show the controls by default so you will need to 
-//   call .play() on the player element and even then the pause /stop button are hidden while the player is playing.
-
-// ############################################################################
 ximpel.XimpelApp = function( appId, playlistFile, configFile, options ){
 	var options = options || {}; // prevents errors when no options are specified.
 	var ximpelAppModel = this.ximpelAppModel = new ximpel.XimpelAppModel();
 
-	// Get the parent element to which the appElement will be attached (null if not specified)	
+	// There is one main element to which XIMPEL will attach all DOM elements. This element can 
+	// be specified using the "appElement" option, if not specified XIMPEL will create an element.
+	// Additionally, you can specify a "parentElement" option. This will cause the main ximpel element
+	// (whether you specified one explicitly or one is created) to be attached to that "parentElement".
+
+	// Get the jquery selector for the parent element to which the appElement will be attached (null if not specified)	
 	ximpelAppModel.$parentElement = ximpel.getElement( options.parentElement ) || ximpelAppModel.$parentElement;	
 
-	// A unique ID for this specific XIMPEL app.
+	// A unique ID for this specific XIMPEL app (is used for running multiple ximpel apps on one page).
 	ximpelAppModel.appId = appId;
 
 	// Create a ximpelApp view, without rendering it yet.	
 	this.ximpelAppView = new ximpel.XimpelAppView( ximpelAppModel,  options.appElement, options.appWidth, options.appHeight );
 
-	//this.ximpelAppView.render( ximpelAppModel.$parentElement );
-
-	// The ximpel.Player() object which plays the ximpel presentation.
+	// Will hold the ximpel.Player() object which plays the ximpel presentation.
 	this.ximpelPlayer = null;
 
 	// Create a Parser object, which can parse playlist and xml files and create a playlist and config model.
@@ -35,25 +37,25 @@ ximpel.XimpelApp = function( appId, playlistFile, configFile, options ){
 	// The path the the config file (relative to the page that includes this javascript file).
 	ximpelAppModel.configFile = configFile;
 
-	// The retrieved XML content for the specified playlist file.
+	// Will hold the retrieved XML content for the specified playlist file.
 	ximpelAppModel.playlistXmlDocument = null;
 
-	// The retrieved XML content for the specified config file.
+	// Will hold the retrieved XML content for the specified config file.
 	ximpelAppModel.configXmlDocument = null;						
 	
-	// Will hold the config model that is used by this ximpel application.
+	// Will hold the config model that is used by this ximpel Player.
 	ximpelAppModel.configModel = null;
 
-	// Will hold the playlist model that is used by this ximpel application.
+	// Will hold the playlist model that is used by this ximpel Player.
 	ximpelAppModel.playlistModel = null;
 
-	// A jquery promise object, which indicates whether the ximpel files (playlist/config) have been loaded.
+	// Will hold a jquery promise object, which indicates whether the ximpel files (playlist/config) have been loaded.
 	ximpelAppModel.filesRequestPromise = null;
 
-	// A jquery promise object, indicating whether specifically the playlist file has been loaded.
+	// Will hold a jquery promise object, indicating whether specifically the playlist file has been loaded.
 	ximpelAppModel.playlistRequestPromise = null;
 
-	// A jquery promise object, indicating whether specifically the config file has been loaded.
+	// Will hold a jquery promise object, indicating whether specifically the config file has been loaded.
 	ximpelAppModel.configRequestPromise = null;
 
 	// This timeout handler is used to set and cancel timeouts for hiding the controls bar.
@@ -62,22 +64,15 @@ ximpel.XimpelApp = function( appId, playlistFile, configFile, options ){
 	// This timeout handler is used to set and cancel timeouts for hiding the mouse cursor.
 	ximpelAppModel.hideCursorTimeoutHandler = null;
 
-	//
+	// This holds the state of the XIMPEL app. This indicates if the XimpelApp is still loading or not.
 	ximpelAppModel.appReadyState = this.APP_STATE_LOADING;
 
-	//
+	// this indicates the state of the Player (whether it is playing or paused or stopped.)
 	ximpelAppModel.playerState = this.ximpelAppModel.PLAYER_STATE_STOPPED;
 }
-ximpel.XimpelApp.prototype.getAppElementWidth = function(){
-	var width = this.ximpelAppModel.$appElement.width();
-}
-
-ximpel.XimpelApp.prototype.getAppElementHeight = function(){
-	var height = this.ximpelAppModel.$appElement.height();
-}
 
 
-// [PUBLIC] 
+
 // The load function does several things:
 // - It retrieves the playlist (and config if specified) file from the server.
 // - It parses these files, giving back a playlist and config model (ie an in-memory representation of the playlist and config files).
@@ -95,13 +90,15 @@ ximpel.XimpelApp.prototype.load = function( options ){
 	// function attached to the promise object, it will also be the first to execute. This guarantees that our own callback function is
 	// executed before any callback function defined by the caller of .load()
 	ximpelAppModel.filesRequestPromise.done( function( playlistStatus, configStatus ){
+		// Store the resulting XMLDoc of the playlist file.
 		ximpelAppModel.playlistXmlDocument = playlistStatus[0];
 
+		// Store the resulting XMLDoc of the config file if a config file was specified.
 		// configStatus[0] may not exist if no config file was specified.
 		ximpelAppModel.configXmlDocument = configStatus ? configStatus[0] : null; 
 
-		// We parse the content of the loaded files. parseResult will have the form: {'playlist':<PlaylistModel-object>, 'config':<configModel-object>}
-		// Even if no config file was specified, there were still be a config model filled with default values.
+		// We parse the content of the loaded files. parseResult will have the form: {'playlist':<PlaylistModel>, 'config':<configModel>}
+		// Even if no config file was specified, there will still be a config model filled with default values for a config model.
 		var parseResult = this.parse( ximpelAppModel.playlistXmlDocument, ximpelAppModel.configXmlDocument );
 		if( !parseResult ){
 			ximpel.error("XimelApp.load(): No XIMPEL player was created because the playlist or config file was invalid.");
@@ -115,23 +112,33 @@ ximpel.XimpelApp.prototype.load = function( options ){
 		// We then create a player and pass to it the playlist and config models which will specify what the player will do.
 		this.ximpelPlayer = new ximpel.Player( this.getPlayerElement(), parseResult['playlist'], parseResult['config'] );
 
+		// We set the  appReadyState to the ready state to indicate loading is finished and the player is ready.
 		this.ximpelAppModel.appReadyState = this.ximpelAppModel.APP_READY_STATE_READY;
+
+		// Register the functions to be executed when the play/pause/stop buttons are clicked.
 		this.ximpelAppView.registerPlayHandler( this.startPlayer.bind(this) );
 		this.ximpelAppView.registerPauseHandler( this.pausePlayer.bind(this) );
 		this.ximpelAppView.registerStopHandler( this.stopPlayer.bind(this) );
+
+		// Render the view (this adds some DOM elements to the main ximpel element, including the controls)
 		this.ximpelAppView.render( ximpelAppModel.$parentElement );
 
 		// Tell the player to start playing immediately if autoPlay is true.
+		// If its false then the user should click the play button to start playing.
 		if( autoPlay === true ){
 			this.startPlayer();
+
+			// Update the controls.
+			//this.ximpelAppView.renderControls();
 		}
 	}.bind(this) );
-
 
 	// We return the "loadFilesRequest" promise object so that the caller of the load() method can also attach callback functions to it.
 	return ximpelAppModel.filesRequestPromise;
 }
-// [PRIVATE]
+
+
+
 // Load the given playlistFile and configFile (if specified) from the server.
 // Return value: a jquery Promise. The promise object is used to keep track of the status of the
 // 				 request. Handler functions can be attached to it to react upon the request succeeding or failing.
@@ -157,7 +164,9 @@ ximpel.XimpelApp.prototype.loadFiles = function( playlistFile, configFile, optio
 	// We return the combined jquery Promise object, so that the caller of loadFiles() can attach callback handlers to it.
 	return $.when( ximpelAppModel.playlistRequestPromise, ximpelAppModel.configRequestPromise );
 }
-// [PRIVATE]
+
+
+
 // Load an xml file with the specified url from the server. 
 ximpel.XimpelApp.prototype.requestXmlFile = function( fileUrl, options ){
 	var options = options || {};
@@ -169,15 +178,20 @@ ximpel.XimpelApp.prototype.requestXmlFile = function( fileUrl, options ){
 		cache: false // for during development, so that we always get an up-to-date version
 	});
 
-	// Return a jquery XHR object (which is practically the same as a jquery Promise object)
+	// Return a jquery XHR object (which looks alot like a a jquery Promise object)
 	// This can be used to keep track of the status of a request.
 	return xmlRequest;
 }
-// [PRIVATE]
+
+
+
 // This method takes the playlistXml content and (if it exists) the configXml content and parses it to return
 // a PlaylistModel object and a ConfigModel object.
+// Return value: an object with format: {'playlist':<PlaylistModel>, 'config':<configModel>}
+//               or false if parsing failed.
 ximpel.XimpelApp.prototype.parse = function( playlistXml, configXml ){
 	var ximpelAppModel = this.ximpelAppModel;
+	
 	// Tell the parser to parse the playlist and config xml files. 
 	var parseResult = this.parser.parse( playlistXml, configXml );
 
@@ -196,15 +210,18 @@ ximpel.XimpelApp.prototype.parse = function( playlistXml, configXml ){
 
 
 
+// Returns the main player element that the player uses to attach DOM elements to. (this is
+// not the same as the main ximpel element, the player element is a descendant of the main ximpel element)
 ximpel.XimpelApp.prototype.getPlayerElement = function(){
 	return this.ximpelAppView.getPlayerElement();
 }
 
 
 
+// Tell the Player to start playing.
 ximpel.XimpelApp.prototype.startPlayer = function(){
 	if( this.ximpelAppModel.appReadyState !== this.ximpelAppModel.APP_READY_STATE_READY ){
-		ximpel.warn("XimpelApp.startPlayer(): cannot start player when app is not ready yet.");
+		ximpel.warn("XimpelApp.startPlayer(): XimpelApp.startPlayer(): cannot start player when app is not ready yet.");
 		return;
 	} else if( this.ximpelAppModel.playerState !== this.ximpelAppModel.PLAYER_STATE_PAUSED && this.ximpelAppModel.playerState !== this.ximpelAppModel.PLAYER_STATE_STOPPED ){
 		ximpel.warn("XimpelApp.startPlayer(): cannot start player when the player is not paused or stopped.");
@@ -212,10 +229,13 @@ ximpel.XimpelApp.prototype.startPlayer = function(){
 	}
 
 	this.ximpelAppModel.playerState = this.ximpelAppModel.PLAYER_STATE_PLAYING;
-	this.ximpelAppView.render();
 	this.ximpelPlayer.play();
+	this.ximpelAppView.renderControls();
 }
 
+
+
+// Tell the Player to pause.
 ximpel.XimpelApp.prototype.pausePlayer = function(){
 	if( this.ximpelAppModel.appReadyState !== this.ximpelAppModel.APP_READY_STATE_READY ){
 		ximpel.warn("XimpelApp.pausePlayer(): cannot pause player when app is not ready yet.");
@@ -226,16 +246,17 @@ ximpel.XimpelApp.prototype.pausePlayer = function(){
 		this.ximpelAppModel.playerState = this.ximpelAppModel.PLAYER_STATE_PAUSED;
 		this.ximpelPlayer.pause();
 	} else if( this.ximpelAppModel.playerState === this.ximpelAppModel.PLAYER_STATE_PAUSED ){
-		this.ximpelAppModel.playerState = this.ximpelAppModel.PLAYER_STATE_PLAYING;
-		this.ximpelPlayer.play();
+		ximpel.warn("XimpelApp.pausePlayer(): cannot pause player when the player is already paused.");
 	} else{
 		ximpel.warn("XimpelApp.pausePlayer(): cannot pause player when the player is stopped.");
 		return;
 	}
-
-	this.ximpelAppView.render();
+	this.ximpelAppView.renderControls();
 }
 
+
+
+// Tell the Player to start playing.
 ximpel.XimpelApp.prototype.stopPlayer = function(){
 	if( this.ximpelAppModel.appReadyState !== this.ximpelAppModel.APP_READY_STATE_READY ){
 		ximpel.warn("XimpelApp.stopPlayer(): cannot stop player when app is not ready yet.");
@@ -245,6 +266,20 @@ ximpel.XimpelApp.prototype.stopPlayer = function(){
 		return;
 	}
 	this.ximpelAppModel.playerState = this.ximpelAppModel.PLAYER_STATE_STOPPED;
-	this.ximpelAppView.render();
 	this.ximpelPlayer.stop();
+	this.ximpelAppView.renderControls();
+}
+
+
+
+// Returns the width of the main XIMPEL element.
+ximpel.XimpelApp.prototype.getAppElementWidth = function(){
+	var width = this.ximpelAppModel.$appElement.width();
+}
+
+
+
+// Returns the height of the main XIMPEL element.
+ximpel.XimpelApp.prototype.getAppElementHeight = function(){
+	var height = this.ximpelAppModel.$appElement.height();
 }

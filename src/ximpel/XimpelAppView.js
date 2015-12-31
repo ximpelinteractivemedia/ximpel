@@ -1,15 +1,23 @@
+// XimpelApp()
+// The XimpelAppView object creates the main XIMPEL elements (such ass the appElement,
+// a wrapper element, the player element, the controls element, control buttons, etc.)
+// It draws these elements based on the XimpelApp model which contains all information needed to do this.
+
 
 // TODO: 
 // - Right now the keypress handlers dont work.
-// - If you start the player programatically then the controls won't update propery.
+
 
 ximpel.XimpelAppView = function( ximpelAppModel, appElement, specifiedAppWidth, specifiedAppHeight ){
+	// The app element is the main ximpel element. If no element is specified one will be created.
 	this.$appElement = this.determineAppElement( appElement );
 	
 	// All view implementations should call the init method of their prototype.	
 	this.init( ximpelAppModel, this.$appElement );
 
-	// the width and height of the app element initially (including the units: px or % or w/e)
+	// the width and height of the app element initially (including the units: px or % or w/e) this
+	// specifies how large the app will appear on the page. However the width/height of the app can 
+	// change when the fullscreen button is pressed.
 	this.initialAppWidth = this.determineAppWidth( specifiedAppWidth );
 	this.initialAppHeight = this.determineAppHeight( specifiedAppHeight );
 
@@ -23,7 +31,10 @@ ximpel.XimpelAppView = function( ximpelAppModel, appElement, specifiedAppWidth, 
 	this.$stopButtonElement = $('<div></div>');
 	this.$fullscreenButtonElement = $('<div></div>');
 	
+	// The PubSub object is used internally to register callback functions for certain events.
 	this.pubSub = new ximpel.PubSub();
+
+	// Initialize the main ximpel elements.
 	this.initElements();
 }
 // Create a new View() object and set it as the prototype for XimpelAppView(). 
@@ -31,35 +42,61 @@ ximpel.XimpelAppView = function( ximpelAppModel, appElement, specifiedAppWidth, 
 ximpel.XimpelAppView.prototype = new ximpel.View();
 ximpel.XimpelAppView.prototype.DEFAULT_XIMPEL_APP_ELEMENT_ID = 'XIMPEL';
 
+// Define some z-indexes for the different elements. This specifies which elements will be above
+// which other elements. For example the player element has a z-index of <base>+1000 and the controls
+// have a z-index of <base>+2000. This means that all the player element's children will need to have a z-index
+// between <base>+1000 en <base>+2000
 ximpel.XimpelAppView.prototype.Z_INDEX_BASE_MAIN_ELEMENTS = 16000000;
 ximpel.XimpelAppView.prototype.Z_INDEX_CONTROLS = ximpel.XimpelAppView.prototype.Z_INDEX_BASE_MAIN_ELEMENTS+2000;
 ximpel.XimpelAppView.prototype.Z_INDEX_PLAYER = ximpel.XimpelAppView.prototype.Z_INDEX_BASE_MAIN_ELEMENTS+1000;
 
-
-/*ximpel.XimpelAppView.prototype.NATIVE_PLAYER_ELEMENT_WIDTH = '1920px';
-ximpel.XimpelAppView.prototype.NATIVE_PLAYER_ELEMENT_HEIGHT = '1080px';*/
+// The native width and height of the XIMPEL app. All content within the appElement will be scaled
+// from 1920*1080 to the appWidth/appHeight (while maintaining aspect ratio). So when specify X and Y
+// coordinates for overlays or media items in your presentation you must do so based on a 1920*1080
+// resolution even if your appWidth/appHeight is smaller because ximpel will scale it for you.
 ximpel.XimpelAppView.prototype.NATIVE_PLAYER_ELEMENT_WIDTH = '1920px';
 ximpel.XimpelAppView.prototype.NATIVE_PLAYER_ELEMENT_HEIGHT = '1080px';
+
+// The default width/height of your app. (ie. the dimensions that the ximpel will appear in on your page.)
 ximpel.XimpelAppView.prototype.DEFAULT_APP_WIDTH = '1024px';
 ximpel.XimpelAppView.prototype.DEFAULT_APP_HEIGHT = '576px';
+
+// Defines the default width/height of the control buttons (and with that the entire controlsbar)
 ximpel.XimpelAppView.prototype.DEFAULT_CONTROL_HEIGHT = '125px';
 ximpel.XimpelAppView.prototype.DEFAULT_CONTROL_WIDTH = '125px';
+
+// The class name for the main ximpel appElement
 ximpel.XimpelAppView.prototype.APP_ELEMENT_CLASS = 'ximpelApp';
+
+// The class name for the wrapper element.
 ximpel.XimpelAppView.prototype.WRAPPER_ELEMENT_CLASS = 'ximpelWrapper';
+
+// The class name for the player element
 ximpel.XimpelAppView.prototype.PLAYER_ELEMENT_CLASS = 'ximpelPlayer'; 
+
+// The class name for the control bar element.
 ximpel.XimpelAppView.prototype.CONTROLS_CLASS = 'ximpelControls'; 
+
+// The class name for the control button elements
 ximpel.XimpelAppView.prototype.CONTROL_CLASS = 'ximpelControl'; 
-ximpel.XimpelAppView.prototype.CONTROLS_DISPLAY_METHOD_OVERLAY_CLASS = 'ximpelControlsOverlay'; 
+
+// The class name for the controls bar when the controls bar is displayed as an overlay.
+ximpel.XimpelAppView.prototype.CONTROLS_DISPLAY_METHOD_OVERLAY_CLASS = 'ximpelControlsOverlay';
+
+// The class name for the controls bar when the controls bar is displayed fixed (not displayed as an overlay but below the player element)
 ximpel.XimpelAppView.prototype.CONTROLS_DISPLAY_METHOD_FIXED_CLASS = 'ximpelControlsFixed'; 
+
+// Two constants that indicate the display types for the controls bar (fixed or overlay)
 ximpel.XimpelAppView.prototype.CONTROLS_DISPLAY_METHOD_OVERLAY = 'overlay';
 ximpel.XimpelAppView.prototype.CONTROLS_DISPLAY_METHOD_FIXED = 'fixed';
-ximpel.XimpelAppView.prototype.CONTROLS_HIDE_TIMEOUT = 2000; // hide the controls after 2 seconds without a mouse movement within the ximpel element.
-ximpel.XimpelAppView.prototype.CURSOR_HIDE_TIMEOUT = 2000; // hide the cursor after 2 seconds without a mouse movement within the ximpel element.
 
 ximpel.XimpelAppView.prototype.PLAY_EVENT = 'play_button_clicked';
 ximpel.XimpelAppView.prototype.PAUSE_EVENT = 'pause_button_clicked';
 ximpel.XimpelAppView.prototype.STOP_EVENT = 'stop_button_clicked';
 
+
+
+// Initialize all the ximpel elements (ie. specify some initial styling for those elements)
 ximpel.XimpelAppView.prototype.initElements = function(){
 	this.initAppElement();
 	this.initPlayerElement();
@@ -67,8 +104,10 @@ ximpel.XimpelAppView.prototype.initElements = function(){
 	this.initWrapperElement();
 	this.initButtonElements();
 }
-// The app element is just a wrapper around the content of the ximpel presentation. When the size of the app element changes, then the 
-// content is scaled to fit within the container element taking up as much space as possible while maintining the original aspect ratio.
+
+
+
+// The app element is just the main element to which all other elements are attached.
 ximpel.XimpelAppView.prototype.initAppElement = function(){
 	this.$appElement.css({
 		'position': 'relative',
@@ -78,6 +117,11 @@ ximpel.XimpelAppView.prototype.initAppElement = function(){
 
 	this.$appElement.addClass( this.APP_ELEMENT_CLASS );
 }
+
+
+
+// The player element is the element to which the Player() object attaches all the DOM elements that
+// form the presentation (overlays, questions, media items, etc.).
 ximpel.XimpelAppView.prototype.initPlayerElement = function(){
 	this.$playerElement.css({
 		'position': 'absolute',
@@ -90,6 +134,10 @@ ximpel.XimpelAppView.prototype.initPlayerElement = function(){
 	this.$playerElement.addClass( this.PLAYER_ELEMENT_CLASS );
 	this.$playerElement.appendTo( this.$wrapperElement );
 }
+
+
+
+// The controls element is the controls bar that contains the control buttons.
 ximpel.XimpelAppView.prototype.initControlsElement = function(){
 	this.$controlsElement.hide();
 	this.$controlsElement.css({
@@ -103,6 +151,12 @@ ximpel.XimpelAppView.prototype.initControlsElement = function(){
 	this.updateControlsElementClass();
 	this.$controlsElement.appendTo( this.$wrapperElement );
 }
+
+
+
+// The wrapperElement is just a wrapper around the content of the ximpel presentation. When the size of the wrapper 
+// element changes, then the content is scaled to fit within the container element taking up as much space as possible
+// while maintining the original aspect ratio.
 ximpel.XimpelAppView.prototype.initWrapperElement = function(){
 	this.$wrapperElement.css({
 		'position': 'absolute',
@@ -115,6 +169,10 @@ ximpel.XimpelAppView.prototype.initWrapperElement = function(){
 	this.$wrapperElement.addClass( this.WRAPPER_ELEMENT_CLASS );
 	this.$wrapperElement.appendTo( this.$appElement );
 }
+
+
+
+// This initializes the elements that represent the control buttons of the presentation.
 ximpel.XimpelAppView.prototype.initButtonElements = function(){
 	var buttonWidth = this.DEFAULT_CONTROL_HEIGHT;
 	var buttonHeight = this.DEFAULT_CONTROL_WIDTH;
@@ -123,6 +181,10 @@ ximpel.XimpelAppView.prototype.initButtonElements = function(){
 	this.initButtonElement( this.$stopButtonElement, 'ximpel/images/stop_button.png', 'left', buttonWidth, buttonHeight, this.stopHandler.bind(this) );
 	this.initButtonElement( this.$fullscreenButtonElement, 'ximpel/images/fullscreen_button.png', 'right', buttonWidth, buttonHeight, this.fullscreenHandler.bind(this) );
 }
+
+
+
+// This initializes one specific control button element.
 ximpel.XimpelAppView.prototype.initButtonElement = function( $buttonElement, backgroundImage, floatDirection, buttonWidth, buttonHeight, handler ){
 	$buttonElement.css({
 		'float': floatDirection,
@@ -142,6 +204,7 @@ ximpel.XimpelAppView.prototype.initButtonElement = function( $buttonElement, bac
 	$buttonElement.hide();
 	$buttonElement.appendTo( this.$controlsElement );
 }
+
 
 
 // The renderView() method is mandatory to implement for any object that wants to be a view and has a View() object as prototype.
@@ -169,6 +232,10 @@ ximpel.XimpelAppView.prototype.renderView = function( $parentElement ){
 	this.listenForKeyPresses();
 	this.listenForFullscreenChange();
 }
+
+
+
+
 ximpel.XimpelAppView.prototype.renderControls = function(){
 	if( ! this.controlsEnabled() ){
 		return;
@@ -183,6 +250,10 @@ ximpel.XimpelAppView.prototype.renderControls = function(){
 	this.$controlsElement.show();
 	this.renderControlButtons();
 }
+
+
+
+
 ximpel.XimpelAppView.prototype.renderControlButtons = function(){
 	var buttonHeight = this.$controlsElement.height();
 	var buttonWidth = buttonHeight;
@@ -193,6 +264,10 @@ ximpel.XimpelAppView.prototype.renderControlButtons = function(){
 
 	this.$fullscreenButtonElement.show();
 }
+
+
+
+
 ximpel.XimpelAppView.prototype.renderPlaybackButtons = function( buttonWidth, buttonHeight ){
 	if( this.model.playerState === this.model.PLAYER_STATE_PLAYING ){
 		this.$playButtonElement.hide();
@@ -209,27 +284,48 @@ ximpel.XimpelAppView.prototype.renderPlaybackButtons = function( buttonWidth, bu
 	}
 }
 
+
+
 ximpel.XimpelAppView.prototype.fullscreenHandler = function(){
 	this.toggleFullscreen();
 }
+
+
+
 ximpel.XimpelAppView.prototype.playHandler = function(){
 	this.pubSub.publish( this.PLAY_EVENT );
 }
+
+
+
 ximpel.XimpelAppView.prototype.pauseHandler = function(){
 	this.pubSub.publish( this.PAUSE_EVENT );
 }
+
+
+
 ximpel.XimpelAppView.prototype.stopHandler = function(){
 	this.pubSub.publish( this.STOP_EVENT );
 }
+
+
+
 ximpel.XimpelAppView.prototype.registerPlayHandler = function( handler ){
 	return this.pubSub.subscribe( this.PLAY_EVENT, handler );
 }
+
+
+
 ximpel.XimpelAppView.prototype.registerPauseHandler = function( handler ){
 	return this.pubSub.subscribe( this.PAUSE_EVENT, handler );
 }
+
+
+
 ximpel.XimpelAppView.prototype.registerStopHandler = function( handler ){
 	return this.pubSub.subscribe( this.STOP_EVENT, handler );
 }
+
 
 
 ximpel.XimpelAppView.prototype.updateControlsElementClass = function(){
@@ -244,6 +340,9 @@ ximpel.XimpelAppView.prototype.updateControlsElementClass = function(){
 
 	this.$controlsElement.addClass(  this.CONTROLS_CLASS + ' ' + controlsDisplayMethodClass );
 }
+
+
+
 ximpel.XimpelAppView.prototype.renderWrapper = function(){
 	var wrapperDimensions = this.determineWrapperDimensions();
 	this.$wrapperElement.css({
@@ -270,6 +369,9 @@ ximpel.XimpelAppView.prototype.renderWrapper = function(){
     var scaledContentHeight = this.$wrapperElement[0].getBoundingClientRect().height;
     this.repositionInCenter( this.$wrapperElement, appWidth, appHeight, scaledContentWidth, scaledContentHeight );
 }
+
+
+
 ximpel.XimpelAppView.prototype.determineControlsPosition = function(){
 	var wrapperDimensions = this.determineWrapperDimensions();
 	var controlsDisplayMethod = this.getControlsDisplayMethod();
@@ -285,6 +387,9 @@ ximpel.XimpelAppView.prototype.determineControlsPosition = function(){
 	}
 	return {'x': x, 'y': y };
 }
+
+
+
 ximpel.XimpelAppView.prototype.determineWrapperDimensions = function(){
 	var controlsDisplayMethod = this.getControlsDisplayMethod();
 	var controlsEnabled = this.controlsEnabled();
@@ -300,10 +405,16 @@ ximpel.XimpelAppView.prototype.determineWrapperDimensions = function(){
 	}
 	return {'width': width, 'height': height };
 }
+
+
+
 // implement a destroyView method which is called when the ximpelApp.destroy() method is called.
 ximpel.XimpelAppView.prototype.destroyView = function(){
 	//	console.log("view destroyed!");
 }
+
+
+
 ximpel.XimpelAppView.prototype.listenForWindowResize = function(){
 	// Listen for window resizes and re-render the view because elements may have changed size.
 	// Only start rendering if the window was stopped being resized at least 50ms ago (for performance).
@@ -315,9 +426,15 @@ ximpel.XimpelAppView.prototype.listenForWindowResize = function(){
 		resizeTimer = setTimeout( this.windowResizeHandler.bind( this ), 100);
 	}.bind(this) );
 }
+
+
+
 ximpel.XimpelAppView.prototype.windowResizeHandler = function(){
 	this.render();
 }
+
+
+
 ximpel.XimpelAppView.prototype.listenForKeyPresses = function(){
 	var namespace = 'ximpelAppView_'+this.model.appId;
 	this.$appElement.off("keypress."+namespace);
@@ -333,6 +450,9 @@ ximpel.XimpelAppView.prototype.listenForKeyPresses = function(){
 		}
 	}.bind(this) );
 }
+
+
+
 ximpel.XimpelAppView.prototype.toggleFullscreen = function(){
 	var appElement = this.$appElement[0];
 	// If there is an element in fullscreen then we exit fullscreen mode.
@@ -346,6 +466,9 @@ ximpel.XimpelAppView.prototype.toggleFullscreen = function(){
 		this.requestFullscreen( appElement );
 	}
 }
+
+
+
 ximpel.XimpelAppView.prototype.exitFullscreen = function(){
 	if( document.exitFullscreen ){
 		document.exitFullscreen();
@@ -360,9 +483,15 @@ ximpel.XimpelAppView.prototype.exitFullscreen = function(){
 	}
 	return true;
 }
+
+
+
 ximpel.XimpelAppView.prototype.fullscreenElement = function(){
 	return document.fullscreenElement || document.webkitFullscreenElement || document.mozFullScreenElement || document.msFullscreenElement;
 }
+
+
+
 ximpel.XimpelAppView.prototype.requestFullscreen = function( element ){
 	if( element.requestFullscreen ){
 		element.requestFullscreen();
@@ -377,9 +506,14 @@ ximpel.XimpelAppView.prototype.requestFullscreen = function( element ){
 	}
 	return true;
 }
+
+
+
 ximpel.XimpelAppView.prototype.fullscreenSupported = function(){
 	return document.fullscreenEnabled || document.webkitFullscreenEnabled || document.mozFullScreenEnabled || document.msFullscreenEnabled;
 }
+
+
 
 // Start listening for the fullscreenchange event and execute the fullscreenChangeHandler() function when the event is triggered.
 ximpel.XimpelAppView.prototype.listenForFullscreenChange = function(){
@@ -387,6 +521,9 @@ ximpel.XimpelAppView.prototype.listenForFullscreenChange = function(){
 	$(document).off('webkitfullscreenchange.'+namespace+' mozfullscreenchange.'+namespace+' fullscreenchange.'+namespace+' MSFullscreenChange.'+namespace );
 	$(document).on('webkitfullscreenchange.'+namespace+' mozfullscreenchange.'+namespace+' fullscreenchange.'+namespace+' MSFullscreenChange.'+namespace, this.fullscreenChangeHandler.bind(this) );
 }
+
+
+
 // When the appElement goes into fullscreen or comes out of fullscreen we need to set the width and height of the
 // $appElement because in some browsers the size of an element is not set to the size of the window when 
 // going fullscreen. So we need to set this explicitly when going into fullscreen en changing it back when
@@ -406,12 +543,17 @@ ximpel.XimpelAppView.prototype.fullscreenChangeHandler = function(){
 	this.render();
 }
 
+
+
 // Return the scale with which to resize a rectangle's x and y dimensions such that that neither x nor y exceed the specified maximum width or height while
 // x and y are both as large as possible (ie. either x or y takes up the full maximum width or height).
 ximpel.XimpelAppView.prototype.getScaleFactor = function( availableWidth, availableHeight, actualWidth, actualHeight ){
 	var scale = Math.min( availableWidth / actualWidth, availableHeight / actualHeight );
 	return scale;
 }
+
+
+
 // Return the x and y coordinates for a rectangle centered within some available space (another rectangle). If the rectangle to be centered is bigger then the 
 ximpel.XimpelAppView.prototype.getCenteredRectangleCoordinates = function( availableWidth, availableHeight, actualWidth, actualHeight ){
 	var x = Math.abs( Math.round( ( availableWidth-actualWidth ) / 2 ) );
@@ -419,9 +561,13 @@ ximpel.XimpelAppView.prototype.getCenteredRectangleCoordinates = function( avail
 	return { 'x': x, 'y': y };
 }
 
+
+
 ximpel.XimpelAppView.prototype.getPlayerElement = function(){
 	return this.$playerElement;
 }
+
+
 
 ximpel.XimpelAppView.prototype.scaleToFit = function( $el, availWidth, availheight, contentWidth, contentHeight ){
 	var scale = this.getScaleFactor( availWidth, availheight, contentWidth, contentHeight );
@@ -438,6 +584,9 @@ ximpel.XimpelAppView.prototype.scaleToFit = function( $el, availWidth, availheig
 		'transform-origin'         : 'top left',
 	});
 }
+
+
+
 ximpel.XimpelAppView.prototype.repositionInCenter = function( $el, availWidth, availheight, contentWidth, contentHeight ){
 	var coordinates = this.getCenteredRectangleCoordinates( availWidth, availheight, contentWidth, contentHeight );	
 	$el.css({
@@ -445,12 +594,21 @@ ximpel.XimpelAppView.prototype.repositionInCenter = function( $el, availWidth, a
 		'top': coordinates.y + 'px'
 	});
 }
+
+
+
 ximpel.XimpelAppView.prototype.getControlsDisplayMethod = function(){
 	return this.model.configModel.controlsDisplayMethod;
 }
+
+
+
 ximpel.XimpelAppView.prototype.controlsEnabled = function(){
 	return this.model.configModel.enableControls;
 }
+
+
+
 ximpel.XimpelAppView.prototype.determineAppWidth = function( specifiedWidth ){
 	var $parent = this.$appElement.parent();
 
@@ -462,6 +620,9 @@ ximpel.XimpelAppView.prototype.determineAppWidth = function( specifiedWidth ){
 		return this.DEFAULT_APP_WIDTH;
 	}
 }
+
+
+
 ximpel.XimpelAppView.prototype.determineAppHeight = function( specifiedHeight ){
 	var $parent = this.$appElement.parent();
 	if( specifiedHeight ){
@@ -472,6 +633,9 @@ ximpel.XimpelAppView.prototype.determineAppHeight = function( specifiedHeight ){
 		return this.DEFAULT_APP_HEIGHT;
 	}
 }
+
+
+
 ximpel.XimpelAppView.prototype.determineAppElement = function( specifiedAppElement ){
 	var $appElement = ximpel.getElement( specifiedAppElement );
 
@@ -480,6 +644,9 @@ ximpel.XimpelAppView.prototype.determineAppElement = function( specifiedAppEleme
 	}
 	return $appElement;
 }
+
+
+
 // Create the XIMPEL element. The element will have the ID as specified in "specifiedElementId" or the default ID if none is specified.
 // If that ID is already in use by another element, then a suffix number will be added to get an ID that is not in use.
 ximpel.XimpelAppView.prototype.createAppElement = function( specifiedEementId ){
@@ -499,61 +666,4 @@ ximpel.XimpelAppView.prototype.createAppElement = function( specifiedEementId ){
 	});
 
 	return $el;
-}
-
-
-
-
-
-// ################################################### OLD ###################################################
-// ################################################### OLD ###################################################
-// ################################################### OLD ###################################################
-
-ximpel.XimpelAppView.prototype.adjustContainerContent = function(){
-
-	this.updateControlsPosition();
-
-
-
-
-	// call handleContainerMouseMove() when a mousemove happens within the container element.
-	var lastMouseMoveTimestamp = Date.now();
-	this.$containerElement.on("mousemove", function(){
-		var nowTimestamp = Date.now();
-		if( (nowTimestamp - lastMouseMoveTimestamp) >= 100 ){
-			this.handleContainerMouseMove();
-			lastMouseMoveTimestamp = nowTimestamp;
-		}
-	}.bind(this) );
-
-	// call handleContainerMouseLeave() when the mouse leaves the container element.
-	this.$containerElement.on("mouseleave", function(){
-		this.handleContainerMouseLeave();
-	}.bind(this) );
-}
-ximpel.XimpelAppView.prototype.handleContainerMouseLeave = function(){
-	this.handleControlsOnMouseLeave();
-}
-ximpel.XimpelAppView.prototype.handleContainerMouseMove = function(){
-	this.handleCursorOnMouseMove();
-	this.handleControlsOnMouseMove();
-}
-ximpel.XimpelAppView.prototype.handleCursorOnMouseMove = function(){
-	clearTimeout( this.hideCursorTimeoutHandler );
-	this.showCursor();
-	this.hideCursorTimeoutHandler = setTimeout( function(){
-		this.hideCursor();
-	}.bind(this), this.CURSOR_HIDE_TIMEOUT );
-}
-ximpel.XimpelAppView.prototype.handleControlsOnMouseMove = function(){
-	if( this.enableControls === false ){
-		return;
-	}
-	if( this.controlsDisplayMethod === this.CONTROLS_DISPLAY_METHOD_HOVER_OVERLAY ){
-		this.$controlsElement.stop( true, true ).fadeIn("fast");
-		clearTimeout( this.hideControlsTimeoutHandler );
-		this.hideControlsTimeoutHandler = setTimeout( function(){
-			this.$controlsElement.stop( true, true ).fadeOut("slow");
-		}.bind(this), this.CONTROLS_HIDE_TIMEOUT );
-	}
 }

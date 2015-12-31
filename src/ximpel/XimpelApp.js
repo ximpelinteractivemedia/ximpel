@@ -23,7 +23,7 @@ ximpel.XimpelApp = function( appId, playlistFile, configFile, options ){
 	ximpelAppModel.appId = appId;
 
 	// Create a ximpelApp view, without rendering it yet.	
-	this.ximpelAppView = new ximpel.XimpelAppView( ximpelAppModel,  options.appElement, options.appWidth, options.appHeight );
+	this.ximpelAppView = new ximpel.XimpelAppView( ximpelAppModel, options.appElement, options.appWidth, options.appHeight );
 
 	// Will hold the ximpel.Player() object which plays the ximpel presentation.
 	this.ximpelPlayer = null;

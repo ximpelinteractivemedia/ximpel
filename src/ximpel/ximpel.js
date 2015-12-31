@@ -1,16 +1,18 @@
-// ########################################################################################################################################################
-// The main ximpel namespace. Everything directly attached to the ximpel
-// property is globally accessible because the ximpel property is attached
-// to the global object. The ximpel property can be considered as the global
-// namespace for XIMPEL.
+// ximpel.js
+// This file defines the main ximpel namespace. Every property/method directly attached to the ximpel
+// object is globally accessible because the ximpel object stored in a global variable. The ximpel object
+// can be considered as the global namespace for XIMPEL. This way there will only be one XIMPEL variable
+// in the global namespace.
 // ########################################################################################################################################################
 
 // Define the namespace for ximpel. This is where all object constructors get attached to, as well as
 // any other properties that are needed by ximpel.
 var ximpel = {};
 
+
 // An object to which all media type definitions will be attached.
 ximpel.mediaTypeDefinitions = {};
+
 
 // Each media type has a MediaTypeRegistration() object with meta data about that media type. The meta-data
 // includes information such as the tag-name used in the playlist, the allowed children and attributes and
@@ -20,21 +22,20 @@ ximpel.mediaTypeDefinitions = {};
 // Note that this property is attached to the global ximpel namespace. So it can be accessed from anywhere.
 ximpel.availableMediaTypes = {};
 
+
 // A number of tags are supported natively by ximpel in the playlist and config files. 
 // These tags cannot be used as tags for custom media types.
 ximpel.ximpelTags = ['ximpel', 'playlist', 'subject', 'media', 'description','score', 'variable', 'config', 'leadsTo', 'sequence', 'parallel', 'overlay', 'question', 'questions', 'option', 'source'];
+
 
 // Define the log prefix for the custom log functions. This will be shown as prefix in a log message when doing ximpel.log();
 ximpel.LOG_PREFIX = '[XIMPEL] '
 
 
-
-
-
-
 // Here we define a default html element for the ximpel player. All media will be attached to this element.
 // Defining it here is a temporary solution, eventually it should be passed somehow (as an arguemnt to ximpelApp or in the playlist file)
 ximpel.DEFAULT_PLAYER_ELEMENT = 'ximpel_player';
+
 
 // Get the jquery wrapped html element that corresponds to the 'specifiedElement' argument.
 // If the element is a string that corresponds to the id of an html element, that element is returned as a jquery wrapper.
@@ -65,6 +66,7 @@ ximpel.getElement = function( specifiedElement ){
 	return false;
 }
 
+
 // wrapInJquery wraps jquery around a DOM element if needed. When it already is a jquery object then this does nothing.
 // Note: rewrapping a jquery object that is already a jquery object, does not do harm but it is claimed that wrapping only
 // when needed is 30 or more percent faster then just blindly rewrapping the object as jquery.
@@ -72,16 +74,17 @@ ximpel.wrapInJquery = function( obj ){
 	return (obj instanceof jQuery) ? obj : $( obj );
 }
 
+
 // Returns true of the given obj is a html DOM element and false otherwise.
 ximpel.isElement = function( obj ){
 	return obj instanceof HTMLElement;
 }
 
+
 // Returns true of the given obj is a jquery object and false otherwise.
 ximpel.isJQueryObject = function( obj ){
 	return obj instanceof jQuery;
 }
-
 
 
 // A function factory that returns logging functions that log information in different ways. 
@@ -98,6 +101,7 @@ ximpel.logFunctionFactory = function( logFunc, logPrefix, logType ){
 		}
 	}
 }
+
 
 // We use the logFunctionFactory() to create ximpel specific logging functions. The bind()
 // calls are  needed because the console functions expect the this keyword to refer to the 

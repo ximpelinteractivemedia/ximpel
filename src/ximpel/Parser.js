@@ -727,7 +727,10 @@ ximpel.Parser.prototype.processConfigNode = function( domElement ){
 			configModel.controlsDisplayMethod = $.trim(child.textContent);
 		} else if( childName === 'mediaDirectory' ){
 			configModel.mediaDirectory = $.trim(child.textContent);
-		} else{
+		} else if( childName === 'showScore' ){
+			configModel.showScore = ( $.trim(child.textContent).toLowerCase() === 'true');
+		}
+		else{
 			ximpel.warn('Parser.processConfigNode(): Invalid child ignored! Element <'+info.tagName+'> has child <'+childName+'>.This child element is not allowed on <'+info.tagName+'>.');
 		}
 	}

@@ -85,6 +85,7 @@ ximpel.Player.prototype.STATE_PLAYING = 'state_player_playing';
 ximpel.Player.prototype.STATE_PAUSED = 'state_player_paused';
 ximpel.Player.prototype.STATE_STOPPED = 'state_player_stopped';
 ximpel.Player.prototype.EVENT_PLAYER_END = 'ended';
+ximpel.Player.prototype.EVENT_VARIABLE_UPDATED = 'variable_updated';
 
 
 
@@ -305,6 +306,9 @@ ximpel.Player.prototype.applyVariableModifier = function( variableModifier ){
 
 	// Store the new value of the variable
 	this.variables[ variableModifier.id ] = newValue;
+
+	// Publish event
+	this.pubSub.publish( this.EVENT_VARIABLE_UPDATED, variableModifier.id );
 }
 
 
@@ -458,7 +462,7 @@ ximpel.Player.prototype.handleSequencePlayerEnd = function(){
 
 	// There is nothing more to play.... we may want to present an end screen here.
 
-	// Publis the player end event. Any (third party) code that registered a handler for this event using
+	// Publish the player end event. Any (third party) code that registered a handler for this event using
 	// addEventHandler() will have its handler called.
 	this.pubSub.publish( this.EVENT_PLAYER_END );
 }
@@ -478,6 +482,8 @@ ximpel.Player.prototype.addEventHandler = function( eventName, func ){
 	switch( eventName ){
 		case this.EVENT_PLAYER_END:
 			return this.pubSub.subscribe( this.EVENT_PLAYER_END, func ); break;
+		case this.EVENT_VARIABLE_UPDATED:
+			return this.pubSub.subscribe( this.EVENT_VARIABLE_UPDATED, func ); break;
 		default:
 			ximpel.warn("Player.addEventHandler(): cannot add an event handler for event '" + eventName + "'. This event is not used by the player.");
 			break;

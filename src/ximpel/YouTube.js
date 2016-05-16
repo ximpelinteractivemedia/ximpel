@@ -46,6 +46,9 @@ ximpel.mediaTypeDefinitions.YouTube = function( customElements, customAttributes
 	// The youtube video id (can be found in the URL of a youtube video).
 	this.videoId = customAttributes.id;
 
+	// Set mute audio
+	this.mute = customAttributes.mute;
+
 	// The x coordinate of the video relative to the ximpel player element or 'center' to align center.
 	// The value for x should include the units (for instance: 600px or 20%)
 	this.x = customAttributes.x || 'center';
@@ -269,6 +272,13 @@ ximpel.mediaTypeDefinitions.YouTube.prototype.loadYoutubePlayer = function( defe
 // This tells the youtube player to start playing. It also shows and positions the youtube element at the appropriate position.
 ximpel.mediaTypeDefinitions.YouTube.prototype.playYoutube = function(){
 	this.repositionYoutubeIframe();
+	if (this.mute) {
+		this.youtubePlayer.mute();
+	}
+	else {
+		this.youtubePlayer.unMute();
+	}
+
 	this.youtubePlayer.playVideo();
 	this.$youtubeContainer.show();
 }

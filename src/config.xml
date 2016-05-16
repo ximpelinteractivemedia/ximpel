@@ -3,5 +3,6 @@
 		<enableControls>true</enableControls>
 		<controlsDisplayMethod>overlay</controlsDisplayMethod>
 		<mediaDirectory></mediaDirectory>
+		<showScore>false</showScore>
 	</config>
 </ximpel>

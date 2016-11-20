@@ -41,6 +41,9 @@ ximpel.mediaTypeDefinitions.Video = function( customElements, customAttributes, 
 	// A reference to the XIMPEL player object. The media type can make use of functions on the player object.
 	this.player = player;
 
+	// Set mute audio
+	this.mute = this.customAttributes.mute === 'true' || false;
+
 	// The x coordinate of the video relative to the ximpel player element or 'center' to align center.
 	// The value for x should include the units (for instance: 600px or 20%)
 	this.x = this.customAttributes.x || 'center';
@@ -136,6 +139,7 @@ ximpel.mediaTypeDefinitions.Video.prototype.mediaPlay = function(){
 		// media item, otherwise do nothing. It may be the case that the media item is in a non-playing
 		// state when the pause() method has been called during the buffering.
 		if( this.state === this.STATE_PLAYING ){
+			$video.prop('muted', this.mute);
 			videoElement.play();
 		}
 	}.bind(this) );
@@ -402,7 +406,7 @@ var mediaTypeRegistrationObject = new ximpel.MediaTypeRegistration(
 	'video',  							// = the media type ID (and also the tagname used in the playlist)
 	ximpel.mediaTypeDefinitions.Video,  // a pointer to the constructor function to create instances of the media type.
 	{
-		'allowedAttributes': ['width', 'height', 'x', 'y', 'startTime'], // the attributes that are allowed on the <video> tag (excluding the attributes that are available for every media type like duration).
+		'allowedAttributes': ['mute', 'width', 'height', 'x', 'y', 'startTime'], // the attributes that are allowed on the <video> tag (excluding the attributes that are available for every media type like duration).
 		'requiredAttributes': [],		// the attributes that are required on the <video> tag.
 		'allowedChildren': ['source'],	// the child elements that are allowed on the <video> tag.
 		'requiredChildren': ['source'] 	// The child elements that are required on the <video> tag.

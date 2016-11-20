@@ -468,7 +468,7 @@ var mediaTypeRegistrationObject = new ximpel.MediaTypeRegistration(
 	'youtube',  							// = the media type ID (and also the tagname used in the playlist)
 	ximpel.mediaTypeDefinitions.YouTube,	// a pointer to the constructor function to create instances of the media type.
 	{
-		'allowedAttributes': ['videoId', 'width', 'height', 'x', 'y', 'startTime'], // the attributes that are allowed on the <youtube> tag (excluding the attributes that are available for every media type like duration).
+		'allowedAttributes': ['mute', 'videoId', 'width', 'height', 'x', 'y', 'startTime'], // the attributes that are allowed on the <youtube> tag (excluding the attributes that are available for every media type like duration).
 		'requiredAttributes': ['videoId'],	// the attributes that are required on the <youtube> tag.
 		'allowedChildren': ['source'],		// the child elements that are allowed on the <youtube> tag.
 		'requiredChildren': ['source'] 		// The child elements that are required on the <youtube> tag.

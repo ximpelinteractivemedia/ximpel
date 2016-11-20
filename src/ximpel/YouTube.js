@@ -233,11 +233,6 @@ ximpel.mediaTypeDefinitions.YouTube.prototype.requestYoutubeApiScript = function
 ximpel.mediaTypeDefinitions.YouTube.prototype.loadYoutubePlayer = function( deferred ){
 	// The function to be called when the youtube player is ready to be used.
 	var youtubePlayerReadyHandler = function(){
-		// If the startTime is zero then we use 0.01 instead because youtube doesn't 
-		// allow seeking to time "0".
-		var startTime = this.startTime === 0 ? 0.01 : this.startTime;
-
-		this.youtubePlayer.seekTo( startTime, true );
 		deferred.resolve();
 	}
 
@@ -260,8 +255,9 @@ ximpel.mediaTypeDefinitions.YouTube.prototype.loadYoutubePlayer = function( defe
      		'disablekb': 1,		// disable keyboard shortcuts?
      		'wmode': 'opaque',
      		'modestbranding': 0,
-     		'iv_load_policy': 3 // show annotations? (3=no, 1 =yes)
-			}
+     		'iv_load_policy': 3, // show annotations? (3=no, 1 =yes)
+     		'start': this.startTime
+		}
 	});
 
 	return deferred;

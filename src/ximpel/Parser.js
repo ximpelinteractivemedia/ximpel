@@ -331,7 +331,7 @@ ximpel.Parser.prototype.processMediaTypeNode = function( playlistModel, domEleme
 		var childName = child.nodeName;
 
 		if( childName === 'overlay' ){
-			mediaModel.overlays.push( this.processOverlayNode( playlistModel, child ) );
+			mediaModel.overlays.push( this.processOverlayNode( playlistModel, child, i ) );
 		} else if( childName === 'score' || childName === 'variable' ){
 			var variableModifier = this.processVariableNode( playlistModel, child );
 			mediaModel.variableModifiers.push( variableModifier );
@@ -624,10 +624,13 @@ ximpel.Parser.prototype.processDescriptionNode = function( playlistModel, domEle
 
 
 // Process the <overlay> node. The result is an OverlayModel object.
-ximpel.Parser.prototype.processOverlayNode = function( playlistModel, domElement ){
+ximpel.Parser.prototype.processOverlayNode = function( playlistModel, domElement, index ){
 	// Get some info about the current domElement (like its parent, its children, etc)
 	var info = this.getDomElementInfo( domElement );
 	var overlayModel = new ximpel.OverlayModel();
+
+	// Store index for stable sorting
+	overlayModel.index = index;
 
 	// Process and store the attributes of the <overlay> element.
 	for( var i=0; i<info.nrOfAttributes; i++ ){

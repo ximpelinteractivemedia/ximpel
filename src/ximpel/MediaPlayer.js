@@ -535,6 +535,11 @@ ximpel.MediaPlayer.prototype.destroyPlayingOverlays = function(){
 ximpel.MediaPlayer.prototype.getOverlaysSortedByStartTime = function( overlays ){
 	// overlays.slice() creates a copy of the overlays array and then sort() sorts them by start time.
 	var overlaysSorted = overlays.slice().sort( function( overlay1, overlay2 ){
+		if (overlay1.startTime === overlay2.startTime) {
+			// Some browser implementations of Array.sort are non-stable, so
+			// compare the indexes to retain the current order (stable sort)
+			return overlay1.index - overlay2.index;
+		}
 		return overlay1.startTime - overlay2.startTime;
 	} );
 	

@@ -141,6 +141,27 @@
 
 
 
+					<h3>Opening a URL in an iframe using leadsTo</h3>
+					To open a URL in an iframe that is put on top the currently visible content, the leadsTo attribute value must contain a URL with the <code>url:</code> prefix.
+
+					<h4>playlist.xml</h4>
+					<pre class="brush: html;">
+						&lt;subject id=&quot;subject1&quot;
+							&lt;media&gt;
+						            &lt;video&gt;
+						                &lt;source file=&quot;fast&quot; extensions=&quot;mp4&quot; types=&quot;video/mp4&quot; /&gt;
+										&lt;overlay leadsTo=&quot;url:http://www.ximpel.net&quot; shape=&quot;rectangle&quot; x=&quot;0px&quot; y=&quot;0px&quot; width=&quot;300px&quot; height=&quot;200px&quot; text=&quot;View the XIMPEL site!	&quot; /&gt;
+						            &lt;/video&gt;
+							&lt;/media&gt;
+						&lt;/subject&gt;</pre>
+					
+					If there is media item playing when the iframe is opened, the media type will be paused. When the iframe is closed with the close button, the media item will be resumed.
+					<br /><br />
+
+
+
+
+
 					<h3>Overview of supported attributes and elements</h3>
 					There are many other attributes available for the overlay. A list is shown below.
 					
@@ -188,7 +209,7 @@
 						<tr>
 							<td>leadsTo</td>
 							<td>For example: <code>introSubject</code></td>
-							<td>The name of the subject to jump to when this subject finishes.</td>
+							<td>The name of the subject to jump to when this subject finishes. When you assign a URL with the prefix <code>url:</code> as value, an iframe with the URL is displayed over the current content.</td>
 						</tr>
 						<tr>
 							<td>startTime</td>

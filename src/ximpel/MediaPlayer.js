@@ -364,8 +364,38 @@ ximpel.MediaPlayer.prototype.handleOverlayClick = function( overlayModel, overla
 
 	// Determine the leadsTo value for the overlay that was clicked.
 	var leadsTo = this.player.determineLeadsTo( overlayModel.leadsToList );
+
 	if( leadsTo ){
-		this.player.goTo( leadsTo ); // starts playing the subject specified in the leadsTo
+		// Check if URL is set to be displayed in iframe
+		var urlAttr = 'url:';
+		if (leadsTo.toLowerCase().indexOf(urlAttr) === 0){
+			// Re-attach overlay click handler if playing; otherwise it already has been attached
+			if( this.isPlaying() ){
+				this.player.pause();
+				overlayView.onOneClick( this.handleOverlayClick.bind(this, overlayModel, overlayView ) );
+			}
+
+			// Generate iframe with close button and inject into DOM
+			var url = leadsTo.substr(urlAttr.length);
+			$player = this.player;
+			$urlDisplay = $('<div class="urlDisplay"></div>');
+
+			$closeButton = $('<img class="closeButton" src="ximpel/images/close_button.png"/>')
+				.one('click', function(){
+					$urlDisplay.remove();
+					if( $player.isPaused() ){
+						$player.resume();
+					}
+				});
+
+			$urlDisplay.append( $('<iframe src="' + url + '"></iframe>') )
+				.append( $closeButton )
+				.appendTo( this.player.getPlayerElement() );
+
+		} else{
+			// start playing the subject specified in the leadsTo
+			this.player.goTo( leadsTo );
+		}
 	}
 }
 

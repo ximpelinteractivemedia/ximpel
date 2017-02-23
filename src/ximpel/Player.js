@@ -87,6 +87,8 @@ ximpel.Player.prototype.STATE_STOPPED = 'state_player_stopped';
 ximpel.Player.prototype.EVENT_PLAYER_END = 'ended';
 ximpel.Player.prototype.EVENT_VARIABLE_UPDATED = 'variable_updated';
 
+// Sent when a subject begins to play. The subject model is included as an argument.
+ximpel.Player.prototype.EVENT_SUBJECT_PLAYING = 'subject_playing';
 
 
 // init() initializes the player once when the Player is constructed, but is never called again after that.
@@ -166,6 +168,10 @@ ximpel.Player.prototype.playSubject = function( subjectModel ){
 
 	// Then finally tell the sequence player to start playing the sequence model of our subject.
 	this.sequencePlayer.play( sequenceModel );
+
+	// Publish the subject play event. Any (third party) code that registered a handler for this event using
+	// addEventHandler() will have its handler called.
+	this.pubSub.publish( this.EVENT_SUBJECT_PLAYING, subjectModel );
 }
 
 
@@ -484,6 +490,8 @@ ximpel.Player.prototype.addEventHandler = function( eventName, func ){
 			return this.pubSub.subscribe( this.EVENT_PLAYER_END, func ); break;
 		case this.EVENT_VARIABLE_UPDATED:
 			return this.pubSub.subscribe( this.EVENT_VARIABLE_UPDATED, func ); break;
+		case this.EVENT_SUBJECT_PLAYING:
+			return this.pubSub.subscribe( this.EVENT_SUBJECT_PLAYING, func ); break;
 		default:
 			ximpel.warn("Player.addEventHandler(): cannot add an event handler for event '" + eventName + "'. This event is not used by the player.");
 			break;

@@ -141,6 +141,31 @@
 	cursor: pointer;
 }
 
+.ximpelVideoContainer > video {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: auto;
+}
+
+.ximpelProgressBar {
+	position: absolute;
+	height: 20px;
+	width: 100%;
+	z-index: 1;
+	opacity: 0.4;
+	background: #000000;
+}
+
+.ximpelProgressBar > div {
+	position: relative;
+	transition: width 1s;
+	width: 0;
+	height: 100%;
+	background: #55ee55;
+}
+
 /* 	
  * transform: translate3d( 0,0,0 ); might work for overflow: hidden bugs in chrome 
  */

@@ -62,11 +62,23 @@ ximpel.mediaTypeDefinitions.Video = function( customElements, customAttributes, 
 	// The statTime should be in seconds but can be a floating point number.
 	this.startTime = customAttributes['startTime'] || 0;
 
-	// will hold the video's HTML element (or more specifically a jquery selector that points to the HTML element).
+	// jQuery selectors that point to the video container div, the video element itself and
+	// a progressbar. We will create the following DOM structure:
+	//   <div class="ximpelVideoContainer">
+	//     <video />
+	//     <div class="ximpelProgressBar">
+	//       <div />
+	//    </div>
+	//   </div>
+	this.$videoContainer = null;
 	this.$video = null;
+	this.$progressBar = null;
 
 	// Get the <source> element that was specified in the playlist for this video (should be one element)
 	var playlistSourceElement = ximpel.filterArrayOfObjects( customElements, 'elementName', 'source' )[0];
+
+	// Show progress bar if the <video ... progressbar="true" />
+	this.showProgressBar = (customAttributes.progressbar == 'true');
 
 	// Get a jquery object that selects all the html source elements that should be added to the video element.
 	this.$htmlSourceElements = this.getHtmlSourceElements( playlistSourceElement );
@@ -83,6 +95,18 @@ ximpel.mediaTypeDefinitions.Video.prototype = new ximpel.MediaType();
 ximpel.mediaTypeDefinitions.Video.prototype.STATE_PLAYING = 'state_video_playing';
 ximpel.mediaTypeDefinitions.Video.prototype.STATE_PAUSED = 'state_video_paused';
 ximpel.mediaTypeDefinitions.Video.prototype.STATE_STOPPED = 'state_video_stopped';
+
+
+
+// This method is called every time the 'timeupdate' event fires, which is whenever the
+// `currentTime` attribute of the video has been updated. If the video has a progress bar
+// (defined in the playlist), we will update it.
+ximpel.mediaTypeDefinitions.Video.prototype.timeupdate = function(evt) {
+	var progress = evt.currentTarget.currentTime / evt.currentTarget.duration * 100;
+	if (this.$progressBar) {
+		this.$progressBar.css({width: progress + '%'});
+	}
+};
 
 
 
@@ -105,6 +129,7 @@ ximpel.mediaTypeDefinitions.Video.prototype.mediaPlay = function(){
 		'preload': 'none'
 	});
 	var videoElement = $video[0];
+	var $videoContainer = this.$videoContainer = $('<div class="ximpelVideoContainer" />').append($video);
 
 	// Add the HTML source elements to the video element (the browser will pick which source to use once the video starts loading).
 	$video.append( this.$htmlSourceElements );
@@ -114,7 +139,13 @@ ximpel.mediaTypeDefinitions.Video.prototype.mediaPlay = function(){
 	// with .addEventHandler('end', handlerFunc) will be called. Here we indicate that the .ended() method will be
 	// called when the 'ended' event on the video element is triggered (ie. when the video has nothing more to play).
 	$video.on('ended', this.ended.bind(this) );
-	
+
+	// Call 'timeupdate' method on the 'timeupdate' event
+	$video.on('timeupdate', this.timeupdate.bind(this) );
+
+	// Call 'timeupdate' method on the `timeupdate` event
+	$video.on( 'timeupdate', this.timeupdate.bind(this) );
+
 	// Set an event listener (that runs only once) for the loadedmetadata event. This waits till the metadata of the video
 	// (duration, videoWidth, videoHeight) has been loaded and then executes the function.
 	$video.one("loadedmetadata", function(){
@@ -122,9 +153,15 @@ ximpel.mediaTypeDefinitions.Video.prototype.mediaPlay = function(){
 
 		// Set the current position in the video to the appropriate startTime (this can only be done after the metadata is loaded).
 		videoElement.currentTime = this.startTime;
-		
-		// Attach the video element to the DOM.
-		this.$video.appendTo( this.$attachTo );
+
+		// Attach the progress bar to the video container
+		if (this.showProgressBar) {
+			var $progressBar = this.$progressBar = $('<div />');
+			$('<div class="ximpelProgressBar" />').append($progressBar).appendTo(this.$videoContainer);
+		}
+
+		// Attach the video container to the DOM.
+		this.$videoContainer.appendTo( this.$attachTo );
 
 		// This sets the x, y, width and height of the video (can only be done after the video is appended to the DOM)
 		this.calculateVideoDetails();
@@ -212,7 +249,6 @@ ximpel.mediaTypeDefinitions.Video.prototype.mediaStop = function(){
 	// Indicate that the media item is now in a stopped state.
 	this.state = this.STATE_STOPPED;
 
-	var $video = this.$video;
 	var videoElement = this.$video[0];
 	videoElement.pause();
 	
@@ -223,11 +259,13 @@ ximpel.mediaTypeDefinitions.Video.prototype.mediaStop = function(){
 	videoElement.load();
 
 	// We detach and remove the video element. We just create it again when the play method is called.
-	$video.detach();
-	$video.remove();
+	this.$videoContainer.detach();
+	this.$videoContainer.remove();
 
 	// Make sure we are back in the state the media item was in before it started playing.
+	this.$videoContainer = null;
 	this.$video = null;
+	this.$progressBar = null;
 	this.bufferingPromise = null;
 }
 
@@ -302,13 +340,13 @@ ximpel.mediaTypeDefinitions.Video.prototype.calculateVideoDetails = function(){
 	// We need to do this before we check if x and y are equal to "center"
 	// because determining the x and y to center the video can only be done if the width and height of the
 	// video are known and this information is only accessible if we set it here.
-	this.$video.css({
+	this.$videoContainer.css({
 		'position': 'absolute',
 		'width': width,
 		'height': height,
 		'left': x,
 		'top': y
-	});	
+	});
 
 	// If x or y are set to 'center' then we use the width and height of the video element to determine the x and y coordinates such
 	// that the video element is centered within the player element.
@@ -318,7 +356,7 @@ ximpel.mediaTypeDefinitions.Video.prototype.calculateVideoDetails = function(){
 	if( this.y === 'center' ){
 		var y = Math.round( Math.abs( this.$attachTo.height() - this.$video.height() ) / 2 );
 	}
-	this.$video.css({
+	this.$videoContainer.css({
 		'left': x,
 		'top': y
 	});

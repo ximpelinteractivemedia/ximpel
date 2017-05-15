@@ -159,7 +159,34 @@
 							&lt;/media&gt;
 						&lt;/subject&gt;</pre>
 					In this case when the subject finished it will play <code>subject1</code> UNLESS <code>score1 > 8</code> then it will go to <code>subject2</code> or <code>score1 > 6</code> then it will go <code>subject3</code>. The first leadsTo condition listed that returns true is the leadsTo subject that will be used.
-					
+					<br /><br />
+
+					<h3>Swiping between subjects</h3>
+
+					The parameters <code>swipeLeftTo</code>, <code>swipeRightTo</code>, <code>swipeUpTo</code> and <code>swipeDownTo</code> can be used to cause subject changes upon swipe 
+					gestures.
+
+					Note: For swipe gestures to work, you must include the JavaScript library <a href="http://hammerjs.github.io/">Hammer.js</a>.
+
+					<h4>playlist.xml</h4>
+					<pre class="brush: html;">
+					    &lt;subject id=&quot;Scene1&quot; swipeLeftTo=&quot;Scene3&quot; swipeRightTo=&quot;Scene2&quot;&gt;
+					        &lt;media&gt;
+					            &lt;image src=&quot;scene1.png&quot; /&gt;
+					        &lt;/media&gt;
+					    &lt;/subject&gt;
+
+					    &lt;subject id=&quot;Scene2&quot; swipeLeftTo=&quot;Scene1&quot; swipeRightTo=&quot;Scene3&quot;&gt;
+					        &lt;media&gt;
+					            &lt;image src=&quot;scene2.png&quot; /&gt;
+					        &lt;/media&gt;
+					    &lt;/subject&gt;
+
+					    &lt;subject id=&quot;Scene3&quot; swipeLeftTo=&quot;Scene2&quot; swipeRightTo=&quot;Scene1&quot;&gt;
+					        &lt;media&gt;
+					            &lt;image src=&quot;scene3.png&quot; /&gt;
+					        &lt;/media&gt;
+					    &lt;/subject&gt;</pre>
 					<br /><br /><br /><br />
 					
 					

@@ -166,6 +166,13 @@
 	background: #55ee55;
 }
 
+@keyframes swipe {
+	to {
+		transform: translateX(0px) translateY(0px) scale(1.0);
+		opacity: 1.0;
+	}
+}
+
 /* 	
  * transform: translate3d( 0,0,0 ); might work for overflow: hidden bugs in chrome 
  */

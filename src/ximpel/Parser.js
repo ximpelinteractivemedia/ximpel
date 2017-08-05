@@ -189,7 +189,23 @@ ximpel.Parser.prototype.processSubjectNode = function( playlistModel, domElement
 			var leadsToModel = new ximpel.LeadsToModel();
 			leadsToModel.subject = attributeValue;
 			subjectModel.leadsToList.push( leadsToModel );
-		} else{
+		} else if( attributeName === 'swipeLeftTo' ){
+			var leadsToModel = new ximpel.LeadsToModel();
+			leadsToModel.subject = attributeValue;
+			subjectModel.swipeTo.swipeleft = leadsToModel;
+		} else if( attributeName === 'swipeRightTo' ){
+			var leadsToModel = new ximpel.LeadsToModel();
+			leadsToModel.subject = attributeValue;
+			subjectModel.swipeTo.swiperight = leadsToModel;
+		} else if( attributeName === 'swipeUpTo' ){
+			var leadsToModel = new ximpel.LeadsToModel();
+			leadsToModel.subject = attributeValue;
+			subjectModel.swipeTo.swipeup = leadsToModel;
+		} else if( attributeName === 'swipeDownTo' ){
+			var leadsToModel = new ximpel.LeadsToModel();
+			leadsToModel.subject = attributeValue;
+			subjectModel.swipeTo.swipedown = leadsToModel;
+		}  else{
 			ximpel.warn('Parser.processSubjectNode(): Invalid attribute ignored! Attribute \''+attributeName+'\' on element <'+info.tagName+'> is not supported. Make sure you spelled the attribute name correctly.');
 		}
 	}
@@ -732,6 +748,10 @@ ximpel.Parser.prototype.processConfigNode = function( domElement ){
 			configModel.mediaDirectory = $.trim(child.textContent);
 		} else if( childName === 'showScore' ){
 			configModel.showScore = ( $.trim(child.textContent).toLowerCase() === 'true');
+		} else if( childName === 'minimumSwipeVelocity' ){
+			configModel.minimumSwipeVelocity = parseFloat(child.textContent);
+		} else if( childName === 'minimumSwipeTranslation' ){
+			configModel.minimumSwipeTranslation = parseFloat(child.textContent)
 		}
 		else{
 			ximpel.warn('Parser.processConfigNode(): Invalid child ignored! Element <'+info.tagName+'> has child <'+childName+'>.This child element is not allowed on <'+info.tagName+'>.');

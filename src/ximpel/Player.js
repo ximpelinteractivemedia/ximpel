@@ -78,6 +78,17 @@ ximpel.Player = function( playerElement, playlistModel, configModel ){
 	// because all the items in the sequence have finished playing, the sequence player will trigger this event.
 	this.sequencePlayer.addEventHandler( this.sequencePlayer.EVENT_SEQUENCE_END, this.handleSequencePlayerEnd.bind(this) );
 
+	if (typeof Hammer === 'undefined') {
+		ximpel.warn('Hammer is not loaded. Swipe events will not be supported.');
+	} else {
+		// Add Hammer to handle swipes
+		this.mc = new Hammer.Manager( this.$playerElement[0] );
+
+		this.mc.add( new Hammer.Pan() );
+		this.mc.on( 'pan', this.onPan.bind(this) );
+	}
+
+
 	// Do some stuff to initialize the player to make it ready for use.
 	this.init();
 };
@@ -86,6 +97,7 @@ ximpel.Player.prototype.STATE_PAUSED = 'state_player_paused';
 ximpel.Player.prototype.STATE_STOPPED = 'state_player_stopped';
 ximpel.Player.prototype.EVENT_PLAYER_END = 'ended';
 ximpel.Player.prototype.EVENT_VARIABLE_UPDATED = 'variable_updated';
+ximpel.Player.prototype.EVENT_SWIPE = 'swipe';
 
 // Sent when a subject begins to play. The subject model is included as an argument.
 ximpel.Player.prototype.EVENT_SUBJECT_PLAYING = 'subject_playing';
@@ -492,6 +504,8 @@ ximpel.Player.prototype.addEventHandler = function( eventName, func ){
 			return this.pubSub.subscribe( this.EVENT_VARIABLE_UPDATED, func ); break;
 		case this.EVENT_SUBJECT_PLAYING:
 			return this.pubSub.subscribe( this.EVENT_SUBJECT_PLAYING, func ); break;
+		case this.EVENT_SWIPE:
+			return this.pubSub.subscribe( this.EVENT_SWIPE, func ); break;
 		default:
 			ximpel.warn("Player.addEventHandler(): cannot add an event handler for event '" + eventName + "'. This event is not used by the player.");
 			break;
@@ -557,5 +571,81 @@ ximpel.Player.prototype.getConfigProperty = function( propertyName ){
 		return value;
 	} else{
 		return null;
+	}
+}
+
+
+// Handles the pan event on the main ximpelPlayer element. If the current subject has a swipe
+// property ('swipeLeftTo', 'swipeRightTo', 'swipeUpTo' or 'swipeDownTo') that matches the pan
+// direction, we will let the main ximpelPlayer element be dragged in that direction.
+ximpel.Player.prototype.onPan = function(event){
+
+	if( ! this.isPlaying() || ! this.currentSubjectModel ){
+		ximpel.warn("Player.onPan(): Ignoring event while stopped or paused");
+		return this;
+	}
+
+	// Scale deltaX and Y to the scale of the $playerElement div.
+	var boundingRect = this.$playerElement[0].getBoundingClientRect(),
+		scaleX = boundingRect.width / this.$playerElement[0].offsetWidth,
+		scaleY = boundingRect.height / this.$playerElement[0].offsetHeight,
+		translateX = event.deltaX / scaleX,
+		translateY = event.deltaY / scaleY;
+
+	// Check whether there are subjects defined for the horizontal and vertical pan directions.
+	var hEvent = (translateX > 0) ? 'swiperight' : 'swipeleft',
+		vEvent = (translateY > 0) ? 'swipedown' : 'swipeup';
+
+	if ( ! this.currentSubjectModel.swipeTo[hEvent] && ! this.currentSubjectModel.swipeTo[vEvent] ) {
+		// No subject to swipe to in either of the directions, so lets return
+		return;
+	}
+
+	// We want the pan to be *either* horizontal or vertical, not both at the same time,
+	// so if we have subjects defined in both directions, we will choose the major one.
+	var panDirection = ( (this.currentSubjectModel.swipeTo[hEvent] && this.currentSubjectModel.swipeTo[vEvent] && Math.abs(translateX) > Math.abs(translateY)) || !this.currentSubjectModel.swipeTo[vEvent] )
+		? Hammer.DIRECTION_HORIZONTAL : Hammer.DIRECTION_VERTICAL;
+
+	var translate = (panDirection == Hammer.DIRECTION_HORIZONTAL) ? translateX : translateY;
+	var opacity = 1.0 - Math.min(1.0, Math.abs(translate) * 0.0015);
+	var scale = 1.0 - Math.min(0.4, Math.abs(translate) * 0.0001);
+
+	var swipeType = (panDirection == Hammer.DIRECTION_HORIZONTAL) ? hEvent : vEvent;
+	var nextSubject = this.currentSubjectModel.swipeTo[swipeType];
+
+	if (panDirection == Hammer.DIRECTION_HORIZONTAL) {
+		this.$playerElement.css('transform', 'translateX(' + translate + 'px) scale(' + scale + ')');
+	} else {
+		this.$playerElement.css('transform', 'translateY(' + translate + 'px) scale(' + scale + ')');
+	}
+	this.$playerElement.css('animation', '');
+	this.$playerElement.css('opacity', opacity);
+
+	if (event.isFinal) {
+		if (Math.abs(event.velocity) < this.getConfigProperty('minimumSwipeVelocity') || Math.abs(translate) < this.getConfigProperty('minimumSwipeTranslation')) {
+
+			// The pan was either too slow or didn't move far enough, so we just snap back
+			this.$playerElement.css('animation', 'swipe 0.5s ease-out forwards');
+
+		} else {
+
+			// Let's do a swipe animation
+			if (panDirection == Hammer.DIRECTION_HORIZONTAL) {
+				var initPos = this.$playerElement.width() * 0.8 * (translateX > 0 ? -1 : 1);
+				this.$playerElement.css('transform', 'translateX(' + initPos + 'px) scale(0.5)');
+			} else {
+				var initPos = this.$playerElement.height() * 0.8 * (translateY > 0 ? -1 : 1);
+				this.$playerElement.css('transform', 'translateY(' + initPos + 'px) scale(0.5)');
+			}
+			this.$playerElement.css('animation', 'swipe 0.5s ease-out forwards');
+
+			// Change subject
+			this.goTo( nextSubject.subject );
+
+			// Publish a swipe event in case anyone's interested
+			event.type = swipeType;
+			event.nextSubject = nextSubject;
+			this.pubSub.publish( this.EVENT_SWIPE, event );
+		}
 	}
 }

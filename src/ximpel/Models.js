@@ -54,6 +54,9 @@ ximpel.SubjectModel = function(){
 
 	// An array of leadsToModels. These leadsToModels specify the leadsTo value that is used when the subject ends.
 	this.leadsToList = [];
+
+	// A key-value object where the key is an event type (like 'swipeleft', 'swiperight') and the value is a leadsToModel
+	this.swipeTo = {};
 }
 ximpel.SubjectModel.prototype = new ximpel.Model();
 ximpel.SubjectModel.prototype.description = '';
@@ -304,6 +307,8 @@ ximpel.ConfigModel.prototype.titleScreenImage = 'assets/ximpel_title_screen.png'
 ximpel.ConfigModel.prototype.enableControls = true;
 ximpel.ConfigModel.prototype.controlsDisplayMethod = 'overlay';
 ximpel.ConfigModel.prototype.showScore = false;
+ximpel.ConfigModel.prototype.minimumSwipeVelocity = 0.10;
+ximpel.ConfigModel.prototype.minimumSwipeTranslation = 50;
 
 // This extend method allows for extending one ConfigModel with another ConfigModel
 // The config model that is being extended gets all values overwritten from the ConfigModel

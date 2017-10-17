@@ -48,6 +48,7 @@ module.exports = function( grunt ){
                     '<%= meta.srcPath %>QuestionView.js', 
 
                     '<%= meta.srcPath %>Video.js',
+                    '<%= meta.srcPath %>Iframe.js',
                     '<%= meta.srcPath %>Image.js',
                     '<%= meta.srcPath %>Audio.js',
                     '<%= meta.srcPath %>YouTube.js'

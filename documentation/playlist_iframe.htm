@@ -1,0 +1,75 @@
+<html>
+	<head>
+		<title>XIMPEL - Documentation</title>
+
+		<!-- include syntax highlighter -->
+		<script type="text/javascript" src="syntaxhighlighter_3.0.83/scripts/shCore.js"></script>
+		<script type="text/javascript" src="syntaxhighlighter_3.0.83/scripts/shBrushJScript.js"></script>
+		<script type="text/javascript" src="syntaxhighlighter_3.0.83/scripts/shBrushXml.js"></script>
+		<link href="syntaxhighlighter_3.0.83/styles/shCore.css" rel="stylesheet" type="text/css" />
+		<link type="text/css" rel="stylesheet" href="syntaxhighlighter_3.0.83/styles/shCoreDefault.css"/>
+
+		<!-- include jquery -->
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+
+		<!-- include jquery ui -->
+		<link rel="stylesheet" href="jquery-ui-1.11.4/jquery-ui.min.css" />
+		<script src="jquery-ui-1.11.4/jquery-ui.min.js"></script>
+		
+		<!-- include scripts/css for this documentation page. -->
+		<link rel="stylesheet" href="styles/main.css" />
+		<script src="scripts/main.js"></script>
+		<script type="text/javascript">
+			//
+			var activeSection=1;
+		</script>
+
+	</head>
+	<body>
+		<div id="container">
+			<script src="scripts/header.js"></script>
+			<script src="scripts/navigation.js"></script>
+
+			<div id="mainContentContainer">
+				<div id="mainContent">
+					<h2>Syntax - iFrame mediatype</h2>
+					The iframe media type allows you to include external web content within your ximpel presentation.
+
+					<h4>playlist.xml</h4>
+					<pre class="brush: html;">
+						&lt;ximpel&gt;
+							&lt;playlist&gt;
+							    &lt;subject id=&quot;subject1&quot;&gt;
+							        &lt;media&gt;
+							            &lt;iframe url=&quot;https://en.wikipedia.org&quot;/&gt;
+							        &lt;/media&gt;
+							    &lt;/subject&gt;
+							&lt;/playlist&gt;
+						&lt;/ximpel&gt;</pre>
+					This integrates the main English Wikipedia page into your XIMPEL application, i.e. <code>http://en.wikipedia.org</code>. Please note that some sites may not allow for displaying their content in an iframe; you can view error messages by right clicking on an element in the XIMPEL viewing pane, choosing 'inspect element' and going to the 'console'.
+
+					<h3>Positioning of the iframe</h3>
+					<p>
+						The <code>x</code>, <code>y</code>, <code>width</code> and <code>height</code> attributes can be used to position the iframe window at a certain spot within the presentation and force it to have a certain size. If you don't set any of these attributes then the iframe will take up the entire view area.
+					</p>
+
+					<pre class="brush: html;">
+						&lt;iframe id=&quot;AI0RTvlm0hw&quot; x=&quot;200px&quot; y=&quot;200px&quot; width=&quot;400px&quot; height=&quot;400&quot; /&gt;</pre>
+
+					<p>
+					 	By setting the <code>x</code> and/or <code>y</code> attributes, the iframe will have an offset from the top-left of the view area. In that case if you don't specify a <code>width</code> or <code>height</code> attribute the iframe will will have a width and height equal to the view-area. This will cause part of the video to become invisble (because offset+view-area is bigger than the view-area). Usually you want to provide width/height attributes when using x and y offsets. By specifying the <code>width</code> and/or <code>height</code> attributes you can change the width and height that the iframe will have.
+					</p>
+					<p>
+						<div class="ui-widget">	<div class="ui-state-highlight ui-corner-all" style="margin-top: 20px; padding: 0 .7em;">
+							<span class="ui-icon ui-icon-info" style="float: left; margin-right: .3em;"></span>
+							The <code>x</code>, <code>y</code>, <code>width</code> and <code>height</code> of the iframe are all based on a <code>1920x1080</code> resolution. So the visible area of the presentation lies between <code>x=0</code> to <code>x=1920</code> and <code>y=0</code> to <code>y=1080</code>. Read more about the native XIMPEL resolution <a href="architecture_resolution.htm">here</a>.
+						</div></div>
+					</p>
+					<br />				
+					
+
+				</div>
+			</div>
+		</div>
+	</body>
+</html>

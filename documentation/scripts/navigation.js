@@ -17,6 +17,7 @@ var html =
 				'<li><a href="playlist_audio.htm">Audio</a></li>',
 				'<li><a href="playlist_image.htm">Image</a></li>',
 				'<li><a href="playlist_youtube.htm">Youtube</a></li>',
+				'<li><a href="playlist_iframe.htm">iFrame</a></li>',
 				'<hr />',
 				'<li><a href="playlist_overlays.htm">Overlays</a></li>',
 				'<li><a href="playlist_questions.htm">Questions</a></li>',

@@ -114,7 +114,38 @@ ximpel.Player.prototype.init = function(){
 	// variables with a value. They are stored in: this.variables
 	this.applyVariableModifiers( this.playlistModel.variableModifiers );
 
+	// The 'popstate' event is fired when the active history entry changes,
+	// that is when the URL changes, due to normal navigation or use of the
+	// browser's back/forward functionality.
+	// Some browsers (older versions of Chrome + Safari) also emits a
+	// popstate event on page load.
+	window.onpopstate = this.onWindowHistoryChange.bind(this)
+
 	return this;
+}
+
+// When the URL changes, we will start playing the subject with ID matching
+// the value of the URL's hash.
+ximpel.Player.prototype.onWindowHistoryChange = function(){
+	if (this.isStopped()) {
+		// If the player is stopped, leave it like that.
+		return;
+	}
+
+	var subjectId = document.location.hash.substr(1);
+	if (!subjectId) {
+		// If there's no subject specified, go to the initial subject
+		subjectId = this.firstSubjectModel.subjectId;
+	}
+
+	var subjectModel = this.subjectModels[subjectId];
+
+	if( !subjectModel ){
+		ximpel.warn("Player: Cannot play a subject with subjectId '" + subjectId + "'. There is no subject with that id.");
+		return;
+	}
+
+	this.playSubject( subjectModel );
 }
 
 
@@ -154,8 +185,9 @@ ximpel.Player.prototype.play = function(){
 	// indicate the player is in a playing state.
 	this.state = this.STATE_PLAYING;
 
-	// This play() method is called from a stopped state so start playing the first subject.
-	this.playSubject( this.firstSubjectModel );
+	// Start playing
+	this.onWindowHistoryChange();
+
 	return this;
 }
 
@@ -240,6 +272,8 @@ ximpel.Player.prototype.stop = function(){
 	// After the reset its ready to be play()'ed again.
 	this.reset();
 
+	window.location = '#';
+
 	return this;
 }
 
@@ -248,14 +282,17 @@ ximpel.Player.prototype.stop = function(){
 // Jump to the subject with the given subjectId. This method can be called at anytime from anywhere and
 // will cause the player to stop playing what it is playing and jump to the specified subject.
 ximpel.Player.prototype.goTo = function( subjectId ){
-	var subjectModel = this.subjectModels[subjectId];
 
-	if( !subjectModel ){
-		ximpel.warn("Player.goTo(): Cannot play a subject with subjectId '" + subjectId + "'. There is no subject with that id.");
-		return;
+	if (subjectId == 'back()') {
+		// This is a reserved name that we use to go to the previous subject.
+		window.history.back();
+	} else {
+		// Request a transition to the new subject by changing the URL. The actual transition
+		// will then be handled by the onWindowHistoryChange method that is called when the
+		// popstate event fires.
+		window.location = '#' + subjectId;
 	}
 
-	this.playSubject( subjectModel );
 	return this;
 }
 

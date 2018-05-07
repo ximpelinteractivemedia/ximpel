@@ -384,7 +384,10 @@ ximpel.MediaPlayer.prototype.handleOverlayClick = function( overlayModel, overla
 
 			$closeButton = $('<img class="closeButton" src="ximpel/images/close_button.png"/>')
 				.one('click', function(){
-					this.pubSub.publish( this.EVENT_IFRAME_CLOSE, url );
+					this.pubSub.publish( this.EVENT_IFRAME_CLOSE, {
+						$iframe: $urlDisplay.find('iframe'),
+						url: url,
+					});
 					$urlDisplay.remove();
 					if( $player.isPaused() ){
 						$player.resume();
@@ -395,7 +398,10 @@ ximpel.MediaPlayer.prototype.handleOverlayClick = function( overlayModel, overla
 				.append( $closeButton )
 				.appendTo( this.player.getPlayerElement() );
 
-			this.pubSub.publish( this.EVENT_IFRAME_OPEN, url );
+			this.pubSub.publish( this.EVENT_IFRAME_OPEN, {
+				$iframe: $urlDisplay.find('iframe'),
+				url: url,
+			});
 
 		} else{
 			// start playing the subject specified in the leadsTo

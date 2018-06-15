@@ -398,6 +398,14 @@ ximpel.MediaPlayer.prototype.handleOverlayClick = function( overlayModel, overla
 			this.pubSub.publish( this.EVENT_IFRAME_OPEN, url );
 
 		} else{
+			if (leadsTo == 'back()') {
+				// Reattach click handler in case the subject contains an iframe with
+				// navigation possibilities, in which case the back button could just
+				// case a back navigation within the iframe, leaving the subject id
+				// the same.
+				overlayView.onOneClick( this.handleOverlayClick.bind(this, overlayModel, overlayView ) );
+			}
+
 			// start playing the subject specified in the leadsTo
 			this.player.goTo( leadsTo );
 		}

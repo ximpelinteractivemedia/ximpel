@@ -46,6 +46,9 @@ ximpel.OverlayView.prototype.renderView = function(){
 	var $span = $("<span></span>");
 	if( model.text ){
 		$span.text( model.text );
+
+		// Convert '\n' to linebreaks
+		$span.html( $span.html().replace(/\\n/g, '<br>') );
 	}
 
 
@@ -155,7 +158,6 @@ ximpel.OverlayView.prototype.makeRectangle = function( el, width, height ){
 	el.css({
 		'width': width,
 		'height': height,
-		'line-height': height,
 	});
 	return this;
 }
@@ -177,7 +179,6 @@ ximpel.OverlayView.prototype.makeOval = function( el, width, height ){
 	el.css({
 		'width': width,
 		'height': height,
-		'line-height': height,
 		'border-radius': '50%'
 	});
 	return this;

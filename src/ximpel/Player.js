@@ -78,6 +78,14 @@ ximpel.Player = function( playerElement, playlistModel, configModel ){
 	// because all the items in the sequence have finished playing, the sequence player will trigger this event.
 	this.sequencePlayer.addEventHandler( this.sequencePlayer.EVENT_SEQUENCE_END, this.handleSequencePlayerEnd.bind(this) );
 
+	// Propagate iframe open/close events from the MediaPlayer object
+	this.sequencePlayer.mediaPlayer.addEventHandler( this.sequencePlayer.mediaPlayer.EVENT_IFRAME_OPEN, function(evt) {
+		this.pubSub.publish( this.EVENT_IFRAME_OPEN, evt );
+	}.bind(this));
+	this.sequencePlayer.mediaPlayer.addEventHandler( this.sequencePlayer.mediaPlayer.EVENT_IFRAME_CLOSE, function(evt) {
+		this.pubSub.publish( this.EVENT_IFRAME_CLOSE, evt );
+	}.bind(this));
+
 	if (typeof Hammer === 'undefined') {
 		ximpel.warn('Hammer is not loaded. Swipe events will not be supported.');
 	} else {
@@ -98,6 +106,8 @@ ximpel.Player.prototype.STATE_STOPPED = 'state_player_stopped';
 ximpel.Player.prototype.EVENT_PLAYER_END = 'ended';
 ximpel.Player.prototype.EVENT_VARIABLE_UPDATED = 'variable_updated';
 ximpel.Player.prototype.EVENT_SWIPE = 'swipe';
+ximpel.Player.prototype.EVENT_IFRAME_OPEN = 'iframe_open';
+ximpel.Player.prototype.EVENT_IFRAME_CLOSE = 'iframe_close';
 
 // Sent when a subject begins to play. The subject model is included as an argument.
 ximpel.Player.prototype.EVENT_SUBJECT_PLAYING = 'subject_playing';
@@ -543,6 +553,10 @@ ximpel.Player.prototype.addEventHandler = function( eventName, func ){
 			return this.pubSub.subscribe( this.EVENT_SUBJECT_PLAYING, func ); break;
 		case this.EVENT_SWIPE:
 			return this.pubSub.subscribe( this.EVENT_SWIPE, func ); break;
+		case this.EVENT_IFRAME_OPEN:
+			return this.pubSub.subscribe( this.EVENT_IFRAME_OPEN, func ); break;
+		case this.EVENT_IFRAME_CLOSE:
+			return this.pubSub.subscribe( this.EVENT_IFRAME_CLOSE, func ); break;
 		default:
 			ximpel.warn("Player.addEventHandler(): cannot add an event handler for event '" + eventName + "'. This event is not used by the player.");
 			break;

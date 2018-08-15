@@ -49,6 +49,10 @@ ximpel.mediaTypeDefinitions.Iframe.prototype = new ximpel.MediaType();
 ximpel.mediaTypeDefinitions.Iframe.prototype.mediaPlay = function(){
     this.state = 'playing';
     this.$parentElement.append( this.$iframeSpan );
+    this.player.pubSub.publish( this.player.EVENT_IFRAME_OPEN, {
+        $iframe: this.$iframeSpan.find('iframe'),
+        url: this.customAttributes.url,
+    });
 }
   
 ximpel.mediaTypeDefinitions.Iframe.prototype.mediaPause = function(){
@@ -57,6 +61,10 @@ ximpel.mediaTypeDefinitions.Iframe.prototype.mediaPause = function(){
   
 ximpel.mediaTypeDefinitions.Iframe.prototype.mediaStop = function(){
     this.state = 'stopped';
+    this.player.pubSub.publish( this.player.EVENT_IFRAME_CLOSE, {
+        $iframe: this.$iframeSpan.find('iframe'),
+        url: this.customAttributes.url,
+    });
     this.$iframeSpan.detach();
 }
   

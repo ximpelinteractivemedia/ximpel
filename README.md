@@ -9,7 +9,7 @@ Within the repository there are a number of folders:
 ### How do I get set up? ###
 
 1. Checkout this repository using:
-git clone https://sbruinsje@bitbucket.org/sbruinsje/ximpel.git
+git clone https://github.com/ximpelinteractivemedia/ximpel.git
 
 2. Go to the build folder and follow the readme. In summary the README says:
 
